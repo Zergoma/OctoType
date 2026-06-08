@@ -6,12 +6,16 @@ using AppInterfaces = OctoType.Application.Interfaces;
 using OctoType.Interfaces;
 using OctoType.Models.UI.Typing;
 using OctoType.Domain.Enums;
+using OctoType.Models;
 
 namespace OctoType.MVVM.ViewModels;
 
 public partial class TypingViewModel : ObservableObject
 {
-    public event Action<TypingLineState?>? CurrentLineChanged;
+    public event Action<int>? LineChanged;
+    public TypingSession Session { get; } = new();
+
+    public ObservableCollection<TypingLineState> Lines => Session.Lines;
 
     private readonly AppInterfaces.IStringsProviderService _stringsProviderService;
     private readonly AppInterfaces.IInputCharMapperService _charMapper;
@@ -25,21 +29,17 @@ public partial class TypingViewModel : ObservableObject
         _stringsProviderService = stringsProviderService;
         _charMapper = charMapper;
         _typingLineFactory = typingLineFactory;
-    }
-    public ObservableCollection<TypingLineState> Lines { get; } = [];
 
+        Session.LineChanged += () =>
+        {
+            LineChanged?.Invoke(Session.CurrentLineIndex);
+        };
 
-    [ObservableProperty]
-    public partial TypingLineState? CurrentLine { get; set; } = null;
-
-    partial void OnCurrentLineChanged(TypingLineState? value)
-    {
-        CurrentLineChanged?.Invoke(value);
-    }
-
-
-    private TypingCharState? CurrentCharacter => CurrentLine?.Current;
-
+        Session.StateChanged += () =>
+        {
+            Session.CurrentCharacter?.IsCurrent = true;
+        };
+    }   
 
     public async Task LoadTextAsync()
     {
@@ -56,57 +56,11 @@ public partial class TypingViewModel : ObservableObject
             Lines.Add(lineVm);
         }
 
-        CurrentLine = Lines.First();
-        CurrentLine.StartLine();
-    }
-
-    private TypingLineState? NextLine(TypingLineState? currentLine)
-    {
-        if(currentLine == null || Lines == null)
-            return null;
-
-        int currentLineIdx = Lines.IndexOf(currentLine);
-        if (currentLineIdx == -1)
-            return null;
-
-        int nextIdx = currentLineIdx + 1;
-        if (nextIdx >= Lines.Count)
-            return null;
-
-        return Lines[nextIdx]; ;
-    }
-
-    private bool GoToNextLine()
-    {
-        CurrentLine?.EndLine();
-        TypingLineState? nextLine = NextLine(CurrentLine);
-
-        CurrentLine = nextLine;
-        CurrentLine?.StartLine();
-
-        return CurrentLine != null;
+        Session.Reset();
     }
 
     public TypingStatus ProcessInput(char input)
     {
-        if (CurrentCharacter == null || CurrentLine == null)
-        {
-            return TypingStatus.Ended;
-        }
-
-        bool success = CurrentCharacter.ChallengeValue(_charMapper.Map(input));
-        
-        if (success)
-        {
-            if(!CurrentLine.MoveToNextCharacter())
-            {
-                if (!GoToNextLine())
-                {
-                    return TypingStatus.Ended;
-                }
-            }
-        }
-
-        return TypingStatus.InProgress;
+        return Session.ProcessInput(input, _charMapper.Map);
     }
 }

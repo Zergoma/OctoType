@@ -1,8 +1,12 @@
 using System.Diagnostics;
 
 using OctoType.Domain.Enums;
-using OctoType.Models.UI.Typing;
 using OctoType.MVVM.ViewModels;
+
+
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
+
 
 namespace OctoType.MVVM.Views;
 
@@ -12,6 +16,8 @@ public partial class TypingView : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = vm;
+
+        #region Keyboard Focus
 
         HiddenInput.Focused += (_, __) =>
         {
@@ -24,17 +30,17 @@ public partial class TypingView : ContentPage
             TakeFocusButton.IsVisible = true;
             Debug.WriteLine("UNFOCUSED");
         };
+        #endregion
 
-        vm.CurrentLineChanged += 
-            (currentLine) =>
+        vm.LineChanged += (int lineNumber) =>
+        {
+            Dispatcher.DispatchAsync(async () =>
             {
-                Dispatcher.DispatchAsync(async () =>
-                {
-                    await Task.Delay(200);
+                await Task.Delay(50);
 
-                    ScrollToCurrentLine(currentLine);
-                });
-            };
+                ScrollToCurrentLine(lineNumber);
+            });
+        };
     }
 
     protected override async void OnAppearing()
@@ -48,7 +54,6 @@ public partial class TypingView : ContentPage
             {
                 await vm.LoadTextAsync();
             });
-            //await vm.InitializeAsync();
         }
 
         await Dispatcher.DispatchAsync(async () =>
@@ -59,14 +64,6 @@ public partial class TypingView : ContentPage
 
     private void OnCompleted(object sender, EventArgs e)
     {
-        if (BindingContext is not TypingViewModel vm)
-        {
-            return;
-        }
-
-        // articicialy send new line on enter
-        vm.ProcessInput('\n');
-
         HiddenInput.Text = string.Empty;
     }
 
@@ -81,7 +78,7 @@ public partial class TypingView : ContentPage
         {
             return;
         }
-
+        
         char input = e.NewTextValue[^1];
 
         TypingStatus typingStatus = vm.ProcessInput(input);
@@ -93,12 +90,35 @@ public partial class TypingView : ContentPage
     {
         base.OnHandlerChanged();
 
-        if (Handler != null)
+        if (HiddenInput.Handler?.PlatformView is not Microsoft.UI.Xaml.Controls.TextBox nativeTextBox)
+            return;
+
+        nativeTextBox.KeyDown += OnNativeKeyDown; ;
+
+        Dispatcher.Dispatch(() =>
         {
-            Dispatcher.Dispatch(() =>
-            {
-                HiddenInput.Focus();
-            });
+            HiddenInput.Focus();
+        });
+    }
+
+    private void OnNativeKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (BindingContext is not TypingViewModel vm)
+            return;
+
+        var key = e.Key;
+
+        switch (key)
+        {
+            case Windows.System.VirtualKey.Back:
+                vm.ProcessInput('\b');
+                e.Handled = true;
+                break;
+
+            case Windows.System.VirtualKey.Enter:
+                vm.ProcessInput('\n');
+                e.Handled = true;
+                break;
         }
     }
 
@@ -107,13 +127,13 @@ public partial class TypingView : ContentPage
         HiddenInput.Focus();
     }
 
-    public void ScrollToCurrentLine(TypingLineState? currentLine)
+    public void ScrollToCurrentLine(int index)
     {
-        if (currentLine == null)
+        if(index <0 )
             return;
 
         TypingCollectionView.ScrollTo(
-            currentLine,
+            index,
             position: ScrollToPosition.Start,
             animate: true);
     }

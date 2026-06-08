@@ -21,9 +21,6 @@ public partial class TypingLineState : ObservableObject
     public ObservableCollection<TypingCharState> Characters { get; } = [];
 
     [ObservableProperty]
-    public partial TypingCharState? Current { get; set; }
-
-    [ObservableProperty]
     public partial bool IsCurrentLine { get; set; }
 
     [ObservableProperty]
@@ -48,55 +45,4 @@ public partial class TypingLineState : ObservableObject
         Characters.Add(
             _factoryTypingChar.CreateAsync('↵', TypingCharEnumState.Pending, "OctoType_Typing_Theme").Result);
     }
-
-    public void EndLine()
-    {
-        IsCurrentLine = false;
-        if (Current != null)
-        {
-            Current.IsCurrent = false;
-        }
-    }
-
-    public void StartLine()
-    {
-        Current = Characters.First();
-        Current.IsCurrent = true;
-        IsCurrentLine = true;
-    }
-    public bool MoveToNextCharacter()
-    {
-        Current?.IsCurrent = false;
-
-        TypingCharState? next = GetNextCharacter(Current);
-
-        if (next == null)
-            return false;
-
-        Current = next;
-        next.IsCurrent = true;
-
-        return true;
-    }
-
-    private TypingCharState? GetNextCharacter(TypingCharState? current)
-    {
-        if (current == null)
-            return null;
-
-        int index = Characters.IndexOf(current);
-
-        if (index < 0)
-            return null;
-
-        int nextIdx = index + 1;
-        if (nextIdx >= Characters.Count)
-        {
-            return null;
-        }
-        TypingCharState nextChar = Characters[nextIdx];
-
-        return nextChar;
-    }
-
 }
