@@ -1,0 +1,38 @@
+{
+  "name": "Edclub_Typing_Theme",
+
+  "pending": {
+    "textColor": "#FF757575",
+    "backgroundColor": "#00000000",
+    "borderColor": "#00000000",
+    "borderThickness": 2
+  },
+
+  "current": {
+    "textColor": "#FF757575",
+    "backgroundColor": "#00000000",
+    "borderColor": "#FF0074FF",
+    "borderThickness": 0
+  },
+
+  "correct": {
+    "textColor": "#FF0E630E",
+    "backgroundColor": "#FFE7FBD3",
+    "borderColor": "#00000000",
+    "borderThickness": 0
+  },
+
+  "correctWithError": {
+    "textColor": "#FFFF8300",
+    "backgroundColor": "#FFFFE9B2",
+    "borderColor": "#00000000",
+    "borderThickness": 2
+  },
+
+  "CurrentWrong": {
+    "textColor": "#FFFF4500",
+    "backgroundColor": "#00000000",
+    "borderColor": "#FFFF2345",
+    "borderThickness": 2
+  }
+}

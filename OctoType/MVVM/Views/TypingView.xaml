@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:OctoType.MVVM.ViewModels"
+             xmlns:typing="clr-namespace:OctoType.Models.UI.Typing"
+             x:Class="OctoType.MVVM.Views.TypingView"
+             x:DataType="vm:TypingViewModel">
+    
+    <Grid>
+        <VerticalStackLayout>
+            
+            <Entry
+            x:Name="HiddenInput"
+            Opacity="0.00100"
+            WidthRequest="60"
+            HeightRequest="20"
+            BackgroundColor="Blue"
+            CursorPosition="0"
+            TextChanged="OnTextChanged"
+            Completed="OnCompleted"/>
+
+            
+
+            <Border Margin="20,5"
+                    StrokeShape="RoundRectangle 10">
+
+                    <CollectionView ItemsSource="{Binding Lines}"
+                                    x:DataType="vm:TypingViewModel"
+                                    x:Name="TypingCollectionView"
+                                    HeightRequest="200">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <FlexLayout
+                                    
+                                    x:DataType="typing:TypingLineState"
+                                    Wrap="Wrap"
+                                    Direction="Row"
+                                    BindableLayout.ItemsSource="{Binding Characters}"
+                                    Padding="10,10">
+                                    
+
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate
+                                            x:DataType="typing:TypingCharState">
+
+                                            <Border StrokeShape="RoundRectangle 5"
+                                                        Stroke="Transparent"
+                                                        StrokeThickness="0"
+                                                        BackgroundColor="{Binding BgColor}"
+                                                        Margin="0,0,1,6"
+                                                        WidthRequest="22"
+                                                        VerticalOptions="Center">
+                                                
+                                                <Grid RowDefinitions="auto, *"
+                                                      HorizontalOptions="Center"
+                                                      VerticalOptions="Center">
+                                                    
+                                                    <Label
+                                                        Text="{Binding Character}"
+                                                        TextColor="{Binding TextColor}"
+                                                        BackgroundColor="Transparent"
+                                                        FontSize="25"
+                                                        HorizontalOptions="Center"
+                                                        VerticalOptions="Center"/>
+                                                    
+                                                    <BoxView
+                                                        Grid.Row="1"
+                                                        HeightRequest="4"
+                                                        WidthRequest="20"
+                                                        BackgroundColor="{Binding BorderColor}" />
+
+                                                </Grid>
+                                            </Border>
+
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+
+                                </FlexLayout>
+
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+            </Border>
+            
+            <Button Text="Reprendre la saisie"
+                    x:Name="TakeFocusButton"
+                    Clicked="TakeFocusButton_Clicked"
+                    Margin="20,5"/>
+            
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
