@@ -15,6 +15,9 @@ public class TypingSession
 
     public int CurrentCharacterIndex { get; private set; } = 0;
 
+    public bool BackReturnEnable { get; set; } = true;
+    public bool StopOnError { get; set; } = true;
+
     private void SetPosition(int lineIndex, int characterIndex, bool forceRefresh = false)
     {
         int lineIdxSecured = Math.Max(lineIndex, 0);
@@ -225,6 +228,9 @@ public class TypingSession
         // BACKSPACE
         if (input == '\b')
         {
+            if(! BackReturnEnable)
+                return TypingStatus.InProgress;
+
             if (CanMoveBack())
             {
                 ResetCurrentCharacterTo(TypingCharEnumState.Pending);
@@ -248,7 +254,7 @@ public class TypingSession
 
         bool success = current.ChallengeValue(mapper(input));
 
-        if (success)
+        if (success || !StopOnError)
         {
             if (!MoveForward())
             {
