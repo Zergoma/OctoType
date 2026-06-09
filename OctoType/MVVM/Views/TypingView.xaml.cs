@@ -62,11 +62,6 @@ public partial class TypingView : ContentPage
         });
     }
 
-    private void OnCompleted(object sender, EventArgs e)
-    {
-        HiddenInput.Text = string.Empty;
-    }
-
     private void OnTextChanged(object sender, TextChangedEventArgs e)
     {
         if (BindingContext is not TypingViewModel vm)
@@ -117,6 +112,12 @@ public partial class TypingView : ContentPage
 
             case Windows.System.VirtualKey.Enter:
                 vm.ProcessInput('\n');
+                e.Handled = true;
+                HiddenInput.Text = string.Empty;
+                break;
+
+            case Windows.System.VirtualKey.F5:
+                vm.Session.Reset();
                 e.Handled = true;
                 break;
         }
