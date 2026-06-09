@@ -30,14 +30,9 @@ public partial class TypingViewModel : ObservableObject
         _charMapper = charMapper;
         _typingLineFactory = typingLineFactory;
 
-        Session.LineChanged += () =>
+        Session.LineChanged += (int lineNumber) =>
         {
-            LineChanged?.Invoke(Session.CurrentLineIndex);
-        };
-
-        Session.StateChanged += () =>
-        {
-            Session.CurrentCharacter?.IsCurrent = true;
+            LineChanged?.Invoke(lineNumber);
         };
     }   
 

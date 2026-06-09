@@ -32,7 +32,9 @@ public partial class TypingCharState : ObservableObject
     partial void OnIsCurrentChanged(bool oldValue, bool newValue)
     {
         if (!newValue)
+        {
             return;
+        }
 
         if (State == TypingCharEnumState.Pending)
         {

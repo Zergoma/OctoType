@@ -8,7 +8,7 @@
     
     <Grid>
         <VerticalStackLayout>
-            
+
             <Entry
             x:Name="HiddenInput"
             Opacity="0.00100"
@@ -16,9 +16,7 @@
             HeightRequest="20"
             BackgroundColor="Blue"
             CursorPosition="0"
-            TextChanged="OnTextChanged"
-            Completed="OnCompleted"/>
-
+            TextChanged="OnTextChanged"/>
             
 
             <Border Margin="20,5"

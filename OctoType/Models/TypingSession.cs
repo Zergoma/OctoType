@@ -7,20 +7,69 @@ namespace OctoType.Models;
 
 public class TypingSession
 {
-    public event Action? StateChanged;
-    public event Action? LineChanged;
+    public event Action<int>? LineChanged;
+
     public ObservableCollection<TypingLineState> Lines { get; } = [];
 
-    public int CurrentLineIndex { get; private set; }
+    public int CurrentLineIndex { get; private set; } = 0;
 
-    public int CurrentCharacterIndex { get; private set; }
+    public int CurrentCharacterIndex { get; private set; } = 0;
 
     public void Reset()
     {
+        _previousCurrent = null;
         CurrentLineIndex = 0;
         CurrentCharacterIndex = 0;
-        LineChanged?.Invoke();
-        StateChanged?.Invoke();
+
+        for (int i = 0; i < Lines.Count; i++)
+        {
+            var line = Lines[i];
+
+            for (int j = 0; j < line.Characters.Count; j++)
+            {
+                line.Characters[j].Errors.Clear();
+                line.Characters[j].NbError = 0;
+                line.Characters[j].IsCurrent = false;
+                line.Characters[j].State = TypingCharEnumState.Pending;
+            }
+        }
+
+        var c = CurrentCharacter;
+        if (c != null)
+        {
+            c.State = TypingCharEnumState.Current;
+        }
+
+        LineChanged?.Invoke(CurrentLineIndex);
+        UpdateCurrent();
+    }
+
+    private TypingCharState? _previousCurrent;
+    private void UpdateCurrent()
+    {
+        if (_previousCurrent != null)
+        {
+            _previousCurrent.IsCurrent = false;
+
+            if (_previousCurrent.State == TypingCharEnumState.Current)
+            {
+                _previousCurrent.State = TypingCharEnumState.Pending;
+            }
+        }
+
+        TypingCharState? current = CurrentCharacter;
+
+        if (current != null)
+        {
+            current.IsCurrent = true;
+
+            if (current.State == TypingCharEnumState.Pending)
+            {
+                current.State = TypingCharEnumState.Current;
+            }
+        }
+
+        _previousCurrent = current;
     }
 
     public TypingLineState? CurrentLine
@@ -69,10 +118,10 @@ public class TypingSession
         }
 
         CurrentLineIndex = next;
-        LineChanged?.Invoke();
+        LineChanged?.Invoke(CurrentLineIndex);
 
         CurrentCharacterIndex = 0;
-        StateChanged?.Invoke();
+        UpdateCurrent();
 
         return true;
     }
@@ -94,30 +143,37 @@ public class TypingSession
 
         CurrentCharacterIndex = next;
 
-        StateChanged?.Invoke();
+        UpdateCurrent();
+
         return true;
     }
 
-    public bool MoveToPreviousCharacter()
+    public bool CanMoveToPrevious()
     {
         if (CurrentCharacterIndex > 0)
-        {
-            CurrentCharacterIndex--;
-            StateChanged?.Invoke();
             return true;
-        }
 
         return false;
     }
 
-    private void ResetCurrentCharacter()
+    public bool MoveToPreviousCharacter()
+    {
+        if (!CanMoveToPrevious())
+            return false;
+
+        CurrentCharacterIndex--;
+        UpdateCurrent();
+        return true;
+    }
+
+    private void ResetCurrentCharacterTo(TypingCharEnumState state)
     {
         var c = CurrentCharacter;
         if (c == null)
             return;
 
-        c.State = TypingCharEnumState.Pending;
-        //c.NbError = 0;
+        c.State = state;
+        c.NbError = 0;
     }
 
     public TypingStatus ProcessInput(char input, Func<char, char> mapper)
@@ -125,9 +181,14 @@ public class TypingSession
         // BACKSPACE
         if (input == '\b')
         {
+            if (CanMoveToPrevious())
+            {
+                ResetCurrentCharacterTo(TypingCharEnumState.Pending);
+            }
+
             if (MoveToPreviousCharacter())
             {
-                ResetCurrentCharacter();
+                ResetCurrentCharacterTo(TypingCharEnumState.Current);
                 return TypingStatus.InProgress;
             }
 
