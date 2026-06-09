@@ -3,8 +3,6 @@
 using OctoType.Domain.Enums;
 using OctoType.Models.UI.Typing;
 
-using Windows.Devices.Geolocation;
-
 namespace OctoType.Models;
 
 public class TypingSession
@@ -17,26 +15,26 @@ public class TypingSession
 
     public int CurrentCharacterIndex { get; private set; } = 0;
 
-    private void SetPosition(int lineIndex, int characterIndex)
+    private void SetPosition(int lineIndex, int characterIndex, bool forceRefresh = false)
     {
         int lineIdxSecured = Math.Max(lineIndex, 0);
         int charIdxSecured = Math.Max(characterIndex, 0);
-        
+
         bool lineDelta = CurrentLineIndex != lineIdxSecured;
-        bool columnDelat = CurrentCharacterIndex != charIdxSecured;
+        bool columnDelta = CurrentCharacterIndex != charIdxSecured;
 
         if (lineDelta)
-        { 
+        {
             CurrentLineIndex = lineIdxSecured;
             LineChanged?.Invoke(CurrentLineIndex);
         }
-        
-        if (columnDelat)
+
+        if (columnDelta)
         {
             CurrentCharacterIndex = charIdxSecured;
         }
 
-        if(lineDelta || columnDelat)
+        if (forceRefresh || lineDelta || columnDelta)
         {
             UpdateCurrent();
         }
@@ -59,8 +57,7 @@ public class TypingSession
         }
 
         _previousCurrent = null;
-        SetPosition(0, 0);
-        UpdateCurrent();
+        SetPosition(0, 0, true);
     }
 
     private TypingCharState? _previousCurrent;
@@ -140,6 +137,7 @@ public class TypingSession
 
         return true;
     }
+
     public bool MoveToNextCharacter()
     {
         TypingLineState? line = CurrentLine;
@@ -162,29 +160,19 @@ public class TypingSession
     }
 
     public bool CanMoveToPreviousChar()
-    {
-        if (CurrentCharacterIndex > 0)
-            return true;
-
-        return false;
-    }
+        => CurrentCharacterIndex > 0;
 
     public bool MoveToPreviousCharacter()
     {
         if (!CanMoveToPreviousChar())
             return false;
 
-        SetPosition(CurrentLineIndex, CurrentCharacterIndex-1);
+        SetPosition(CurrentLineIndex, CurrentCharacterIndex - 1);
         return true;
     }
 
     public bool CanMoveToPreviousLine()
-    {
-        if (CurrentLineIndex > 0)
-            return true;
-
-        return false;
-    }
+        => CurrentLineIndex > 0;
 
     public bool MoveToPreviousLine()
     {
@@ -193,7 +181,7 @@ public class TypingSession
 
         int prevLineIdx = CurrentLineIndex - 1;
         var prevLine = Lines[prevLineIdx];
-        SetPosition(prevLineIdx, prevLine.Characters.Count -1);
+        SetPosition(prevLineIdx, prevLine.Characters.Count - 1);
 
         return true;
     }
@@ -208,20 +196,44 @@ public class TypingSession
         c.NbError = 0;
     }
 
+
+    private bool CanMoveBack()
+    {
+        return CanMoveToPreviousChar()
+            || CanMoveToPreviousLine();
+    }
+    private bool MoveBack()
+    {
+        return MoveToPreviousCharacter()
+            || MoveToPreviousLine();
+    }
+
+    private bool MoveForward()
+    {
+        if (MoveToNextCharacter())
+            return true;
+
+
+        if (MoveToNextLine())
+            return true;
+
+        return false;
+    }
+
     public TypingStatus ProcessInput(char input, Func<char, char> mapper)
     {
         // BACKSPACE
         if (input == '\b')
         {
-            if (CanMoveToPreviousChar() || CanMoveToPreviousLine())
+            if (CanMoveBack())
             {
                 ResetCurrentCharacterTo(TypingCharEnumState.Pending);
-            }
 
-            if (MoveToPreviousCharacter() || MoveToPreviousLine())
-            {
-                ResetCurrentCharacterTo(TypingCharEnumState.Current);
-                return TypingStatus.InProgress;
+                if (MoveBack())
+                {
+                    ResetCurrentCharacterTo(TypingCharEnumState.Current);
+                    return TypingStatus.InProgress;
+                }
             }
 
             return TypingStatus.InProgress;
@@ -238,12 +250,9 @@ public class TypingSession
 
         if (success)
         {
-            if (!MoveToNextCharacter())
+            if (!MoveForward())
             {
-                if (!MoveToNextLine())
-                {
-                    return TypingStatus.Ended;
-                }
+                return TypingStatus.Ended;
             }
         }
 
