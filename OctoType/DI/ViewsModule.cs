@@ -11,6 +11,7 @@ public static class ViewsModule
         services.AddTransient<TypingView>();        
         services.AddTransient<ImportWordView>();        
         services.AddTransient<ImportBookView>();        
+        services.AddTransient<ExerciceGeneratorView>();        
         return services;
     }
 }

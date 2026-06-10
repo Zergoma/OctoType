@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OctoType.MVVM.Views.ExerciceGeneratorView"
+             xmlns:vm="clr-namespace:OctoType.MVVM.ViewModels"
+             Title="Générateur d'exercice"
+             x:DataType="vm:ExerciceGeneratorViewModel">
+    <VerticalStackLayout>
+        <Label 
+            Text="Generateur d'exercice"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Editor Text="{Binding GeneratedText}"/>
+        <Label Text="{Binding ErrorGeneratedTxt}"
+               TextColor="OrangeRed"/>
+        
+        <Button Text="Generate"
+                Command="{Binding GenerateWordsCommand}"/>
+
+        <Grid ColumnDefinitions="*,*"
+              RowDefinitions="*,*,*,*"
+              ColumnSpacing="5">
+
+            <Label Text="Number Words"/>
+            <Entry Grid.Column="1"
+            Keyboard="Numeric"
+            Text="{Binding NumberWords}"/>
+
+
+            <Label Grid.Row="1"
+                   Text="Min Lenght Word"/>
+            <Entry Grid.Row="1"
+                Grid.Column="1"
+                Keyboard="Numeric"
+                Text="{Binding MinLengthWord}"/>
+
+            <Label Grid.Row="2"
+                Text="Max Lenght Word"/>
+            <Entry Grid.Row="2"
+                Grid.Column="1"
+                Keyboard="Numeric"
+                Text="{Binding MaxLengthWord}"/>
+
+            <Label Grid.Row="3"
+                Text="Allowed characters"/>
+            <Entry Grid.Row="3"
+                Grid.Column="1"
+                Keyboard="Numeric"
+                Text="{Binding AllowedChars}"/>
+
+        </Grid>
+
+    </VerticalStackLayout>
+</ContentPage>

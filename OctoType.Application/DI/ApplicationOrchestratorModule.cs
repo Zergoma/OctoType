@@ -10,6 +10,7 @@ static internal class ApplicationOrchestratorModule
     public static IServiceCollection AddOctoTypeApplicationOrchestrators(this IServiceCollection services)
     {
         services.AddTransient<IWordImportServiceOrchestrator, WordImportOrchestrator>();
+        services.AddTransient<IPseudoWordBatchGenerator, PseudoWordBatchGeneratorOrchestrator>();
 
         return services;
     }

@@ -4,7 +4,7 @@ namespace OctoType.Infrastructure.Themes;
 
 public class AssetThemeAvailable
 {
-    public async Task<IReadOnlyList<string>> GetAvailableThemesAsync()
+    public async Task<IEnumerable<string>> GetAvailableThemesAsync()
     {
         await using Stream stream =
             await FileSystem.OpenAppPackageFileAsync(
@@ -13,6 +13,6 @@ public class AssetThemeAvailable
         var themes =
             await JsonSerializer.DeserializeAsync<List<string>>(stream);
 
-        return themes ?? [];
+        return themes?.AsEnumerable() ?? [];
     }
 }

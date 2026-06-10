@@ -9,6 +9,7 @@ public static class ViewModelsModule
         services.AddTransient<TypingViewModel>();
         services.AddTransient<ImportBookViewModel>();
         services.AddTransient<ImportWordViewModel>();
+        services.AddTransient<ExerciceGeneratorViewModel>();
         return services;
     }
 }

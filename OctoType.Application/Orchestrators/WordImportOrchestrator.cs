@@ -5,6 +5,7 @@ using OctoType.Application.Services;
 using OctoType.Application.ValueObjects;
 using OctoType.Domain.Entities;
 using OctoType.Domain.Enums;
+using OctoType.Domain.Models;
 
 namespace OctoType.Application.Orchestrators;
 
@@ -38,8 +39,15 @@ public class WordImportOrchestrator : IWordImportServiceOrchestrator
 
         HashSet<string> NoMapWords = [];
 
+        WordSearchCriteria searchCriteria =
+            new WordQueryBuilder()
+            .WithLanguages(languageCode)
+            .Build();
+
         Dictionary<string, Word> existingWords =
-            await _repository.GetWordsByLanguageAsync(languageCode);
+            (await _repository.SearchAsync(searchCriteria))
+            .ToDictionary(w => w.Text);
+
 
         await foreach (string word in _wordStreamingService.ReadWordsAsync(filePath))
         {

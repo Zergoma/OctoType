@@ -13,6 +13,7 @@ static internal class ApplicationServicesModule
         services.AddTransient<IInputCharMapperService, InputCharMapperService>();
         services.AddTransient<IWordBatchProcessorService, WordBatchProcessorService>();
         services.AddTransient<IKeyboardAnalyzerService, KeyboardAnalyzerService>();
+        services.AddTransient<IPseudoWordGeneratorService, PseudoWordGeneratorService>();
 
         services.AddTransient<IKeyboardKeyLocator, AzertyKeyLocator>();
         services.AddTransient<IKeyboardKeyLocatorManager, KeyboardKeyLocatorManager>();
