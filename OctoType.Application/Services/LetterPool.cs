@@ -2,6 +2,9 @@
 
 public class LetterPool
 {
+    static readonly private HashSet<char> VowelsHash = [.. "aeiouy" + "éèêë" + "àâä" + "îï" + "ôö" + "ûü" + "ÿ"];
+    static readonly private HashSet<char> ConsonantsHash = [.. "bcdfghjklmnpqrstvwxz" + "ç" + "ß"];
+
     private readonly Random s_random = Random.Shared;
     private readonly string _vowelsCurrent;
     private readonly string _consonantsCurrent;
@@ -10,34 +13,22 @@ public class LetterPool
     private bool _sourceSelector;
 
 
-    /// <summary>
-    /// Vowel-consonant alternation Letter Generator
-    /// 
-    /// To be generated, letters have be contains in AllowedCharts 
-    /// if no vowels: only consonants
-    /// if no consonants : only vowels
-    /// 
-    /// </summary>
-    /// <param name="Vowels">_vowels list</param>
-    /// <param name="Consonants">_consonants list</param>
-    /// <param name="AllowedChars">Only letters that we want</param>
-    /// <returns></returns>
+
+
     static public Result<LetterPool> Create(
-        string Vowels,
-        string Consonants,
         string AllowedChars)
     {
         string vowelsCurrent =
-            string.Concat(Vowels.Where(c => AllowedChars.Contains(c)));
+            string.Concat(AllowedChars.Where(VowelsHash.Contains));
 
         string consonantsCurrent =
-            string.Concat(Consonants.Where(c => AllowedChars.Contains(c)));
+            string.Concat(AllowedChars.Where(ConsonantsHash.Contains));
 
         if (string.IsNullOrEmpty(vowelsCurrent) &&
             string.IsNullOrEmpty(consonantsCurrent))
         {
             return Result<LetterPool>
-                .Fail($"Error: No letter: vowels: {vowelsCurrent}, consonants: {consonantsCurrent}, allowed letters: {AllowedChars}");
+                .Fail($"Error: No vowels or consonants letter(s)");
         }
         return Result<LetterPool>
             .Ok(new (

@@ -3,50 +3,75 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OctoType.MVVM.Views.ExerciceGeneratorView"
              xmlns:vm="clr-namespace:OctoType.MVVM.ViewModels"
+             xmlns:behaviors="clr-namespace:OctoType.Behaviors"
              Title="Générateur d'exercice"
-             x:DataType="vm:ExerciceGeneratorViewModel">
+             x:DataType="vm:ExerciceGeneratorViewModel"
+             Shell.NavBarIsVisible="False">
     <VerticalStackLayout>
         <Label 
-            Text="Generateur d'exercice"
+            Text="Générateur d'exercice"
+            FontSize="40"
             VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" 
+            Margin="0,20,0,60"/>
 
-        <Editor Text="{Binding GeneratedText}"/>
+        <Editor Text="{Binding GeneratedText}"
+                HeightRequest="100"
+                WidthRequest="800"/>
         <Label Text="{Binding ErrorGeneratedTxt}"
                TextColor="OrangeRed"/>
         
         <Button Text="Generate"
-                Command="{Binding GenerateWordsCommand}"/>
+                Command="{Binding GenerateWordsCommand}"
+                WidthRequest="500"/>
 
-        <Grid ColumnDefinitions="*,*"
+        <Grid 
               RowDefinitions="*,*,*,*"
-              ColumnSpacing="5">
+              ColumnDefinitions="auto,70,80,80,80"
+              ColumnSpacing="5"
+              HorizontalOptions="Center"
+              RowSpacing="5"
+              Margin="10">
 
-            <Label Text="Number Words"/>
+            <Label Text="Number Words" StyleClass="label_text_h_end,label_text_v_center"/>
             <Entry Grid.Column="1"
-            Keyboard="Numeric"
-            Text="{Binding NumberWords}"/>
+                Keyboard="Numeric"
+                StyleClass="entry_no_spell_no_prediction"
+                Text="{Binding NumberWords}">
+                <Entry.Behaviors>
+                    <behaviors:DigitsOnlyBehavior />
+                </Entry.Behaviors>
+            </Entry>
 
 
-            <Label Grid.Row="1"
-                   Text="Min Lenght Word"/>
+            <Label Grid.Row="1" Text="Min Lenght Word" StyleClass="label_text_h_end,label_text_v_center" />
             <Entry Grid.Row="1"
                 Grid.Column="1"
                 Keyboard="Numeric"
-                Text="{Binding MinLengthWord}"/>
+                StyleClass="entry_no_spell_no_prediction"
+                Text="{Binding MinLengthWord}">
+                <Entry.Behaviors>
+                    <behaviors:DigitsOnlyBehavior />
+                </Entry.Behaviors>
+            </Entry>
 
-            <Label Grid.Row="2"
-                Text="Max Lenght Word"/>
+            <Label Grid.Row="2" Text="Max Lenght Word" StyleClass="label_text_h_end,label_text_v_center"/>
             <Entry Grid.Row="2"
                 Grid.Column="1"
                 Keyboard="Numeric"
-                Text="{Binding MaxLengthWord}"/>
+                StyleClass="entry_no_spell_no_prediction"
+                Text="{Binding MaxLengthWord}">
+                <Entry.Behaviors>
+                    <behaviors:DigitsOnlyBehavior />
+                </Entry.Behaviors>
+            </Entry>
 
-            <Label Grid.Row="3"
-                Text="Allowed characters"/>
+            <Label Grid.Row="3" Text="Allowed characters" StyleClass="label_text_h_end,label_text_v_center"/>
             <Entry Grid.Row="3"
-                Grid.Column="1"
-                Keyboard="Numeric"
+                    Grid.Column="1"
+                   Grid.ColumnSpan="3"
+                Keyboard="Text"
+                StyleClass="entry_no_spell_no_prediction"
                 Text="{Binding AllowedChars}"/>
 
         </Grid>

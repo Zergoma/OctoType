@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using OctoType.Application;
@@ -16,6 +14,9 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     {
         _pseudoWordBatchOrchestrator = pseudoWordGeneratorService;
         AllowedChars = "abcdefghijklmnopqrstuvwxyz";
+        NumberWords = 10;
+        MinLengthWord = 3;
+        MaxLengthWord = 3;
     }
 
     [ObservableProperty]
@@ -31,10 +32,10 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         get;
         set
         {
-            int clampValue = Math.Clamp(value, 1, 100);
-
-            if (clampValue == field)
+            if (value == field)
                 return;
+
+            int clampValue = Math.Clamp(value, 1, 100);
 
             field = clampValue;
             OnPropertyChanged(nameof(NumberWords));
@@ -46,10 +47,10 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         get;
         set
         {
-            int clampValue = Math.Clamp(value, 1, 100);
-
-            if (clampValue == field)
+            if (value == field)
                 return;
+
+            int clampValue = Math.Clamp(value, 1, 100);
 
             field = clampValue;
             OnPropertyChanged(nameof(MinLengthWord));
@@ -61,15 +62,16 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         get;
         set
         {
-            int clampValue = Math.Clamp(value, 1, 100);
-
-            if (clampValue == field)
+            if (value == field)
                 return;
+
+            int clampValue = Math.Clamp(value, 1, 100);
 
             field = clampValue;
             OnPropertyChanged(nameof(MaxLengthWord));
         }
     }
+
 
     [ObservableProperty]
     public partial string ErrorGeneratedTxt { get; set; } = string.Empty;

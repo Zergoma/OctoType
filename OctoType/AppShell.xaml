@@ -32,13 +32,13 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Import">
-        <Tab>
+        <Tab Title="Sélectionnez l'import">
             <ShellContent Title="Import mots"
                           Route="ImportWordView"
                           ContentTemplate="{DataTemplate views:ImportWordView}"/>
 
             <ShellContent Title="Import book"
-                          Route=""
+                          Route="ImportBookView"
                           ContentTemplate="{DataTemplate views:ImportBookView}"/>
 
         </Tab>

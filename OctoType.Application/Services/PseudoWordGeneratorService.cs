@@ -10,8 +10,6 @@ namespace OctoType.Application.Services;
 public class PseudoWordGeneratorService : IPseudoWordGeneratorService
 {
     private static readonly Random s_random = Random.Shared;
-    private const string _vowels = "aàeéêèiîouûy";
-    private const string _consonants = "bcdfghjklmnpqrstvwxz";
     
     Result<LetterPool>? _letterPoolResu = null;
     PseudoWordOptions? _LetterOption = null;
@@ -33,14 +31,14 @@ public class PseudoWordGeneratorService : IPseudoWordGeneratorService
         {
             _LetterOption = options;
             _letterPoolResu =
-                LetterPool.Create(_vowels, _consonants, options.AllowedChars);
+                LetterPool.Create(options.AllowedChars);
         }
         // next time
         // compare option if delta, re-create the letterPool
         else if(_LetterOption != options)
         {
             _letterPoolResu =
-                LetterPool.Create(_vowels, _consonants, options.AllowedChars);
+                LetterPool.Create(options.AllowedChars);
         }
 
         // does the letterPool operational ?

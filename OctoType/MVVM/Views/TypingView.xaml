@@ -4,9 +4,10 @@
              xmlns:vm="clr-namespace:OctoType.MVVM.ViewModels"
              xmlns:typing="clr-namespace:OctoType.Models.UI.Typing"
              x:Class="OctoType.MVVM.Views.TypingView"
-             x:DataType="vm:TypingViewModel">
+             x:DataType="vm:TypingViewModel"
+             Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="0.1,2*,0.4*,*">
+    <Grid RowDefinitions="0.1,auto,0.4*,*">
 
         <Entry
                 Grid.Row="0"
@@ -26,18 +27,16 @@
             <CollectionView ItemsSource="{Binding Lines}"
                                     x:DataType="vm:TypingViewModel"
                                     x:Name="TypingCollectionView"
-                                    HeightRequest="200">
+                                    HeightRequest="350">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <FlexLayout
-                                    
-                                    x:DataType="typing:TypingLineState"
-                                    Wrap="Wrap"
-                                    Direction="Row"
-                                    BindableLayout.ItemsSource="{Binding Characters}"
-                                    Padding="10,10">
-
+                        <FlexLayout    
+                                x:DataType="typing:TypingLineState"
+                                Wrap="Wrap"
+                                Direction="Row"
+                                BindableLayout.ItemsSource="{Binding Characters}"
+                                Padding="10,10">
 
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate
@@ -48,7 +47,6 @@
                                                         StrokeThickness="0"
                                                         BackgroundColor="{Binding BgColor}"
                                                         Margin="0,0,1,6"
-                                                        WidthRequest="22"
                                                         VerticalOptions="Center">
 
                                         <Grid RowDefinitions="auto, *"
@@ -59,7 +57,7 @@
                                                         Text="{Binding Character}"
                                                         TextColor="{Binding TextColor}"
                                                         BackgroundColor="Transparent"
-                                                        FontSize="25"
+                                                        FontSize="45"
                                                         HorizontalOptions="Center"
                                                         VerticalOptions="Center"/>
 
@@ -88,7 +86,9 @@
                 Text="Reprendre la saisie"
                     x:Name="TakeFocusButton"
                     Clicked="TakeFocusButton_Clicked"
-                    Margin="20,5"/>
+                    Margin="20,5"
+                    HeightRequest="30"
+                    WidthRequest="300"/>
 
         <Grid Grid.Row="3"
               RowDefinitions="*,*"
