@@ -2,4 +2,4 @@
 
 namespace OctoType.Domain.Models;
 
-public readonly record struct KeyInfo(KeyboardRow Row, Finger Finger);
+public readonly record struct KeyInfo(KeyboardRow Row, Finger Finger, bool ExtrenalAccent = false);

@@ -16,6 +16,8 @@ public sealed class WordAnalysis
 
     public Finger FingerMask { get; set; }
 
+    public bool ExternalAccent { get; set; }
+
     public int WordId { get; set; }
     public Word Word { get; set; } = null!;
 }

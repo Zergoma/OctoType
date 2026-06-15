@@ -9,8 +9,14 @@ static internal class ApplicationOrchestratorModule
 {
     public static IServiceCollection AddOctoTypeApplicationOrchestrators(this IServiceCollection services)
     {
-        services.AddTransient<IWordImportServiceOrchestrator, WordImportOrchestrator>();
-        services.AddTransient<IPseudoWordBatchGenerator, PseudoWordBatchGeneratorOrchestrator>();
+        // ****************************************************************************************************
+        // Order manner
+        // ****************************************************************************************************
+        services.AddTransient<IWordBatchProcessorOrchestrator, WordBatchProcessorOrchestrator>();   // depends ->  IKeyboardAnalyzerService
+        services.AddTransient<IWordImportOrchestrator, WordImportOrchestrator>();                   // depends ->  IWordBatchProcessorOrchestrator
+        // ****************************************************************************************************
+
+        services.AddTransient<IPseudoWordListGenerator, PseudoWordListGeneratorService>();
 
         return services;
     }

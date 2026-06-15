@@ -9,6 +9,7 @@ public static class InfrastructureModule
         services.AddProviders();
         services.AddRepositories();
         services.AddIo();
+        services.AddStrores();
 
         return services;
     }

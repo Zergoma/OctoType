@@ -12,12 +12,12 @@ public partial class ImportBookViewModel : ObservableObject
 
     private readonly IChoosePath _choosePathPresenter;
     private readonly IImportFilePathProvider _importFilePahtProvider;
-    private readonly IFileSaverProvider _fileSaverProvider;
+    private readonly IFileCopyProvider _fileSaverProvider;
 
     public ImportBookViewModel(
         IChoosePath choosePathPresnter,
         IImportFilePathProvider importFilePahtProvider,
-        IFileSaverProvider fileSaverProvider)
+        IFileCopyProvider fileSaverProvider)
     {
         _choosePathPresenter = choosePathPresnter;
         _importFilePahtProvider = importFilePahtProvider;
@@ -62,6 +62,6 @@ public partial class ImportBookViewModel : ObservableObject
         string dstFile = Path.Combine(folderDir, filename);
 
         var copyResu =
-            await _fileSaverProvider.SaveToAsync(ImportFilePath, dstFile, true);
+            await _fileSaverProvider.CopyFileToAsync(ImportFilePath, dstFile, true);
     }
 }

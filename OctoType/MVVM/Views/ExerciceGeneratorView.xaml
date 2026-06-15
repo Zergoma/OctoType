@@ -13,21 +13,66 @@
             FontSize="40"
             VerticalOptions="Center" 
             HorizontalOptions="Center" 
-            Margin="0,20,0,60"/>
+            Margin="0,20,0,20"/>
 
-        <Editor Text="{Binding GeneratedText}"
+        <VerticalStackLayout HorizontalOptions="Start"
+                             Margin="10"
+                             Spacing="5">
+            <Entry Placeholder="Set the filename" 
+                   WidthRequest="200"
+                   HorizontalOptions="Start"
+                   Text="{Binding FileName}"/>
+
+            <Entry Placeholder="Set the short Description" 
+                WidthRequest="200"
+                HorizontalOptions="Start"
+                Text="{Binding ShortDescription}"/>
+
+            <Editor 
+                Placeholder="Set a description here"
+                HeightRequest="60"
+                WidthRequest="600"
+                Text="{Binding Description}"/>
+
+            <Grid ColumnDefinitions="*,*"
+                  HorizontalOptions="Start"
+                  ColumnSpacing="5">
+                <Label Text="Allowed characters" StyleClass="label_text_h_end,label_text_v_center"/>
+                <Entry Grid.Column="1"
+                    Keyboard="Text"
+                    WidthRequest="300"
+                    StyleClass="entry_no_spell_no_prediction, entry_small"
+                    Text="{Binding AllowedChars}"/>
+            </Grid>
+        </VerticalStackLayout>
+        
+        
+        
+        <Grid ColumnDefinitions="*,*"
+              Margin="10,5,10,5"
+              ColumnSpacing="5"
+              HorizontalOptions="Start">
+
+            <Editor Text="{Binding GeneratedText}"
+                    Placeholder="pseudo-words or words will be generated here, you can modify them if you want"
                 HeightRequest="100"
-                WidthRequest="800"/>
+
+                    HorizontalOptions="Fill"
+
+                FontSize="24"/>
+            
+            <Button Grid.Column="1"
+                    Text="Generate"
+                    Command="{Binding GenerateWordsCommand}"/>
+        </Grid>
+        
         <Label Text="{Binding ErrorGeneratedTxt}"
                TextColor="OrangeRed"/>
-        
-        <Button Text="Generate"
-                Command="{Binding GenerateWordsCommand}"
-                WidthRequest="500"/>
+
 
         <Grid 
               RowDefinitions="*,*,*,*"
-              ColumnDefinitions="auto,70,80,80,80"
+              ColumnDefinitions="auto,50,80,80,80"
               ColumnSpacing="5"
               HorizontalOptions="Center"
               RowSpacing="5"
@@ -36,7 +81,7 @@
             <Label Text="Number Words" StyleClass="label_text_h_end,label_text_v_center"/>
             <Entry Grid.Column="1"
                 Keyboard="Numeric"
-                StyleClass="entry_no_spell_no_prediction"
+                StyleClass="entry_no_spell_no_prediction, entry_small"
                 Text="{Binding NumberWords}">
                 <Entry.Behaviors>
                     <behaviors:DigitsOnlyBehavior />
@@ -48,7 +93,7 @@
             <Entry Grid.Row="1"
                 Grid.Column="1"
                 Keyboard="Numeric"
-                StyleClass="entry_no_spell_no_prediction"
+                StyleClass="entry_no_spell_no_prediction, entry_small"
                 Text="{Binding MinLengthWord}">
                 <Entry.Behaviors>
                     <behaviors:DigitsOnlyBehavior />
@@ -59,21 +104,40 @@
             <Entry Grid.Row="2"
                 Grid.Column="1"
                 Keyboard="Numeric"
-                StyleClass="entry_no_spell_no_prediction"
+                StyleClass="entry_no_spell_no_prediction, entry_small"
                 Text="{Binding MaxLengthWord}">
                 <Entry.Behaviors>
                     <behaviors:DigitsOnlyBehavior />
                 </Entry.Behaviors>
             </Entry>
 
-            <Label Grid.Row="3" Text="Allowed characters" StyleClass="label_text_h_end,label_text_v_center"/>
-            <Entry Grid.Row="3"
-                    Grid.Column="1"
-                   Grid.ColumnSpan="3"
-                Keyboard="Text"
-                StyleClass="entry_no_spell_no_prediction"
-                Text="{Binding AllowedChars}"/>
+            
 
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*,*"
+              RowDefinitions="*,*"
+              ColumnSpacing="10"
+              WidthRequest="500">
+
+            <Picker Grid.Column="0" ItemsSource="{Binding LanguageAvailable}" SelectedItem="{Binding LanguageSelected}"/>
+            <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" />
+
+            <Button Grid.Column="2" Text="Save"
+                    Command="{Binding SaveExercideSettingCommand}"/>
+
+            <Grid Grid.Row="1"
+                ColumnDefinitions="auto,auto"
+                ColumnSpacing="2">
+                <Switch IsToggled="{Binding IsStaticGenerated}"/>
+                <Label Grid.Column="1"
+                   Text="{Binding StaticDynamicText}"
+                   StyleClass="label_text_v_center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchStaticDynamicCommand}"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
         </Grid>
 
     </VerticalStackLayout>

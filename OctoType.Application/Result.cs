@@ -4,6 +4,16 @@ public class Result<T>
 {
     public bool Success { get; }
     public T? Value { get; }
+
+    public T GetValue
+    {
+        get 
+        {
+            if (Success) return Value!;
+            throw new ArgumentNullException();
+        }
+    }
+    
     public string Error { get; }
 
     private Result(

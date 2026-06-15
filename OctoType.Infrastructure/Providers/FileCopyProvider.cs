@@ -3,17 +3,17 @@ using OctoType.Application.Interfaces;
 
 namespace OctoType.Infrastructure.Providers;
 
-public class FileSaverProvider : IFileSaverProvider
+public class FileCopyProvider : IFileCopyProvider
 {
-    public async Task<Result<bool>> SaveToAsync(string src, string dst, bool force)
+    public async Task<Result<bool>> CopyFileToAsync(string src, string dst, bool force)
     {
-        if (File.Exists(src) is false)
+        if (!File.Exists(src))
         {
             return Result<bool>
                 .Fail($"Src file {src} doesn't exists");
         }
 
-        if (File.Exists(dst) && force is false)
+        if (File.Exists(dst) && !force)
         {
             return Result<bool>
                 .Fail($"Dst file {dst} already exists");

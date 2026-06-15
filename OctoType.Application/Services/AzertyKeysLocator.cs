@@ -4,7 +4,7 @@ using OctoType.Domain.Models;
 
 namespace OctoType.Application.Services;
 
-public class AzertyKeyLocator : IKeyboardKeyLocator
+public class AzertyKeysLocator : IKeyboardKeysLocator
 {
     private readonly Dictionary<char, KeyInfo> _azerty = [];
     private readonly KeyboardLayout _keyboardLayout;
@@ -13,7 +13,7 @@ public class AzertyKeyLocator : IKeyboardKeyLocator
 
     public KeyboardLayout GetKeyboardType => _keyboardLayout;
 
-    public AzertyKeyLocator()
+    public AzertyKeysLocator()
     {
         _azerty = AzertKeyLocatorsBuilder.BuildMap();
         _keyboardLayout = KeyboardLayout.AzertyFr;

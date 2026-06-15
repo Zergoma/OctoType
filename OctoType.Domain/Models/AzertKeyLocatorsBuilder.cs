@@ -78,11 +78,11 @@ public class AzertKeyLocatorsBuilder
             ['ç'] = new KeyInfo(KeyboardRow.D, Finger.LeftPinky),
             ['ù'] = new KeyInfo(KeyboardRow.C, Finger.RightPinky),
 
-            ['ê'] = new KeyInfo(KeyboardRow.C, Finger.RightRing),
-            ['â'] = new KeyInfo(KeyboardRow.B, Finger.LeftPinky),
-            ['î'] = new KeyInfo(KeyboardRow.B, Finger.RightMiddle),
-            ['ô'] = new KeyInfo(KeyboardRow.C, Finger.RightMiddle),
-            ['û'] = new KeyInfo(KeyboardRow.C, Finger.RightPinky),
+            ['ê'] = new KeyInfo(KeyboardRow.C, Finger.RightRing, true),
+            ['â'] = new KeyInfo(KeyboardRow.B, Finger.LeftPinky, true),
+            ['î'] = new KeyInfo(KeyboardRow.B, Finger.RightMiddle, true),
+            ['ô'] = new KeyInfo(KeyboardRow.C, Finger.RightMiddle, true),
+            ['û'] = new KeyInfo(KeyboardRow.C, Finger.RightPinky, true),
 
             // =========================
             // SPACE (optionnel mais utile pour stats)

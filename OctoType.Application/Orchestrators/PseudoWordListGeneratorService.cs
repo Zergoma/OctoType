@@ -3,11 +3,11 @@ using OctoType.Application.ValueObjects;
 
 namespace OctoType.Application.Orchestrators;
 
-public class PseudoWordBatchGeneratorOrchestrator : IPseudoWordBatchGenerator
+public class PseudoWordListGeneratorService : IPseudoWordListGenerator
 {
     private readonly IPseudoWordGeneratorService _wordGenerator;
 
-    public PseudoWordBatchGeneratorOrchestrator(
+    public PseudoWordListGeneratorService(
         IPseudoWordGeneratorService wordGenerator)
     {
         _wordGenerator = wordGenerator;

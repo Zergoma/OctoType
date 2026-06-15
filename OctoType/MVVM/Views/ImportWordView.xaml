@@ -8,7 +8,7 @@
              Shell.NavBarIsVisible="False">
     
     <Grid RowDefinitions="0.2*,0.8*"
-          HorizontalOptions="Fill"
+          HorizontalOptions="Center"
           VerticalOptions="Fill">
         
         <Label Grid.Row="0"
@@ -18,19 +18,22 @@
             HorizontalOptions="Center" />
 
         <Grid Grid.Row="1"
-            RowDefinitions="*,*,*"
-              ColumnDefinitions="*,*"
+              RowDefinitions="*,*,*,*"
+              ColumnDefinitions="*,*,*"
               VerticalOptions="Center"
               HorizontalOptions="Center"
               RowSpacing="10"
               Margin="10">
 
             <Button Text="Sélection d'un fichier"
-                    Command="{Binding SelectFileCommand}"
-                Grid.Row="0"/>
+                    Command="{Binding SelectFileCommand}"/>
 
-            <Button Text="Sélection langue"
-                Grid.Row="1"/>
+
+            <Picker Grid.Column="1" ItemsSource="{Binding AllLanguage}" 
+                    SelectedItem="{Binding SelectedLanguage}"/>
+
+            <Picker Grid.Column="2" ItemsSource="{Binding KeyboardLayoutAvailable}" 
+                SelectedItem="{Binding SelectedKeyboard}"/>
 
             <Button Text="Analyser"
                 Grid.Column="1"
@@ -41,6 +44,10 @@
                 IsEnabled="{Binding IsFileSelected}"
                 Command="{Binding ImportWordsFromFileCommand}"
                     />
+            <Label Grid.Row="3"
+                   Grid.Column="1"
+                   Text="{Binding ErrorImport}"
+                   TextColor="OrangeRed"/>
         </Grid>
     </Grid>
     

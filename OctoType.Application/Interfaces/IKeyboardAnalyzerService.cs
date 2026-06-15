@@ -1,9 +1,9 @@
-﻿using OctoType.Domain.Entities;
-using OctoType.Domain.Enums;
+﻿using OctoType.Application.Models;
+using OctoType.Domain.Models;
 
 namespace OctoType.Application.Interfaces;
 
 public interface IKeyboardAnalyzerService
 {
-    WordAnalysis? Analyze(string text, KeyboardLayout layout);
+    Result<UnitTextAnalysis> Analyze(string text, IReadOnlyDictionary<char, KeyInfo> map);
 }

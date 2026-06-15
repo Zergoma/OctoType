@@ -9,6 +9,8 @@ using OctoType.DI;
 using OctoType.Infrastructure.DbContexts;
 using OctoType.Infrastructure.DI;
 
+using Serilog;
+
 
 namespace OctoType;
 
@@ -16,7 +18,23 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        Log.Logger =
+            new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    Path.Combine(FileSystem.AppDataDirectory, "logs/OctoType-.txt"),
+                    rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+
         var builder = MauiApp.CreateBuilder();
+
+        builder.Logging
+                .ClearProviders()
+                .AddSerilog(Log.Logger);
+
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()

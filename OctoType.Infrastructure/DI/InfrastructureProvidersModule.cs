@@ -11,7 +11,8 @@ internal static class InfrastructureProvidersModule
     {
         services.AddTransient<IThemePathProvider, ThemePathProvider>();
         services.AddTransient<IImportFilePathProvider, ImportFilePathProvider>();
-        services.AddTransient<IFileSaverProvider, FileSaverProvider>(); 
+        services.AddTransient<IFileCopyProvider, FileCopyProvider>();
+        services.AddTransient<IExercicesSettingPathProvider, ExercicesSettingPathProvider>();
         return services;
     }
 }

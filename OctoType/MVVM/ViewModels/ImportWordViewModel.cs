@@ -2,10 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 
 using OctoType.Application;
+using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
-using OctoType.Domain.Constaintes;
-using OctoType.Domain.Enums;
-
 
 namespace OctoType.MVVM.ViewModels;
 
@@ -13,14 +11,23 @@ namespace OctoType.MVVM.ViewModels;
 public partial class ImportWordViewModel : ObservableObject
 {
     private readonly IChoosePath _choosePathPresenter;
-    private readonly IWordImportServiceOrchestrator _wordImportService;
+    private readonly IWordImportOrchestrator _wordImportOrchestrator;
+    private readonly IKeyboardKeyLocatorManager _keyboardKeyLocatorManager;
+    private readonly ILanguageAvailableService _languageAvailableService;
+    private readonly IKeyBoardLayoutAvailableService _keyboardLayoutAvailableService;
 
     public ImportWordViewModel(
         IChoosePath choosePathPresnter,
-        IWordImportServiceOrchestrator wordImportService)
+        IWordImportOrchestrator wordImportService,
+        IKeyboardKeyLocatorManager keyboardKeyLocatorManager,
+        ILanguageAvailableService languageAvailableService,
+        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService)
     {
         _choosePathPresenter = choosePathPresnter;
-        _wordImportService = wordImportService;
+        _wordImportOrchestrator = wordImportService;
+        _keyboardKeyLocatorManager = keyboardKeyLocatorManager;
+        _languageAvailableService = languageAvailableService;
+        _keyboardLayoutAvailableService = keyboardLayoutAvailableService;
     }
 
 
@@ -28,9 +35,17 @@ public partial class ImportWordViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsFileSelected))]
     public partial string ImportFilePath { get; set; }
 
+    public List<String> AllLanguage => _languageAvailableService.GetAvailableLanguage();
+
+    public object? SelectedLanguage { get; set; } = null;
+
+    public List<KeyBoardLayoutDto> KeyboardLayoutAvailable => [.. _keyboardLayoutAvailableService.GetKeyBoardAvailable()];
+    public object? SelectedKeyboard { get; set; } = null;
 
     public bool IsFileSelected => !string.IsNullOrWhiteSpace(ImportFilePath) && File.Exists(ImportFilePath);
 
+    [ObservableProperty]
+    public partial string ErrorImport { get; set; } = string.Empty;
 
 
     [RelayCommand]
@@ -56,6 +71,50 @@ public partial class ImportWordViewModel : ObservableObject
     [RelayCommand]
     public async Task ImportWordsFromFile()
     {
-        await _wordImportService.ImportAsync(ImportFilePath, LanguageCodes.French, KeyboardLayout.AzertyFr);
+        ErrorImport = string.Empty;
+
+        if (SelectedLanguage is null)
+        {
+            ErrorImport = "Select a language first";
+            return;
+        }
+
+        if (SelectedKeyboard is null)
+        {
+            ErrorImport = "Select a keyboard";
+            return;
+        }
+
+
+        if (SelectedLanguage is string language &&
+            SelectedKeyboard is KeyBoardLayoutDto keyboard)
+        {
+            Result<IKeyboardKeysLocator> keyBoardLocatorResult =
+                _keyboardKeyLocatorManager.GetKeyBoardKeyLocator(keyboard);
+
+            if (!keyBoardLocatorResult.Success)
+            {
+                ErrorImport = keyBoardLocatorResult.Error;
+                return;
+            }
+
+            IKeyboardKeysLocator keyBoardLocator = keyBoardLocatorResult.GetValue;
+
+            Result<bool> resuImport =
+                await _wordImportOrchestrator.ImportAsync(ImportFilePath, language, keyBoardLocator);
+
+            if (resuImport.Success)
+            {
+                ErrorImport = "";
+            }
+            else
+            {
+                ErrorImport = resuImport.Error;
+            }
+        }
+        else
+        {
+            ErrorImport = "Select a language first";
+        }
     }
 }

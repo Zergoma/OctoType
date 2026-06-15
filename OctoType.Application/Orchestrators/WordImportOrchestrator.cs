@@ -1,18 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
 
 using OctoType.Application.Interfaces;
-using OctoType.Application.Services;
+using OctoType.Application.Models;
 using OctoType.Application.ValueObjects;
 using OctoType.Domain.Entities;
-using OctoType.Domain.Enums;
-using OctoType.Domain.Models;
 
 namespace OctoType.Application.Orchestrators;
 
-public class WordImportOrchestrator : IWordImportServiceOrchestrator
+public class WordImportOrchestrator : IWordImportOrchestrator
 {
     private readonly IDactyloRepository _repository;
-    private readonly IWordBatchProcessorService _processor;
+    private readonly IWordBatchProcessorOrchestrator _wordBatchProcessorOrchestrator;
     private readonly IWordStreamReader _wordStreamingService;
     private readonly ILogger<WordImportOrchestrator> _logger;
 
@@ -20,20 +18,20 @@ public class WordImportOrchestrator : IWordImportServiceOrchestrator
 
     public WordImportOrchestrator(
         IDactyloRepository dactyloRepository,
-        IWordBatchProcessorService processor,
+        IWordBatchProcessorOrchestrator processor,
         IWordStreamReader wordStreamingService,
         ILogger<WordImportOrchestrator> logger)
     {
         _repository = dactyloRepository;
-        _processor = processor;
+        _wordBatchProcessorOrchestrator = processor;
         _wordStreamingService = wordStreamingService;
         _logger = logger;
     }
 
-    public async Task ImportAsync(
+    public async Task<Result<bool>> ImportAsync(
         string filePath,
         string languageCode,
-        KeyboardLayout layout)
+        IKeyboardKeysLocator layout)
     {
         Dictionary<string, int> batch = new(StringComparer.OrdinalIgnoreCase);
 
@@ -48,7 +46,6 @@ public class WordImportOrchestrator : IWordImportServiceOrchestrator
             (await _repository.SearchAsync(searchCriteria))
             .ToDictionary(w => w.Text);
 
-
         await foreach (string word in _wordStreamingService.ReadWordsAsync(filePath))
         {
             if (NoMapWords.Contains(word))
@@ -59,8 +56,13 @@ public class WordImportOrchestrator : IWordImportServiceOrchestrator
 
             if (batch.Count >= BatchSize)
             {
-                await FlushBatch(batch, existingWords, languageCode, layout, NoMapWords);
+                var resuProcess = await FlushBatch(batch, existingWords, languageCode, layout, NoMapWords);
                 batch.Clear();
+                if(!resuProcess.Success)
+                {
+                    return Result<bool>
+                        .Fail(resuProcess.Error);
+                }
             }
         }
 
@@ -68,36 +70,55 @@ public class WordImportOrchestrator : IWordImportServiceOrchestrator
         {
             await FlushBatch(batch, existingWords, languageCode, layout, NoMapWords);
         }
+
+        return Result<bool>
+            .Ok(true);
     }
 
-    private async Task FlushBatch(
+    private async Task<Result<bool>> FlushBatch(
         Dictionary<string, int> batch,
         Dictionary<string, Word> existingWords,
         string languageCode,
-        KeyboardLayout layout,
+        IKeyboardKeysLocator layout,
         HashSet<string> NoMapWords)
     {
-        WordProcessResult result =
-            _processor.Process(batch, existingWords, languageCode, layout);
+        Result<WordProcessResult> resultProcess =
+            _wordBatchProcessorOrchestrator.Process(batch, existingWords, languageCode, layout);
+
+        if (!resultProcess.Success)
+        {
+            return Result<bool>
+                .Fail(resultProcess.Error);
+        }
+
+        WordProcessResult result = resultProcess.Value!;
 
         // add the newly added words to the dictionnary
         foreach (Word w in result.NewWords)
         {
             existingWords[w.Text] = w;
         }
-        _logger.LogInformation($"Add {result.NewWords.Length} new word(s)");
+        _logger.LogInformation(
+            "Add {NewWordsCount} new word(s)",
+            result.NewWords.Length);
 
         // Keep in-memory txt that failed
         foreach (string txt in result.NoMapWords)
         {
             NoMapWords.Add(txt);
-            _logger.LogWarning($"Analysis failed for text {txt} on layout {layout}");
+            _logger.LogWarning(
+                "Analysis failed for text {FailedTxt} on layout {Layout}",
+                txt,
+                layout);
         }
 
         // enforce via parameter name because same type
         await _repository.PersistWordsAsync(
-            newWords: result.NewWords, 
+            newWords: result.NewWords,
             updatedWords: result.UpdatedWords);
+
+        return Result<bool>
+            .Ok(true);
     }
 }
 

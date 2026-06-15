@@ -1,4 +1,5 @@
 ﻿using OctoType.Application.Interfaces;
+using OctoType.Application.Models;
 using OctoType.Domain.Entities;
 using OctoType.Domain.Enums;
 using OctoType.Domain.Models;
@@ -7,35 +8,13 @@ namespace OctoType.Application.Services;
 
 public sealed class KeyboardAnalyzerService : IKeyboardAnalyzerService
 {
-    private readonly IKeyboardKeyLocatorManager _keyboardKeyLocatorManager;
-
-
-    public KeyboardAnalyzerService(
-        IKeyboardKeyLocatorManager keyboardKeyLocatorManager)
-    {
-        _keyboardKeyLocatorManager = keyboardKeyLocatorManager;
-    }
-
-    public WordAnalysis? Analyze(string text, KeyboardLayout layout)
-    {
-        IKeyboardKeyLocator? keyBoardLocator =
-            _keyboardKeyLocatorManager.GetKeyBoardKeyLocator(layout);
-
-        if (keyBoardLocator == null)
-        {
-            throw new NotSupportedException($"Layout not supported: {layout}");
-        }
-
-        return AnalyzeInternal(text, keyBoardLocator.KeyLocator, keyBoardLocator.GetKeyboardType);
-    }
-
-    private static WordAnalysis? AnalyzeInternal(
+    public Result<UnitTextAnalysis> Analyze(
         string text,
-        IReadOnlyDictionary<char, KeyInfo> map,
-        KeyboardLayout layout)
+        IReadOnlyDictionary<char, KeyInfo> map)
     {
         KeyboardRow rowMask = KeyboardRow.None;
         Finger fingerMask = Finger.None;
+        bool externalAccent = false;
 
         int leftCount = 0;
         int rightCount = 0;
@@ -46,11 +25,13 @@ public sealed class KeyboardAnalyzerService : IKeyboardAnalyzerService
             {
                 // character not in the map
                 // this word is not possible with that layout
-                return null;
+                return Result<UnitTextAnalysis>.Fail($"The character {c} have no correspondance");
             }
 
             rowMask |= info.Row;
             fingerMask |= info.Finger;
+
+            externalAccent = info.ExtrenalAccent;
 
             if (IsLeftFinger(info.Finger))
             {
@@ -62,14 +43,14 @@ public sealed class KeyboardAnalyzerService : IKeyboardAnalyzerService
             }
         }
 
-        return new ()
+        return Result<UnitTextAnalysis>.Ok(new ()
         {
-            Layout = layout,
             RowMask = rowMask,
             FingerMask = fingerMask,
+            ExternalAccent = externalAccent,
             UsesLeftHand = leftCount > 0,
             UsesRightHand = rightCount > 0
-        };
+        });
     }
 
     private static bool IsLeftFinger(Finger finger)

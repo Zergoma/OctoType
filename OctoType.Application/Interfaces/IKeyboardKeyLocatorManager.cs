@@ -1,9 +1,9 @@
-﻿using OctoType.Domain.Enums;
+﻿using OctoType.Application.DTOs;
 
 namespace OctoType.Application.Interfaces
 {
     public interface IKeyboardKeyLocatorManager
     {
-        IKeyboardKeyLocator? GetKeyBoardKeyLocator(KeyboardLayout keyBoardLayout);
+        Result<IKeyboardKeysLocator> GetKeyBoardKeyLocator(KeyBoardLayoutDto keyBoardLayout);
     }
 }

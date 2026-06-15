@@ -1,7 +1,7 @@
 ﻿using OctoType.Domain.Entities;
 using OctoType.Domain.Enums;
 
-namespace OctoType.Domain.Models;
+namespace OctoType.Application.Models;
 
 public sealed class WordQueryBuilder
 {
@@ -40,6 +40,12 @@ public sealed class WordQueryBuilder
     public WordQueryBuilder WithLayout(KeyboardLayout layout)
     {
         _criteria = _criteria with { Layout = layout };
+        return this;
+    }
+
+    public WordQueryBuilder WithExternalAccent(bool externalAccent)
+    {
+        _criteria = _criteria with { ExternalAccent = externalAccent };
         return this;
     }
 

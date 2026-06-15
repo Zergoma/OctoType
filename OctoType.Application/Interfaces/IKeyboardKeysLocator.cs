@@ -3,7 +3,7 @@ using OctoType.Domain.Models;
 
 namespace OctoType.Application.Interfaces
 {
-    public interface IKeyboardKeyLocator
+    public interface IKeyboardKeysLocator
     {
         public KeyboardLayout GetKeyboardType {  get; }
         public IReadOnlyDictionary<char, KeyInfo> KeyLocator { get; }

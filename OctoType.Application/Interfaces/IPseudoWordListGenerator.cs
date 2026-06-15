@@ -2,7 +2,7 @@
 
 namespace OctoType.Application.Interfaces;
 
-public interface IPseudoWordBatchGenerator
+public interface IPseudoWordListGenerator
 {
     Result<List<string>> Generate(int count, PseudoWordOptions options);
 }

@@ -1,7 +1,7 @@
 ﻿using OctoType.Domain.Entities;
 using OctoType.Domain.Enums;
 
-namespace OctoType.Domain.Models;
+namespace OctoType.Application.Models;
 
 public struct WordSearchCriteria
 {
@@ -10,6 +10,8 @@ public struct WordSearchCriteria
     public KeyboardLayout? Layout { get; set; }
 
     public KeyboardRow? RowMask { get; set; }
+    
+    public bool? ExternalAccent { get; set; }
 
     public Finger? FingerMask { get; set; }
 

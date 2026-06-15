@@ -1,4 +1,4 @@
-﻿namespace OctoType.Application.Services;
+﻿namespace OctoType.Application.Models;
 
 public class LetterPool
 {

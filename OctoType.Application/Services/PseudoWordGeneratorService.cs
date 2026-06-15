@@ -1,8 +1,7 @@
 ﻿using System.Text;
 
-using Microsoft.Extensions.Options;
-
 using OctoType.Application.Interfaces;
+using OctoType.Application.Models;
 using OctoType.Application.ValueObjects;
 
 namespace OctoType.Application.Services;
@@ -26,7 +25,7 @@ public class PseudoWordGeneratorService : IPseudoWordGeneratorService
     public Result<string> Generate(PseudoWordOptions options)
     {
         // first time
-        // get the option an build the letterPool
+        // get the option and build the letterPool
         if(_LetterOption is null)
         {
             _LetterOption = options;
