@@ -26,6 +26,7 @@
               Margin="10">
 
             <Button Text="Sélection d'un fichier"
+                    StyleClass="button_hover"
                     Command="{Binding SelectFileCommand}"/>
 
 
@@ -33,17 +34,17 @@
                     SelectedItem="{Binding SelectedLanguage}"/>
 
             <Picker Grid.Column="2" ItemsSource="{Binding KeyboardLayoutAvailable}" 
-                SelectedItem="{Binding SelectedKeyboard}"/>
+                    SelectedItem="{Binding SelectedKeyboard}"/>
 
-            <Button Text="Analyser"
-                Grid.Column="1"
-                Grid.Row="2"
-                FontSize="24"
-                FontAttributes="Bold"
-                CornerRadius="20"
-                IsEnabled="{Binding IsFileSelected}"
-                Command="{Binding ImportWordsFromFileCommand}"
-                    />
+            <Button Grid.Row="2" Grid.Column="1"
+                    Text="Analyser"
+                    StyleClass="button_hover"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    IsEnabled="{Binding IsFileSelected}"
+                    Command="{Binding ImportWordsFromFileCommand}"/>
+            
             <Label Grid.Row="3"
                    Grid.Column="1"
                    Text="{Binding ErrorImport}"

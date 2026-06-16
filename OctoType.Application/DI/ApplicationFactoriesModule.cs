@@ -5,11 +5,12 @@ using OctoType.Application.Interfaces;
 
 namespace OctoType.Application.DI;
 
-static internal class ApplicationFactoriesModule
+internal static class ApplicationFactoriesModule
 {
     public static IServiceCollection AddOctoTypeApplicationFactories(this IServiceCollection services)
     {
-        services.AddTransient<IKeyBoardLayoutDtoFactory, KeyBoardLayoutDtoFactory>(); 
+        services.AddTransient<IKeyBoardLayoutDtoFactory, KeyBoardLayoutDtoFactory>();
+        services.AddTransient<ITypingExerciceSettingFactory, TypingExerciceSettingFactory>();
         return services;
     }
 }

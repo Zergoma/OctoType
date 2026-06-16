@@ -9,4 +9,12 @@ public partial class ExerciceGeneratorView : ContentPage
 		InitializeComponent();
 		BindingContext = vm;
 	}
+
+    protected override async void OnAppearing()
+    {
+        if(BindingContext is ExerciceGeneratorViewModel viewModel)
+		{
+			await viewModel.InitializeAsync();
+		}
+    }
 }

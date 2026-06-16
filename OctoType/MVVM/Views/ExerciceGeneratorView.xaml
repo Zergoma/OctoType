@@ -15,23 +15,23 @@
             HorizontalOptions="Center" 
             Margin="0,20,0,20"/>
 
-        <VerticalStackLayout HorizontalOptions="Start"
+        <VerticalStackLayout
                              Margin="10"
                              Spacing="5">
-            <Entry Placeholder="Set the filename" 
-                   WidthRequest="200"
-                   HorizontalOptions="Start"
-                   Text="{Binding FileName}"/>
 
-            <Entry Placeholder="Set the short Description" 
+            <Entry Placeholder="Set the exercice name" 
                 WidthRequest="200"
                 HorizontalOptions="Start"
-                Text="{Binding ShortDescription}"/>
+                Text="{Binding ExerciceName}"/>
 
             <Editor 
                 Placeholder="Set a description here"
-                HeightRequest="60"
-                WidthRequest="600"
+                StyleClass="editor_no_spell_no_prediction"
+                AutoSize="TextChanges"
+                MinimumHeightRequest="100"
+                MaximumHeightRequest="100"
+                VerticalOptions="Fill"
+                HorizontalOptions="Fill"
                 Text="{Binding Description}"/>
 
             <Grid ColumnDefinitions="*,*"
@@ -48,26 +48,33 @@
         
         
         
-        <Grid ColumnDefinitions="*,*"
+        <Grid ColumnDefinitions="*,auto"
               Margin="10,5,10,5"
               ColumnSpacing="5"
-              HorizontalOptions="Start">
+              HorizontalOptions="Fill">
 
-            <Editor Text="{Binding GeneratedText}"
+            <Editor Grid.Column="0"
+                    Text="{Binding GeneratedText}"
+                    AutoSize="TextChanges"
+                    StyleClass="editor_no_spell_no_prediction"
+                    MinimumHeightRequest="150"
+                    MaximumHeightRequest="150"
                     Placeholder="pseudo-words or words will be generated here, you can modify them if you want"
-                HeightRequest="100"
-
+                    VerticalOptions="Fill"
                     HorizontalOptions="Fill"
-
-                FontSize="24"/>
+                    FontSize="24"/>
             
             <Button Grid.Column="1"
+                    StyleClass="button_hover"
                     Text="Generate"
                     Command="{Binding GenerateWordsCommand}"/>
         </Grid>
-        
-        <Label Text="{Binding ErrorGeneratedTxt}"
+
+        <Label Text="{Binding ErrorMessageTxt}"
                TextColor="OrangeRed"/>
+
+        <Label Text="{Binding SuccessMessageTxt}"
+               TextColor="#047AA6"/>
 
 
         <Grid 
@@ -124,7 +131,8 @@
             <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" />
 
             <Button Grid.Column="2" Text="Save"
-                    Command="{Binding SaveExercideSettingCommand}"/>
+                    StyleClass="button_hover"
+                    Command="{Binding SaveNewExerciceSettingCommand}"/>
 
             <Grid Grid.Row="1"
                 ColumnDefinitions="auto,auto"

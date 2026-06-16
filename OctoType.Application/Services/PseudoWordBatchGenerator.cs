@@ -1,13 +1,13 @@
 ﻿using OctoType.Application.Interfaces;
 using OctoType.Application.ValueObjects;
 
-namespace OctoType.Application.Orchestrators;
+namespace OctoType.Application.Services;
 
-public class PseudoWordListGeneratorService : IPseudoWordListGenerator
+public class PseudoWordBatchGenerator : IPseudoWordBatchGenerator
 {
     private readonly IPseudoWordGeneratorService _wordGenerator;
 
-    public PseudoWordListGeneratorService(
+    public PseudoWordBatchGenerator(
         IPseudoWordGeneratorService wordGenerator)
     {
         _wordGenerator = wordGenerator;

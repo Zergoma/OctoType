@@ -5,78 +5,74 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Models;
+using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
 
 namespace OctoType.MVVM.ViewModels;
 
 public partial class ExerciceGeneratorViewModel : ObservableObject
 {
-    private readonly IPseudoWordListGenerator _pseudoWordBatchOrchestrator;
-    private readonly ILanguageAvailableService _languageAvailableService;
-    private readonly IKeyBoardLayoutAvailableService _keyboardLayoutAvailableService;
-    private readonly IExerciseSettingsStore _exerciceStrore;
-    private readonly IExercicesSettingPathProvider _exercicePathProvider;
+    private readonly IPseudoWordBatchGenerator _pseudoWordBatchGenerator;
+    private readonly ITypingExercicesManager _typingExerciceManager;
+    private readonly ITypingExercicesStorage _typingExercicePersistence;
+    private readonly ISaveTypingExerciceUseCase _saveUseCase;
 
+    private readonly List<string> _languageAvailableElem;
+    private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
 
-    //private readonly IKeyboardAnalyzerService _keyboardAnalyzerService;
     public ExerciceGeneratorViewModel(
-        IPseudoWordListGenerator pseudoWordGeneratorService,
+        IPseudoWordBatchGenerator pseudoWordBatchGenerator,
         ILanguageAvailableService languageAvailableService,
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
-        IExerciseSettingsStore exerciceStrore,
-        IExercicesSettingPathProvider exercicePathProvider)
-    //IKeyboardAnalyzerService keyboardAnalyzerService)
+        ITypingExercicesManager typingExerciceManager,
+        ITypingExercicesStorage typingExercicePersistence,
+        ISaveTypingExerciceUseCase saveUseCase)
     {
-        _pseudoWordBatchOrchestrator = pseudoWordGeneratorService;
+        _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
         AllowedChars = "abcdefghijklmnopqrstuvwxyz";
         NumberWords = 10;
         MinLengthWord = 3;
         MaxLengthWord = 3;
-        _languageAvailableService = languageAvailableService;
-        _keyboardLayoutAvailableService = keyboardLayoutAvailableService;
-        _exerciceStrore = exerciceStrore;
-        _exercicePathProvider = exercicePathProvider;
-        //_keyboardAnalyzerService = keyboardAnalyzerService;
+        _languageAvailableElem = languageAvailableService.GetAvailableLanguage();
+        _keyboardLayoutAvailableElem = keyboardLayoutAvailableService.GetKeyBoardAvailable();
+
+        _typingExerciceManager = typingExerciceManager;
+        _typingExercicePersistence = typingExercicePersistence;
+        _saveUseCase = saveUseCase;
     }
 
-    public List<string> LanguageAvailable => _languageAvailableService.GetAvailableLanguage();
-    public object? LanguageSelected { get; set; }
+    public async Task InitializeAsync()
+    {
+        TypingExercices? exercicesLoaded =
+            await _typingExercicePersistence.LoadAsync();
 
-    public List<KeyBoardLayoutDto> KeyboardLayoutAvailable => [.. _keyboardLayoutAvailableService.GetKeyBoardAvailable()];
-    public object? KeyboardLayoutSelected { get; set; }
+        if (exercicesLoaded is not null)
+        {
+            _typingExerciceManager.Exercice = exercicesLoaded;
+        }
+    }
+
+    public IReadOnlyList<string> LanguageAvailable => _languageAvailableElem;
+    public string? LanguageSelected { get; set; }
+
+    public IReadOnlyList<KeyBoardLayoutDto> KeyboardLayoutAvailable => _keyboardLayoutAvailableElem;
+    public KeyBoardLayoutDto? KeyboardLayoutSelected { get; set; }
 
 
-    [ObservableProperty]
-    public partial string GeneratedText { get; set; }
+    [ObservableProperty] public partial string GeneratedText { get; set; }
 
+    [ObservableProperty] public partial string ExerciceName { get; set; }
 
-    [ObservableProperty]
-    public partial string FileName { get; set; }
-    [ObservableProperty]
-    public partial string ShortDescription { get; set; }
+    [ObservableProperty] public partial string Description { get; set; }
 
-    [ObservableProperty]
-    public partial string Description { get; set; }
-
-    [ObservableProperty]
-    public partial string AllowedChars { get; set; }
+    [ObservableProperty] public partial string AllowedChars { get; set; }
 
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StaticDynamicText))]
     public partial bool IsStaticGenerated { get; set; } = true;
 
-    public string StaticDynamicText
-    {
-        get
-        {
-            if (IsStaticGenerated)
-            {
-                return "Static";
-            }
-            return "Dynamic";
-        }
-    }
+    public string StaticDynamicText => IsStaticGenerated ? "Static" : "Dynamic";
 
     public int NumberWords
     {
@@ -123,23 +119,25 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         }
     }
 
-    [ObservableProperty]
-    public partial string ErrorGeneratedTxt { get; set; } = string.Empty;
+    [ObservableProperty] public partial string ErrorMessageTxt { get; set; } = string.Empty;
+    [ObservableProperty] public partial string SuccessMessageTxt { get; set; } = string.Empty;
 
     [RelayCommand]
     private void GenerateWords()
     {
         Result<List<string>> resu =
-            _pseudoWordBatchOrchestrator.Generate(NumberWords, new PseudoWordOptions(AllowedChars, MinLengthWord, MaxLengthWord));
+            _pseudoWordBatchGenerator.Generate(
+                NumberWords,
+                new PseudoWordOptions(AllowedChars, MinLengthWord, MaxLengthWord));
 
         if (resu.Success)
         {
             GeneratedText = string.Join(" ", resu.GetValue);
-            ErrorGeneratedTxt = "";
+            ErrorMessageTxt = "";
         }
         else
         {
-            ErrorGeneratedTxt = resu.Error;
+            ErrorMessageTxt = resu.Error;
             GeneratedText = "";
         }
     }
@@ -151,78 +149,41 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SaveExercideSetting()
+    private async Task SaveNewExerciceSetting()
     {
-        ErrorGeneratedTxt = string.Empty;
+        ErrorMessageTxt = string.Empty;
+        SuccessMessageTxt = string.Empty;
 
-        if (string.IsNullOrWhiteSpace(AllowedChars))
+        if (KeyboardLayoutSelected is null)
         {
-            ErrorGeneratedTxt = "No letters selected";
+            ErrorMessageTxt = "You need to select a keyboard";
             return;
         }
 
-        if(string.IsNullOrWhiteSpace(FileName))
+        TypingExerciseCreateParameters settingbase = new() 
         {
-            ErrorGeneratedTxt = "You need to set the filename";
-            return;
-        }
-
-        bool isStatic = IsStaticGenerated;
-
-        TypingExerciceSetting newSeetings = new()
-        {
-            Name = ShortDescription,
+            Name = ExerciceName,
             Description = Description,
+            Language = LanguageSelected,
+            KeyBoardLayoutDto = KeyboardLayoutSelected,
+            AllowedLetters = AllowedChars
         };
 
-        if (LanguageSelected is string language)
+
+        var resu = 
+            await _saveUseCase.ExecuteAsync(
+                settingbase,
+                IsStaticGenerated,
+                GeneratedText,
+                _typingExerciceManager);
+
+        if (!resu.Success)
         {
-            newSeetings.Language = language;
-        }
-
-
-        if (KeyboardLayoutSelected is KeyBoardLayoutDto keyboard)
-        {
-            AllowLetter allowLetters = new()
-            {
-                KeyboardLayout = keyboard,
-                Letters = AllowedChars
-            };
-
-            if (isStatic)
-            {
-                TypingExerciseSettingStatic staticsetting = new()
-                {
-                    AllowLettersConfig = [allowLetters],
-                    Text = GeneratedText
-                };
-                newSeetings.StaticSettings = staticsetting;
-            }
-            else
-            {
-                TypingExerciceSettingDynamic dynamicSetting = new()
-                {
-                    AllowLettersConfig = [allowLetters]
-                };
-                newSeetings.DynamicSettings = dynamicSetting;
-            }
+            ErrorMessageTxt = resu.Error;
         }
         else
         {
-            ErrorGeneratedTxt = "You need to select a keybord";
-            return;
+            SuccessMessageTxt = "Exercice succesfully saved !";
         }
-
-        string fileName = FileName;
-        if(!FileName.Contains(".json", StringComparison.CurrentCultureIgnoreCase))
-        {
-            fileName = $"{fileName}.json";
-        }
-
-        string exerciceFolder = _exercicePathProvider.ExerciceSettingPath();
-        string fullPath = Path.Combine(
-            exerciceFolder,
-            fileName);
-        await _exerciceStrore.SaveAsync(newSeetings, fullPath);
     }
 }

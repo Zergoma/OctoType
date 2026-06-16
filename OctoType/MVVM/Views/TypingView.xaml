@@ -9,73 +9,65 @@
 
     <Grid RowDefinitions="0.1,auto,0.4*,*">
 
-        <Entry
-                Grid.Row="0"
-            x:Name="HiddenInput"
-            Opacity="0.00100"
-            WidthRequest="60"
-            HeightRequest="20"
-            BackgroundColor="Blue"
-            CursorPosition="0"
-            TextChanged="OnTextChanged"/>
+        <Entry Grid.Row="0"
+               x:Name="HiddenInput"
+               Opacity="0.00100"
+               WidthRequest="60"
+               HeightRequest="20"
+               BackgroundColor="Blue"
+               CursorPosition="0"
+               TextChanged="OnTextChanged"/>
 
 
         <Border Grid.Row="1"
                 Margin="20,5"
-                    StrokeShape="RoundRectangle 10">
+                StrokeShape="RoundRectangle 10">
 
             <CollectionView ItemsSource="{Binding Lines}"
-                                    x:DataType="vm:TypingViewModel"
-                                    x:Name="TypingCollectionView"
-                                    HeightRequest="350">
+                            x:DataType="vm:TypingViewModel"
+                            x:Name="TypingCollectionView"
+                            HeightRequest="350">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <FlexLayout    
-                                x:DataType="typing:TypingLineState"
-                                Wrap="Wrap"
-                                Direction="Row"
-                                BindableLayout.ItemsSource="{Binding Characters}"
-                                Padding="10,10">
+                        <FlexLayout x:DataType="typing:TypingLineState"
+                                    Wrap="Wrap"
+                                    Direction="Row"
+                                    BindableLayout.ItemsSource="{Binding Characters}"
+                                    Padding="10,10">
 
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate
-                                            x:DataType="typing:TypingCharState">
+                                <DataTemplate x:DataType="typing:TypingCharState">
 
                                     <Border StrokeShape="RoundRectangle 5"
-                                                        Stroke="Transparent"
-                                                        StrokeThickness="0"
-                                                        BackgroundColor="{Binding BgColor}"
-                                                        Margin="0,0,1,6"
-                                                        VerticalOptions="Center">
+                                            Stroke="Transparent"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{Binding BgColor}"
+                                            Margin="0,0,1,6"
+                                            VerticalOptions="Center">
 
                                         <Grid RowDefinitions="auto, *"
-                                                      HorizontalOptions="Center"
-                                                      VerticalOptions="Center">
+                                              HorizontalOptions="Center"
+                                              VerticalOptions="Center">
 
-                                            <Label
-                                                        Text="{Binding Character}"
-                                                        TextColor="{Binding TextColor}"
-                                                        BackgroundColor="Transparent"
-                                                        FontSize="45"
-                                                        HorizontalOptions="Center"
-                                                        VerticalOptions="Center"/>
+                                            <Label Text="{Binding Character}"
+                                                   TextColor="{Binding TextColor}"
+                                                   BackgroundColor="Transparent"
+                                                   FontSize="45"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
 
-                                            <BoxView
-                                                        Grid.Row="1"
-                                                        HeightRequest="4"
-                                                        WidthRequest="20"
-                                                        BackgroundColor="{Binding BorderColor}" />
+                                            <BoxView Grid.Row="1"
+                                                     HeightRequest="4"
+                                                     WidthRequest="20"
+                                                     BackgroundColor="{Binding BorderColor}" />
 
                                         </Grid>
                                     </Border>
 
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
-
                         </FlexLayout>
-
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
 
@@ -84,11 +76,12 @@
 
         <Button Grid.Row="2"
                 Text="Reprendre la saisie"
-                    x:Name="TakeFocusButton"
-                    Clicked="TakeFocusButton_Clicked"
-                    Margin="20,5"
-                    HeightRequest="30"
-                    WidthRequest="300"/>
+                StyleClass="button_hover"
+                x:Name="TakeFocusButton"
+                Clicked="TakeFocusButton_Clicked"
+                Margin="20,5"
+                HeightRequest="30"
+                WidthRequest="300"/>
 
         <Grid Grid.Row="3"
               RowDefinitions="*,*"
@@ -99,6 +92,7 @@
             <Switch Grid.Column="0"
                     VerticalOptions="Center"
                     IsToggled="{Binding BackReturnEnable}"/>
+            
             <Label Grid.Column="1"
                    VerticalOptions="Center"
                    Text="{Binding BackReturnTxt}">
@@ -121,6 +115,5 @@
                 </Label.GestureRecognizers>
             </Label>
         </Grid>
-
     </Grid>
 </ContentPage>

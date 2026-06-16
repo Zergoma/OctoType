@@ -4,7 +4,7 @@ namespace OctoType.Application.Interfaces;
 
 public interface IExerciseSettingsStore
 {
-    Task SaveAsync(TypingExerciceSetting settings, string path);
+    Task SaveAsync(TypingExercices settings, string path);
 
-    Task<TypingExerciceSetting?> LoadAsync(string name, string path);
+    Task<TypingExercices?> LoadAsync(string path);
 }

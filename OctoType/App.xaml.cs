@@ -1,5 +1,4 @@
-﻿using OctoType.MVVM.Views;
-using MauiAppNS = Microsoft.Maui.Controls;
+﻿using MauiAppNS = Microsoft.Maui.Controls;
 
 namespace OctoType;
 

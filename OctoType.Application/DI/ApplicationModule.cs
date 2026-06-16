@@ -7,9 +7,12 @@ static public class ApplicationModule
     public static IServiceCollection AddOctoTypeApplication(this IServiceCollection services)
     {
         services.AddOctoTypeApplicationFactories();
+        services.AddOctoTypeApplicationValidators();
         services.AddOctoTypeApplicationServices();
-        services.AddOctoTypeApplicationManager();
+        services.AddOctoTypeApplicationManagers();
         services.AddOctoTypeApplicationOrchestrators();
+        services.AddOctoTypeApplicationUseCases();
+        
         return services;
     }
 }

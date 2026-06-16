@@ -25,19 +25,19 @@
           RowSpacing="10"
           Margin="10">
 
-            <Button Text="Sélection d'un livre"
-                Command="{Binding SelectFileCommand}"
-            Grid.Row="0"/>
+            <Button Grid.Row="0"
+                    Text="Sélection d'un livre"
+                    StyleClass="button_hover"
+                    Command="{Binding SelectFileCommand}"/>
 
-            <Button Text="Importer"
-            Grid.Column="1"
-            Grid.Row="2"
-            FontSize="24"
-            FontAttributes="Bold"
-            CornerRadius="20"
-            IsEnabled="{Binding IsFileSelected}"
-            Command="{Binding ImportFileCommand}"
-                />
+            <Button Grid.Row="2" Grid.Column="1"
+                    Text="Importer"
+                    StyleClass="button_hover"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    IsEnabled="{Binding IsFileSelected}"
+                    Command="{Binding ImportFileCommand}"/>
         </Grid>
     </Grid>
 </ContentPage>
