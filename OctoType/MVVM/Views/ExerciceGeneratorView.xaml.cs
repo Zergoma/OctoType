@@ -1,10 +1,10 @@
-using OctoType.MVVM.ViewModels;
+using VM = OctoType.ViewModels.Exercices;
 
 namespace OctoType.MVVM.Views;
 
 public partial class ExerciceGeneratorView : ContentPage
 {
-	public ExerciceGeneratorView(ExerciceGeneratorViewModel vm)
+	public ExerciceGeneratorView(VM.ExerciceGeneratorViewModel vm)
 	{
 		InitializeComponent();
 		BindingContext = vm;
@@ -12,7 +12,7 @@ public partial class ExerciceGeneratorView : ContentPage
 
     protected override async void OnAppearing()
     {
-        if(BindingContext is ExerciceGeneratorViewModel viewModel)
+        if(BindingContext is VM.ExerciceGeneratorViewModel viewModel)
 		{
 			await viewModel.InitializeAsync();
 		}

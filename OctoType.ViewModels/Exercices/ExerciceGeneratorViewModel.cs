@@ -8,7 +8,7 @@ using OctoType.Application.Models;
 using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
 
-namespace OctoType.MVVM.ViewModels;
+namespace OctoType.ViewModels.Exercices;
 
 public partial class ExerciceGeneratorViewModel : ObservableObject
 {

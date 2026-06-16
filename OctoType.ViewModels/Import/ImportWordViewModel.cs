@@ -5,7 +5,7 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 
-namespace OctoType.MVVM.ViewModels;
+namespace OctoType.ViewModels.Import;
 
 
 public partial class ImportWordViewModel : ObservableObject

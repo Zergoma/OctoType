@@ -7,5 +7,6 @@
   <Project Path="OctoType.Domain/OctoType.Domain.csproj" Id="1bac9925-433b-4325-b749-deab7b769dd3" />
   <Project Path="OctoType.Infrastructure/OctoType.Infrastructure.csproj" Id="ae5d5397-2cb6-410b-890c-e994c04a3adc" />
   <Project Path="OctoType.Tests/OctoType.Tests.csproj" Id="4e1ddf35-1a09-4363-9847-bf62f99ed014" />
+  <Project Path="OctoType.ViewModels/OctoType.ViewModels.csproj" Id="bb522144-655e-4e2c-b8f8-b440886fcb23" />
   <Project Path="OctoType/OctoType.csproj" />
 </Solution>

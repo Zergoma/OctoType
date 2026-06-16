@@ -3,9 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using OctoType.Application;
 using OctoType.Application.Interfaces;
-using OctoType.Domain.Models;
 
-namespace OctoType.MVVM.ViewModels;
+namespace OctoType.ViewModels.Import;
 
 public partial class ImportBookViewModel : ObservableObject
 {

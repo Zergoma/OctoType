@@ -8,6 +8,7 @@ using OctoType.Application.DI;
 using OctoType.DI;
 using OctoType.Infrastructure.DbContexts;
 using OctoType.Infrastructure.DI;
+using OctoType.ViewModels.DI;
 
 using Serilog;
 
@@ -57,6 +58,7 @@ public static class MauiProgram
             .AddFactories()
             .AddTypingThemes()
             .AddViewModels()
+            .AddViewModelsModule()
             .AddViews();
         
         string databasePath =

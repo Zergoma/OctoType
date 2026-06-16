@@ -104,6 +104,7 @@
 	  <ProjectReference Include="..\OctoType.Application\OctoType.Application.csproj" />
 	  <ProjectReference Include="..\OctoType.Domain\OctoType.Domain.csproj" />
 	  <ProjectReference Include="..\OctoType.Infrastructure\OctoType.Infrastructure.csproj" />
+	  <ProjectReference Include="..\OctoType.ViewModels\OctoType.ViewModels.csproj" />
 	</ItemGroup>
 
 </Project>
