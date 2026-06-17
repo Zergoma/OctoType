@@ -1,6 +1,5 @@
-﻿namespace OctoType.Application.Models.Typing.Themes;
-// TODO
-// move to infrastructure layer
+﻿namespace OctoType.Infrastructure.Theme.Models;
+
 public class ThemeStateFileModel
 {
     public string TextColor { get; set; }

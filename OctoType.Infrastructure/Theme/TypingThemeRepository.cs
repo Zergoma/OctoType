@@ -1,6 +1,7 @@
 ﻿using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Infrastructure.Theme.Mappers;
 
 namespace OctoType.Infrastructure.Theme;
 

@@ -4,7 +4,8 @@ using OctoType.Application;
 using OctoType.Application.Mappers;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
-using OctoType.Application.Models.Typing.Themes;
+using OctoType.Infrastructure.Theme.Models;
+using OctoType.Infrastructure.Theme.Mappers;
 
 namespace OctoType.Infrastructure.Theme;
 

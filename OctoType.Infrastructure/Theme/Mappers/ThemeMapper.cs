@@ -1,10 +1,8 @@
 ﻿using OctoType.Application.DTOs;
-using OctoType.Application.Models.Typing.Themes;
+using OctoType.Infrastructure.Theme.Models;
 
-namespace OctoType.Application.Mappers;
+namespace OctoType.Infrastructure.Theme.Mappers;
 
-// TODO
-// move to infrastructure layer
 public static class ThemeMapper
 {
     public static ThemeDto ToDto(this ThemeFileModel model)

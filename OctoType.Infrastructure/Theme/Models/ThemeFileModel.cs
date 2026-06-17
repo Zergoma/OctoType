@@ -1,7 +1,5 @@
-﻿namespace OctoType.Application.Models.Typing.Themes;
+﻿namespace OctoType.Infrastructure.Theme.Models;
 
-// TODO
-// move to infrastructure layer
 public class ThemeFileModel
 {
     public string Name { get; set; }

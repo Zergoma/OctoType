@@ -3,7 +3,7 @@ using OctoType.Application.Interfaces.Typing;
 using OctoType.Application.Models.Typing.Themes;
 using OctoType.Domain.Typing;
 
-namespace OctoType.Infrastructure.Theme;
+namespace OctoType.Infrastructure.Theme.Mappers;
 
 public static class TypingThemeMapper
 {
