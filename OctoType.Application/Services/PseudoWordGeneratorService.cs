@@ -45,7 +45,7 @@ public class PseudoWordGeneratorService : IPseudoWordGeneratorService
             return Result<string>
                 .Fail(_letterPoolResu.Error);
 
-        LetterPool letterSource = _letterPoolResu.Value!;
+        LetterPool letterSource = _letterPoolResu.GetValue;
 
         //int length = GetLength();
         int length = 

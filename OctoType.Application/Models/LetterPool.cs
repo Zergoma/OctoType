@@ -2,8 +2,10 @@
 
 public class LetterPool
 {
-    static readonly private HashSet<char> VowelsHash = [.. "aeiouy" + "éèêë" + "àâä" + "îï" + "ôö" + "ûü" + "ÿ"];
-    static readonly private HashSet<char> ConsonantsHash = [.. "bcdfghjklmnpqrstvwxz" + "ç" + "ß"];
+    static readonly private HashSet<char> VowelsHash = [.. "aeiouy" + "éèêë" + "àâä" + "îï" + "ôö" + "ûü" + "ÿ"
+                                                         + "AEIOUY" + "ÉÈÊË" + "ÀÂÄ"+ "ÎÏ" + "ÔÖ" + "ÛÜ"];
+    static readonly private HashSet<char> ConsonantsHash = [.. "bcdfghjklmnpqrstvwxz" + "ç" + "ß"
+                                                             + "BCDFGHJKLMNPQRSTVWXZ" + "Ç" ];
 
     private readonly Random s_random = Random.Shared;
     private readonly string _vowelsCurrent;

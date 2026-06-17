@@ -62,6 +62,20 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
     [ObservableProperty] public partial string GeneratedText { get; set; }
 
+    // User can type text in the editor too
+    // we add new letter in the allowed
+    partial void OnGeneratedTextChanged(string value)
+    {
+        List<char> detectedChar = value
+            .Where(c =>
+                !char.IsWhiteSpace(c) &&
+                !AllowedChars.Contains(c))
+            .Distinct()
+            .ToList();
+
+        AllowedChars += string.Join(null, detectedChar);
+    }
+
     [ObservableProperty] public partial string ExerciceName { get; set; }
 
     [ObservableProperty] public partial string Description { get; set; }
@@ -161,13 +175,25 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             return;
         }
 
+        // AllowedLetters could be changed to nothing, or with letter unrelated to generated text
+        // we can no longer trust it
+        // we want all the keys present in generated text, nothing more, nothing less
+        // but not changing the allow by user
+        List<char> detectedChar = 
+            [.. GeneratedText
+                .Where(c =>!char.IsWhiteSpace(c))
+                .Distinct()
+                .Order()];
+        
+        string AllowedCharsStrict = string.Join(null, detectedChar);
+
         TypingExerciseCreateParameters settingbase = new() 
         {
             Name = ExerciceName,
             Description = Description,
             Language = LanguageSelected,
             KeyBoardLayoutDto = KeyboardLayoutSelected,
-            AllowedLetters = AllowedChars
+            AllowedLetters = AllowedCharsStrict
         };
 
 
