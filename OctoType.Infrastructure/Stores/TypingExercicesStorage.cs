@@ -1,5 +1,6 @@
 using OctoType.Application.Interfaces;
-using OctoType.Application.Models;
+using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Typing.Exercices;
 
 namespace OctoType.Infrastructure.Stores;
 

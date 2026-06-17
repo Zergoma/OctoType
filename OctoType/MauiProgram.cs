@@ -58,7 +58,6 @@ public static class MauiProgram
             .AddOctoTypeApplication()
 
             .AddTypingThemes()
-            .AddViewModels()
             .AddViewModelsModule()
             .AddViews();
         

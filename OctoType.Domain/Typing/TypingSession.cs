@@ -1,6 +1,4 @@
-﻿using OctoType.Domain.Typing;
-
-namespace OctoType.Models;
+﻿namespace OctoType.Domain.Typing;
 
 public class TypingSession
 {

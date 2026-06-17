@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
 using OctoType.Application;
-using OctoType.Interfaces;
-using OctoType.Models.UI.Typing;
+using OctoType.Application.Interfaces;
+using OctoType.Application.Models.Typing.Themes;
 
 namespace OctoType.Infrastructure.Themes;
 

@@ -1,4 +1,4 @@
-﻿namespace OctoType.Models.UI.Typing;
+﻿namespace OctoType.Application.Models.Typing.Themes;
 
 public class TypingThemeDefinition
 {

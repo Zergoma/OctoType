@@ -1,21 +1,22 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using AppInterfacesTyping = OctoType.Application.Interfaces.Typing;
+using AppModelsTyping = OctoType.Application.Models.Typing.Themes;
 using OctoType.Domain.Typing;
-using OctoType.Interfaces;
 
-namespace OctoType.Models.UI.Typing;
+namespace OctoType.ViewModels.Typing;
 
 
-public partial class TypingCharState : ObservableObject
+public partial class TypingCharStateViewModel : ObservableObject
 {
-    private readonly ITypingTheme _typingTheme;
+    private readonly AppInterfacesTyping.ITypingTheme _typingTheme;
     public TypingChar Model { get; }
 
-    private TypingStyle Style => _typingTheme.GetStyle(State);
+    private AppModelsTyping.TypingStyle Style => _typingTheme.GetStyle(State);
 
 
-    public TypingCharState(
-        ITypingTheme typingTheme,
+    public TypingCharStateViewModel(
+        AppInterfacesTyping.ITypingTheme typingTheme,
         TypingChar model)
     {
         _typingTheme = typingTheme;

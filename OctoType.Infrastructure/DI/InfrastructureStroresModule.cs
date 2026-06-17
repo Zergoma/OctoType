@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using OctoType.Application.Interfaces;
+using OctoType.Application.Interfaces.Typing;
 using OctoType.Infrastructure.Stores;
 
 namespace OctoType.Infrastructure.DI;

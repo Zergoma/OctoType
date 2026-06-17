@@ -1,6 +1,6 @@
-﻿using OctoType.Domain.Typing;
-using OctoType.Interfaces;
-using OctoType.Models.UI.Typing;
+﻿using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Typing.Themes;
+using OctoType.Domain.Typing;
 
 namespace OctoType.Infrastructure.Themes;
 

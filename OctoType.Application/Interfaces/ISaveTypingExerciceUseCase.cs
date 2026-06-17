@@ -1,4 +1,5 @@
-﻿using OctoType.Application.UseCases;
+﻿using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.UseCases;
 
 namespace OctoType.Application.Interfaces
 {

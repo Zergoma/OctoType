@@ -2,6 +2,7 @@
 
 using OctoType.Application.Factories;
 using OctoType.Application.Interfaces;
+using OctoType.Application.Interfaces.Typing;
 
 namespace OctoType.Application.DI;
 

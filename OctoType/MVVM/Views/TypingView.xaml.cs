@@ -1,9 +1,8 @@
 using System.Diagnostics;
-using OctoType.MVVM.ViewModels;
-
 
 using Microsoft.UI.Xaml.Input;
 using OctoType.Domain.Typing;
+using OctoType.ViewModels.Typing;
 
 
 namespace OctoType.MVVM.Views;

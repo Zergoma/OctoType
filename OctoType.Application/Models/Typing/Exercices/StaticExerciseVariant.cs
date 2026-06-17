@@ -1,4 +1,4 @@
-﻿namespace OctoType.Application.Models;
+﻿namespace OctoType.Application.Models.Typing.Exercices;
 
 public class StaticExerciseVariant
 {

@@ -1,7 +1,6 @@
-﻿using OctoType.Application;
-using OctoType.Models.UI.Typing;
+﻿using OctoType.Application.Models.Typing.Themes;
 
-namespace OctoType.Interfaces;
+namespace OctoType.Application.Interfaces;
 
 public interface IThemeLoader
 {

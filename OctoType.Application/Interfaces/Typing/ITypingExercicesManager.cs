@@ -1,6 +1,6 @@
-using OctoType.Application.Models;
+using OctoType.Application.Models.Typing.Exercices;
 
-namespace OctoType.Application.Interfaces;
+namespace OctoType.Application.Interfaces.Typing;
 
 public interface ITypingExercicesManager
 {

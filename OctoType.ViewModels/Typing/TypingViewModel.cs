@@ -4,21 +4,18 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using DomainTyping = OctoType.Domain.Typing;
-using OctoType.Interfaces;
-using OctoType.Models;
-using OctoType.Models.UI.Typing;
-
 using AppInterfaces = OctoType.Application.Interfaces;
+using AppInterfacesTyping = OctoType.Application.Interfaces.Typing;
 
-namespace OctoType.MVVM.ViewModels;
+namespace OctoType.ViewModels.Typing;
 
 public partial class TypingViewModel : ObservableObject
 {
     public event Action<int>? LineChanged;
-    public TypingSession Session { get; } = new();
-    public ObservableCollection<TypingLineState> LinesStates { get; } = [];
+    public DomainTyping.TypingSession Session { get; } = new();
+    public ObservableCollection<TypingLineStateViewModel> LinesStates { get; } = [];
 
-    private readonly ITypingThemeRepository _typingThemeRepo;
+    private readonly AppInterfacesTyping.ITypingThemeRepository _typingThemeRepo;
 
 
     private readonly AppInterfaces.IStringsProviderService _stringsProviderService;
@@ -27,7 +24,7 @@ public partial class TypingViewModel : ObservableObject
     public TypingViewModel(
         AppInterfaces.IStringsProviderService stringsProviderService,
         AppInterfaces.IInputCharMapperService charMapper,
-        ITypingThemeRepository typingThemeRepo)
+        AppInterfacesTyping.ITypingThemeRepository typingThemeRepo)
     {
         _stringsProviderService = stringsProviderService;
         _charMapper = charMapper;
@@ -91,7 +88,7 @@ public partial class TypingViewModel : ObservableObject
 
         // TODO
         // to property, + user access
-        ITypingTheme? theme = await _typingThemeRepo.GetTheme("OctoType_Typing_Theme");
+        AppInterfacesTyping.ITypingTheme? theme = await _typingThemeRepo.GetTheme("OctoType_Typing_Theme");
         if(theme == null)
         {
             return;
@@ -107,7 +104,7 @@ public partial class TypingViewModel : ObservableObject
             DomainTyping.TypingLine typingLine = new (line);
             Session.Lines.Add(typingLine);
 
-            TypingLineState typingLineState =  new (theme, typingLine);
+            TypingLineStateViewModel typingLineState =  new (theme, typingLine);
             LinesStates.Add(typingLineState);
         }
 

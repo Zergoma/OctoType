@@ -1,5 +1,5 @@
-using OctoType.Application.Interfaces;
-using OctoType.Application.Models;
+using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 
 namespace OctoType.Application.Factories;

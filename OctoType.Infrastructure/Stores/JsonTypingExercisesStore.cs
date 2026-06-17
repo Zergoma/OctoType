@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 
 using OctoType.Application.Interfaces;
-using OctoType.Application.Models;
+using OctoType.Application.Models.Typing.Exercices;
 
 namespace OctoType.Infrastructure.Stores;
 

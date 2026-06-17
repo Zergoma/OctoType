@@ -1,4 +1,4 @@
-﻿namespace OctoType.Interfaces;
+﻿namespace OctoType.Application.Interfaces.Typing;
 
 public interface ITypingThemeRepository
 {

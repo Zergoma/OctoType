@@ -1,7 +1,7 @@
-using OctoType.Application.Models;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 
-namespace OctoType.Application.Interfaces;
+namespace OctoType.Application.Interfaces.Typing;
 
 public interface ITypingExerciceSettingFactory
 {

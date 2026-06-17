@@ -1,4 +1,4 @@
-﻿using OctoType.Application.Models;
+﻿using OctoType.Application.Models.Typing.Exercices;
 
 namespace OctoType.Application.Interfaces;
 

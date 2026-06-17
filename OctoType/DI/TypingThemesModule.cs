@@ -1,5 +1,5 @@
-﻿using OctoType.Infrastructure.Themes;
-using OctoType.Interfaces;
+﻿using OctoType.Application.Interfaces.Typing;
+using OctoType.Infrastructure.Themes;
 
 namespace OctoType.DI;
 

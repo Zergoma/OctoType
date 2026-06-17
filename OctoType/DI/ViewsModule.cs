@@ -1,6 +1,4 @@
-﻿using OctoType.Application.Interfaces;
-using OctoType.MVVM.Views;
-using OctoType.Presenter;
+﻿using OctoType.MVVM.Views;
 
 namespace OctoType.DI;
 

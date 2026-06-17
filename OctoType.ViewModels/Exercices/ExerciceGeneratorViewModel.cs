@@ -4,7 +4,8 @@ using CommunityToolkit.Mvvm.Input;
 using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
-using OctoType.Application.Models;
+using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
 
