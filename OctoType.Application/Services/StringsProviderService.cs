@@ -9,12 +9,13 @@ public class StringsProviderService : IStringsProviderService
     {
         IEnumerable<string> data =
         [
-            "super",
+            "super↵",
             "re",
-            "boom",
-            "si tu veux taper plus vite, tu dois pour commencer améliorer ta précision",
-            "un entraînement régulier permet de se perfectionner, chaque fois que tu referas cette leçon, tu amélioreras ta vitesse",
             "chaud",
+            "boom↵",
+            "si tu veux taper plus vite",
+            "tu dois pour commencer améliorer ta précision",
+            "un entraînement régulier permet de se perfectionner, chaque fois que tu referas cette leçon, tu amélioreras ta vitesse",
             "tata",
             "the quick brown fox jumps over the lazy dog",
             "octopus typing trainer",

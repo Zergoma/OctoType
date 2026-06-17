@@ -1,11 +1,9 @@
 using System.Diagnostics;
-
-using OctoType.Domain.Enums;
 using OctoType.MVVM.ViewModels;
 
 
 using Microsoft.UI.Xaml.Input;
-using Windows.System;
+using OctoType.Domain.Typing;
 
 
 namespace OctoType.MVVM.Views;
@@ -117,7 +115,7 @@ public partial class TypingView : ContentPage
                 break;
 
             case Windows.System.VirtualKey.F5:
-                vm.Session.Reset();
+                vm.Session.ResetProgression();
                 e.Handled = true;
                 break;
         }

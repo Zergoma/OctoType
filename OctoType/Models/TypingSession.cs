@@ -1,7 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-using OctoType.Domain.Enums;
-using OctoType.Models.UI.Typing;
+﻿using OctoType.Domain.Typing;
 
 namespace OctoType.Models;
 
@@ -9,7 +6,8 @@ public class TypingSession
 {
     public event Action<int>? LineChanged;
 
-    public ObservableCollection<TypingLineState> Lines { get; } = [];
+    private TypingChar? _previousCurrent;
+    public List<TypingLine> Lines { get; set; } = [];
 
     public int CurrentLineIndex { get; private set; } = 0;
 
@@ -43,19 +41,16 @@ public class TypingSession
         }
     }
 
-    public void Reset()
+    public void ResetProgression()
     {
-        // Reset Character state and error
+        // ResetProgression Character state and error
         for (int i = 0; i < Lines.Count; i++)
         {
-            TypingLineState line = Lines[i];
+            TypingLine line = Lines[i];
 
-            for (int j = 0; j < line.Characters.Count; j++)
+            foreach(TypingChar letter in  line.Characters)
             {
-                line.Characters[j].Errors.Clear();
-                line.Characters[j].NbError = 0;
-                line.Characters[j].IsCurrent = false;
-                line.Characters[j].State = TypingCharEnumState.Pending;
+                letter.Reset();
             }
         }
 
@@ -63,25 +58,21 @@ public class TypingSession
         SetPosition(0, 0, true);
     }
 
-    private TypingCharState? _previousCurrent;
+
     private void UpdateCurrent()
     {
         if (_previousCurrent != null)
         {
-            _previousCurrent.IsCurrent = false;
-
             if (_previousCurrent.State == TypingCharEnumState.Current)
             {
                 _previousCurrent.State = TypingCharEnumState.Pending;
             }
         }
 
-        TypingCharState? current = CurrentCharacter;
+        TypingChar? current = CurrentCharacter;
 
         if (current != null)
         {
-            current.IsCurrent = true;
-
             if (current.State == TypingCharEnumState.Pending)
             {
                 current.State = TypingCharEnumState.Current;
@@ -91,7 +82,7 @@ public class TypingSession
         _previousCurrent = current;
     }
 
-    public TypingLineState? CurrentLine
+    public TypingLine? CurrentLine
     {
         get
         {
@@ -105,11 +96,11 @@ public class TypingSession
         }
     }
 
-    public TypingCharState? CurrentCharacter
+    public TypingChar? CurrentCharacter
     {
         get
         {
-            TypingLineState? line = CurrentLine;
+            TypingLine? line = CurrentLine;
 
             if (line == null)
             {
@@ -143,7 +134,7 @@ public class TypingSession
 
     public bool MoveToNextCharacter()
     {
-        TypingLineState? line = CurrentLine;
+        TypingLine? line = CurrentLine;
 
         if (line == null)
         {
@@ -191,7 +182,7 @@ public class TypingSession
 
     private void ResetCurrentCharacterTo(TypingCharEnumState state)
     {
-        var c = CurrentCharacter;
+        TypingChar? c = CurrentCharacter;
         if (c == null)
             return;
 
@@ -245,7 +236,7 @@ public class TypingSession
             return TypingStatus.InProgress;
         }
 
-        TypingCharState? current = CurrentCharacter;
+        TypingChar? current = CurrentCharacter;
 
         if (current == null)
         {

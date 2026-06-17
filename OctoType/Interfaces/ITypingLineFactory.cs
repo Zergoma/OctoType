@@ -4,6 +4,6 @@ namespace OctoType.Interfaces
 {
     public interface ITypingLineStateFactory
     {
-        TypingLineState Create(string line);
+        TypingLineState CreateLineState(string line, ITypingTheme theme);
     }
 }

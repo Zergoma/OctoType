@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
-using OctoType.Domain.Enums;
+using OctoType.Domain.Typing;
 using OctoType.Interfaces;
 
 namespace OctoType.Models.UI.Typing;
@@ -11,71 +9,38 @@ namespace OctoType.Models.UI.Typing;
 public partial class TypingCharState : ObservableObject
 {
     private readonly ITypingTheme _typingTheme;
+    public TypingChar Model { get; }
+
     private TypingStyle Style => _typingTheme.GetStyle(State);
 
 
     public TypingCharState(
-        ITypingTheme typingTheme)
+        ITypingTheme typingTheme,
+        TypingChar model)
     {
         _typingTheme = typingTheme;
+        Model = model;
+
+        // All the magic is here
+        // model state changed -> trigger property bound to UI
+        Model.StateChanged += OnStateChanged;
     }
 
-    [ObservableProperty]
-    public partial char Character { get; set; }
-
-    [ObservableProperty]
-    public partial TypingCharEnumState State { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsCurrent { get; set; }
-
-    partial void OnIsCurrentChanged(bool oldValue, bool newValue)
+    private void OnStateChanged()
     {
-        if (!newValue)
-        {
-            return;
-        }
-
-        if (State == TypingCharEnumState.Pending)
-        {
-            State = TypingCharEnumState.Current;
-        }
-    }
-
-    [ObservableProperty]
-    public partial int NbError { get; set; } = 0;
-
-
-    public ObservableCollection<char> Errors { get; set; } = [];
-
-    public Color TextColor => Style.GetTextColor();
-    public Color BgColor => Style.GetBackgroundColor();
-    public Color BorderColor => Style.GetBorderColor();
-    public int BorderThikness => Style.BorderThickness;
-
-    partial void OnStateChanged(TypingCharEnumState value)
-    {
+        OnPropertyChanged(nameof(State));
         OnPropertyChanged(nameof(TextColor));
         OnPropertyChanged(nameof(BgColor));
         OnPropertyChanged(nameof(BorderColor));
         OnPropertyChanged(nameof(BorderThikness));
     }
 
-    public bool ChallengeValue(char input)
-    {
-        if (input == Character)
-        {
-            State = NbError switch
-            {
-                0 => TypingCharEnumState.Correct,
-                _ => TypingCharEnumState.CorrectWithError,
-            };
-            return true;
-        }
-        
-        State = TypingCharEnumState.CurrentWrong;
-        Errors.Add(input);
-        NbError++;
-        return false;
-    }
+    public char Character => Model.Character;
+    public TypingCharEnumState State => Model.State;
+
+    public string TextColor => Style.TextColor;
+    public string BgColor => Style.BackgroundColor;
+    public string BorderColor => Style.BorderColor;
+    public int BorderThikness => Style.BorderThickness;
+
 }

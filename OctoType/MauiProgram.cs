@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.Extensions.Logging;
 
 using OctoType.Application.DI;
@@ -52,10 +51,12 @@ public static class MauiProgram
         builder.Services
             .AddOctoTypeInfrastructure()
 
-            .AddPresenters()
+            // define in the maui projet
+            // presenters are used inside App Orchestrators
+            .AddPresenters()            
+            
             .AddOctoTypeApplication()
 
-            .AddFactories()
             .AddTypingThemes()
             .AddViewModels()
             .AddViewModelsModule()

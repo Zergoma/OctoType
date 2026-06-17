@@ -1,4 +1,4 @@
-﻿using OctoType.Domain.Enums;
+﻿using OctoType.Domain.Typing;
 using OctoType.Interfaces;
 using OctoType.Models.UI.Typing;
 

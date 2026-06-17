@@ -3,10 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:OctoType.MVVM.ViewModels"
              xmlns:typing="clr-namespace:OctoType.Models.UI.Typing"
+             xmlns:converters="clr-namespace:OctoType.Converters"
              x:Class="OctoType.MVVM.Views.TypingView"
              x:DataType="vm:TypingViewModel"
              Shell.NavBarIsVisible="False">
+    <ContentPage.Resources>
+        <converters:StringToColorConverter x:Key="stringToColor"/>
 
+    </ContentPage.Resources>
+    
     <Grid RowDefinitions="0.1,auto,0.4*,*">
 
         <Entry Grid.Row="0"
@@ -23,7 +28,7 @@
                 Margin="20,5"
                 StrokeShape="RoundRectangle 10">
 
-            <CollectionView ItemsSource="{Binding Lines}"
+            <CollectionView ItemsSource="{Binding LinesStates}"
                             x:DataType="vm:TypingViewModel"
                             x:Name="TypingCollectionView"
                             HeightRequest="350">
@@ -42,7 +47,7 @@
                                     <Border StrokeShape="RoundRectangle 5"
                                             Stroke="Transparent"
                                             StrokeThickness="0"
-                                            BackgroundColor="{Binding BgColor}"
+                                            BackgroundColor="{Binding BgColor, Converter={StaticResource stringToColor}}"
                                             Margin="0,0,1,6"
                                             VerticalOptions="Center">
 
@@ -51,7 +56,7 @@
                                               VerticalOptions="Center">
 
                                             <Label Text="{Binding Character}"
-                                                   TextColor="{Binding TextColor}"
+                                                   TextColor="{Binding TextColor, Converter={StaticResource stringToColor}}"
                                                    BackgroundColor="Transparent"
                                                    FontSize="45"
                                                    HorizontalOptions="Center"
@@ -60,7 +65,7 @@
                                             <BoxView Grid.Row="1"
                                                      HeightRequest="4"
                                                      WidthRequest="20"
-                                                     BackgroundColor="{Binding BorderColor}" />
+                                                     BackgroundColor="{Binding BorderColor, Converter={StaticResource stringToColor}}" />
 
                                         </Grid>
                                     </Border>

@@ -1,13 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
+using DomainTyping = OctoType.Domain.Typing;
+using OctoType.Interfaces;
+using OctoType.Models;
+using OctoType.Models.UI.Typing;
 
 using AppInterfaces = OctoType.Application.Interfaces;
-using OctoType.Interfaces;
-using OctoType.Models.UI.Typing;
-using OctoType.Models;
-using OctoType.Domain.Enums;
-using CommunityToolkit.Mvvm.Input;
 
 namespace OctoType.MVVM.ViewModels;
 
@@ -15,26 +16,27 @@ public partial class TypingViewModel : ObservableObject
 {
     public event Action<int>? LineChanged;
     public TypingSession Session { get; } = new();
+    public ObservableCollection<TypingLineState> LinesStates { get; } = [];
 
-    public ObservableCollection<TypingLineState> Lines => Session.Lines;
+    private readonly ITypingThemeRepository _typingThemeRepo;
+
 
     private readonly AppInterfaces.IStringsProviderService _stringsProviderService;
     private readonly AppInterfaces.IInputCharMapperService _charMapper;
-    private readonly ITypingLineStateFactory _typingLineFactory;
 
     public TypingViewModel(
         AppInterfaces.IStringsProviderService stringsProviderService,
         AppInterfaces.IInputCharMapperService charMapper,
-        ITypingLineStateFactory typingLineFactory)
+        ITypingThemeRepository typingThemeRepo)
     {
         _stringsProviderService = stringsProviderService;
         _charMapper = charMapper;
-        _typingLineFactory = typingLineFactory;
 
         Session.LineChanged += (int lineNumber) =>
         {
             LineChanged?.Invoke(lineNumber);
         };
+        _typingThemeRepo = typingThemeRepo;
     }
 
 
@@ -50,7 +52,7 @@ public partial class TypingViewModel : ObservableObject
             OnPropertyChanged(nameof(StopOnErrorTxt));
         }
     }
-    
+
     [RelayCommand]
     public async Task SwitchStopOnError()
         => StopOnErrorEnable = !StopOnErrorEnable;
@@ -79,11 +81,21 @@ public partial class TypingViewModel : ObservableObject
     public string BackReturnTxt
         => BackReturnEnable ? "Retour arrière activé" : "Retour arrière interdit";
 
-    
-
+    // TODO
+    // This fct is for dev purpose
+    // A sort of will be required to get exercices
     public async Task LoadTextAsync()
     {
-        Lines.Clear();
+        Session.Lines.Clear();
+        LinesStates.Clear();
+
+        // TODO
+        // to property, + user access
+        ITypingTheme? theme = await _typingThemeRepo.GetTheme("OctoType_Typing_Theme");
+        if(theme == null)
+        {
+            return;
+        }
 
         string[] dataLines =
             [.. (await _stringsProviderService.GetStringsAsync())];
@@ -92,14 +104,17 @@ public partial class TypingViewModel : ObservableObject
 
         foreach (string line in dataLines)
         {
-            TypingLineState lineVm = _typingLineFactory.Create(line);
-            Lines.Add(lineVm);
+            DomainTyping.TypingLine typingLine = new (line);
+            Session.Lines.Add(typingLine);
+
+            TypingLineState typingLineState =  new (theme, typingLine);
+            LinesStates.Add(typingLineState);
         }
 
-        Session.Reset();
+        Session.ResetProgression();
     }
 
-    public TypingStatus ProcessInput(char input)
+    public DomainTyping.TypingStatus ProcessInput(char input)
     {
         return Session.ProcessInput(input, _charMapper.Map);
     }

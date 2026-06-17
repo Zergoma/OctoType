@@ -1,3 +1,3 @@
-﻿namespace OctoType.Domain.Enums;
+﻿namespace OctoType.Domain.Typing;
 
 public enum TypingStatus { InProgress, Ended }

@@ -2,47 +2,32 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using OctoType.Domain.Enums;
+using OctoType.Domain.Typing;
 using OctoType.Interfaces;
 
 namespace OctoType.Models.UI.Typing;
 
 public partial class TypingLineState : ObservableObject
 {
-    private readonly ITypingCharFactory _factoryTypingChar;
-    public TypingLineState(
-        ITypingCharFactory factoryTypingChar,
-        string rawLine)
-    {
-        _factoryTypingChar = factoryTypingChar;
-        RawLine = rawLine;
-    }
-
+    public TypingLine Model { get; }
+    private readonly ITypingTheme _theme;
     public ObservableCollection<TypingCharState> Characters { get; } = [];
 
-    [ObservableProperty]
-    public partial bool IsCurrentLine { get; set; }
-
-    [ObservableProperty]
-    public partial string RawLine { get; set; } = string.Empty;
-
-    partial void OnRawLineChanged(string value)
+    public TypingLineState(ITypingTheme theme, TypingLine model)
     {
-        Load(RawLine);
+        _theme = theme;
+        Model = model;
+
+        Build();
     }
 
-    public void Load(string line)
+    private void Build()
     {
         Characters.Clear();
-        foreach (char c in line)
-        {
-            Characters.Add(
-                _factoryTypingChar.CreateAsync(c, TypingCharEnumState.Pending, "OctoType_Typing_Theme").Result);
-        }
 
-        // add enter at the end of the line
-        // visual character for "enter"
-        Characters.Add(
-            _factoryTypingChar.CreateAsync('↵', TypingCharEnumState.Pending, "OctoType_Typing_Theme").Result);
+        foreach (TypingChar c in Model.Characters)
+        {
+            Characters.Add(new TypingCharState(_theme, c));
+        }
     }
 }
