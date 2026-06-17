@@ -49,7 +49,8 @@ public static class MauiProgram
 #endif
 
         builder.Services
-            .AddOctoTypeInfrastructure()
+            .AddMauiInfrastructure()        // declare a IAssetReader
+            .AddOctoTypeInfrastructure()    // need a IAssetReader
 
             // define in the maui projet
             // presenters are used inside App Orchestrators
@@ -57,7 +58,6 @@ public static class MauiProgram
             
             .AddOctoTypeApplication()
 
-            .AddTypingThemes()
             .AddViewModelsModule()
             .AddViews();
         

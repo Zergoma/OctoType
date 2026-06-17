@@ -1,10 +1,12 @@
 ﻿using System.Text.Json;
 
 using OctoType.Application;
+using OctoType.Application.Mappers;
+using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Models.Typing.Themes;
 
-namespace OctoType.Infrastructure.Themes;
+namespace OctoType.Infrastructure.Theme;
 
 public class UserThemesLoader : IThemeLoader
 {
@@ -15,46 +17,46 @@ public class UserThemesLoader : IThemeLoader
         _AppPathProvider = appPathProvider;
     }
 
-    public async Task<Result<TypingThemeDefinition>> LoadAsync(string themeName)
+    public async Task<Result<ThemeDto>> LoadAsync(string themeName)
     {
-        string path = 
+        string path =
             Path.Combine(
-                _AppPathProvider.ThemesDirectory, 
+                _AppPathProvider.ThemesDirectory,
                 $"{themeName}.json");
 
         if (!File.Exists(path))
         {
-            return Result<TypingThemeDefinition>
+            return Result<ThemeDto>
                 .Fail($"File not found : {path}");
         }
 
-        TypingThemeDefinition? theme = null;
         try
         {
+            ThemeFileModel? theme = null;
             using Stream stream = File.OpenRead(path);
 
-            theme = await JsonSerializer.DeserializeAsync<TypingThemeDefinition>(
+            theme = await JsonSerializer.DeserializeAsync<ThemeFileModel>(
                 stream,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
+            if (theme == null)
+            {
+                return Result<ThemeDto>
+                    .Fail($"Unable to load theme '{themeName}'.");
+            }
+
+            return Result<ThemeDto>
+                .Ok(theme.ToDto());
 
         }
         catch (Exception ex)
         {
-            return Result<TypingThemeDefinition>
+            return Result<ThemeDto>
                 .Fail($"{ex}");
         }
 
-        if (theme == null)
-        {
-            return Result<TypingThemeDefinition>
-                .Fail($"Unable to load theme '{themeName}'.");
-        }
-
-        return Result<TypingThemeDefinition>
-            .Ok(theme);
     }
 }

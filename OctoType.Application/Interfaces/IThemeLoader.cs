@@ -1,8 +1,8 @@
-﻿using OctoType.Application.Models.Typing.Themes;
+﻿using OctoType.Application.DTOs;
 
 namespace OctoType.Application.Interfaces;
 
 public interface IThemeLoader
 {
-    Task<Result<TypingThemeDefinition>> LoadAsync(string themeName);
+    Task<Result<ThemeDto>> LoadAsync(string themeName);
 }

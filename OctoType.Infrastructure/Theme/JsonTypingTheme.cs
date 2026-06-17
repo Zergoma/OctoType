@@ -2,7 +2,7 @@
 using OctoType.Application.Models.Typing.Themes;
 using OctoType.Domain.Typing;
 
-namespace OctoType.Infrastructure.Themes;
+namespace OctoType.Infrastructure.Theme;
 
 public class JsonTypingTheme : ITypingTheme
 {

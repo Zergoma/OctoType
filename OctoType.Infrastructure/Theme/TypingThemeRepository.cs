@@ -1,8 +1,8 @@
 ﻿using OctoType.Application;
+using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces.Typing;
-using OctoType.Application.Models.Typing.Themes;
 
-namespace OctoType.Infrastructure.Themes;
+namespace OctoType.Infrastructure.Theme;
 
 public class TypingThemeRepository : ITypingThemeRepository
 {
@@ -29,19 +29,19 @@ public class TypingThemeRepository : ITypingThemeRepository
         }
 
         {
-            Result<TypingThemeDefinition> resuUser =
+            Result<ThemeDto> resuUser =
                 await _userThemesLoader.LoadAsync(name);
 
             if (resuUser.Success)
             {
-                JsonTypingTheme userTheme = new(resuUser.Value!);
-                _themes.Add(name, userTheme);
+                ITypingTheme userTheme = TypingThemeMapper.ToTheme(resuUser.GetValue);
+                _themes[name] = userTheme;
                 return userTheme;
             }
         }
 
         {
-            Result<TypingThemeDefinition> resuAsset =
+            Result<ThemeDto> resuAsset =
                     await _assetThemesLoader.LoadAsync(name);
 
             if (!resuAsset.Success)
@@ -49,8 +49,8 @@ public class TypingThemeRepository : ITypingThemeRepository
                 return null;
             }
 
-            JsonTypingTheme assetTheme = new(resuAsset.Value!);
-            _themes.Add(name, assetTheme);
+            ITypingTheme assetTheme = TypingThemeMapper.ToTheme(resuAsset.GetValue);
+            _themes[name] = assetTheme;
             return assetTheme;
         }
     }

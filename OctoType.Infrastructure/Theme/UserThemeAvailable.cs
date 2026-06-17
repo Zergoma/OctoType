@@ -1,6 +1,6 @@
 ﻿using OctoType.Application.Interfaces;
 
-namespace OctoType.Infrastructure.Themes;
+namespace OctoType.Infrastructure.Theme;
 
 public class UserThemeAvailable
 {
