@@ -7,6 +7,8 @@ using DomainTyping = OctoType.Domain.Typing;
 using AppInterfaces = OctoType.Application.Interfaces;
 using AppInterfacesTyping = OctoType.Application.Interfaces.Typing;
 
+using OctoType.Application;
+
 namespace OctoType.ViewModels.Typing;
 
 public partial class TypingViewModel : ObservableObject
@@ -15,7 +17,7 @@ public partial class TypingViewModel : ObservableObject
     public DomainTyping.TypingSession Session { get; } = new();
     public ObservableCollection<TypingLineStateViewModel> LinesStates { get; } = [];
 
-    private readonly AppInterfacesTyping.ITypingThemeRepository _typingThemeRepo;
+    private readonly AppInterfacesTyping.ITypingThemeProvider _typingThemeProvider;
 
 
     private readonly AppInterfaces.IStringsProviderService _stringsProviderService;
@@ -24,7 +26,7 @@ public partial class TypingViewModel : ObservableObject
     public TypingViewModel(
         AppInterfaces.IStringsProviderService stringsProviderService,
         AppInterfaces.IInputCharMapperService charMapper,
-        AppInterfacesTyping.ITypingThemeRepository typingThemeRepo)
+        AppInterfacesTyping.ITypingThemeProvider typingThemeProvider)
     {
         _stringsProviderService = stringsProviderService;
         _charMapper = charMapper;
@@ -33,7 +35,7 @@ public partial class TypingViewModel : ObservableObject
         {
             LineChanged?.Invoke(lineNumber);
         };
-        _typingThemeRepo = typingThemeRepo;
+        _typingThemeProvider = typingThemeProvider;
     }
 
 
@@ -88,8 +90,10 @@ public partial class TypingViewModel : ObservableObject
 
         // TODO
         // to property, + user access
-        AppInterfacesTyping.ITypingTheme? theme = await _typingThemeRepo.GetTheme("OctoType_Typing_Theme");
-        if(theme == null)
+        Result<AppInterfacesTyping.ITypingTheme> themeResu =
+            await _typingThemeProvider.GetThemeAsync("OctoType_Typing_Theme");
+        
+        if(!themeResu.Success)
         {
             return;
         }
@@ -104,7 +108,7 @@ public partial class TypingViewModel : ObservableObject
             DomainTyping.TypingLine typingLine = new (line);
             Session.Lines.Add(typingLine);
 
-            TypingLineStateViewModel typingLineState =  new (theme, typingLine);
+            TypingLineStateViewModel typingLineState =  new (themeResu.GetValue, typingLine);
             LinesStates.Add(typingLineState);
         }
 

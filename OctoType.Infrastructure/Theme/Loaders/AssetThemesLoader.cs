@@ -3,9 +3,8 @@
 using OctoType.Application;
 using OctoType.Application.Interfaces;
 using OctoType.Infrastructure.Theme.Models;
-using OctoType.Infrastructure.Theme.Interfaces;
 
-namespace OctoType.Infrastructure.Theme;
+namespace OctoType.Infrastructure.Theme.Loaders;
 
 public class AssetThemesLoader : IThemeLoader
 {
@@ -16,24 +15,25 @@ public class AssetThemesLoader : IThemeLoader
         _assetReader = assetReader;
     }
 
-    public async Task<Result<ThemeFileModel>> LoadAsync(string themeName)
+    public async Task<Result<ThemeFileModel>> LoadAsync(string themeName, CancellationToken cancellationToken = default)
     {
         string path = $"{themeName}.json";
 
         try
         {
-            ThemeFileModel? theme = null;
 
             await using Stream stream =
                 await _assetReader.OpenAsync(path);
 
-            theme =
+            ThemeFileModel? theme =
                 await JsonSerializer.DeserializeAsync<ThemeFileModel>(
                     stream,
                     new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
-                    });
+                    },
+                    cancellationToken);
+
             if (theme == null)
             {
                 return Result<ThemeFileModel>

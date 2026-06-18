@@ -2,7 +2,7 @@
 
 using OctoType.Application.Interfaces;
 
-namespace OctoType.Infrastructure.Theme;
+namespace OctoType.Infrastructure.Theme.Availables;
 
 public class AssetThemeAvailable
 {
