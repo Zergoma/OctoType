@@ -5,5 +5,5 @@ namespace OctoType.Application.Interfaces.Typing;
 
 public interface ITypingTheme
 {
-    TypingStyle GetStyle(TypingCharEnumState state);
+    TypingStyle GetStyle(TypingCharState state);
 }

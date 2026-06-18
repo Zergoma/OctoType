@@ -61,9 +61,9 @@ public class TypingSession
     {
         if (_previousCurrent != null)
         {
-            if (_previousCurrent.State == TypingCharEnumState.Current)
+            if (_previousCurrent.State == TypingCharState.Current)
             {
-                _previousCurrent.State = TypingCharEnumState.Pending;
+                _previousCurrent.State = TypingCharState.Pending;
             }
         }
 
@@ -71,9 +71,9 @@ public class TypingSession
 
         if (current != null)
         {
-            if (current.State == TypingCharEnumState.Pending)
+            if (current.State == TypingCharState.Pending)
             {
-                current.State = TypingCharEnumState.Current;
+                current.State = TypingCharState.Current;
             }
         }
 
@@ -178,7 +178,7 @@ public class TypingSession
         return true;
     }
 
-    private void ResetCurrentCharacterTo(TypingCharEnumState state)
+    private void ResetCurrentCharacterTo(TypingCharState state)
     {
         TypingChar? c = CurrentCharacter;
         if (c == null)
@@ -222,11 +222,11 @@ public class TypingSession
 
             if (CanMoveBack())
             {
-                ResetCurrentCharacterTo(TypingCharEnumState.Pending);
+                ResetCurrentCharacterTo(TypingCharState.Pending);
 
                 if (MoveBack())
                 {
-                    ResetCurrentCharacterTo(TypingCharEnumState.Current);
+                    ResetCurrentCharacterTo(TypingCharState.Current);
                     return TypingStatus.InProgress;
                 }
             }

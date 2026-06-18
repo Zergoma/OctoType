@@ -11,8 +11,8 @@ public class TypingChar
 
     public char Character { get; set; }
 
-    private TypingCharEnumState _state;
-    public TypingCharEnumState State
+    private TypingCharState _state;
+    public TypingCharState State
     {
         get => _state; 
         set
@@ -34,13 +34,13 @@ public class TypingChar
         {
             State = NbError switch
             {
-                0 => TypingCharEnumState.Correct,
-                _ => TypingCharEnumState.CorrectWithError,
+                0 => TypingCharState.Correct,
+                _ => TypingCharState.CorrectWithError,
             };
             return true;
         }
 
-        State = TypingCharEnumState.CurrentWrong;
+        State = TypingCharState.CurrentWrong;
         Errors.Add(input);
         NbError++;
         return false;
@@ -53,6 +53,6 @@ public class TypingChar
             Errors.Clear();
         }
         NbError = 0;
-        State = TypingCharEnumState.Pending;
+        State = TypingCharState.Pending;
     }
 }

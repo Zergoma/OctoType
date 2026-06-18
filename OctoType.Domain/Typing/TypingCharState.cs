@@ -1,6 +1,6 @@
 ﻿namespace OctoType.Domain.Typing;
 
-public enum TypingCharEnumState
+public enum TypingCharState
 {
     Pending,
     Current,

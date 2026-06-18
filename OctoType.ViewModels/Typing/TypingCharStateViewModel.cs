@@ -11,6 +11,10 @@ public partial class TypingCharStateViewModel : ObservableObject
 {
     private readonly AppInterfacesTyping.ITypingTheme _typingTheme;
     public TypingChar Model { get; }
+    public char Character => Model.Character;
+    
+    // private to restrain domain access
+    private TypingCharState State => Model.State;
 
     private AppModelsTyping.TypingStyle Style => _typingTheme.GetStyle(State);
 
@@ -36,8 +40,6 @@ public partial class TypingCharStateViewModel : ObservableObject
         OnPropertyChanged(nameof(BorderThikness));
     }
 
-    public char Character => Model.Character;
-    public TypingCharEnumState State => Model.State;
 
     public string TextColor => Style.TextColor;
     public string BgColor => Style.BackgroundColor;

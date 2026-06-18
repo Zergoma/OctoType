@@ -1,7 +1,7 @@
 ﻿using OctoType.Application;
-using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.Infrastructure.Theme.Mappers;
+using OctoType.Infrastructure.Theme.Models;
 
 namespace OctoType.Infrastructure.Theme;
 
@@ -30,19 +30,19 @@ public class TypingThemeRepository : ITypingThemeRepository
         }
 
         {
-            Result<ThemeDto> resuUser =
+            Result<ThemeFileModel> resuUser =
                 await _userThemesLoader.LoadAsync(name);
 
             if (resuUser.Success)
             {
-                ITypingTheme userTheme = TypingThemeMapper.ToTheme(resuUser.GetValue);
+                ITypingTheme userTheme = resuUser.GetValue.ToTheme();
                 _themes[name] = userTheme;
                 return userTheme;
             }
         }
 
         {
-            Result<ThemeDto> resuAsset =
+            Result<ThemeFileModel> resuAsset =
                     await _assetThemesLoader.LoadAsync(name);
 
             if (!resuAsset.Success)
@@ -50,7 +50,7 @@ public class TypingThemeRepository : ITypingThemeRepository
                 return null;
             }
 
-            ITypingTheme assetTheme = TypingThemeMapper.ToTheme(resuAsset.GetValue);
+            ITypingTheme assetTheme = resuAsset.GetValue.ToTheme();
             _themes[name] = assetTheme;
             return assetTheme;
         }

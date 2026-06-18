@@ -73,7 +73,7 @@ public partial class TypingView : ContentPage
         
         char input = e.NewTextValue[^1];
 
-        TypingStatus typingStatus = vm.ProcessInput(input);
+        vm.ProcessInput(input);
 
         HiddenInput.Text = string.Empty;
     }

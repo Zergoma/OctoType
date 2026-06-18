@@ -1,11 +1,9 @@
 ﻿using System.Text.Json;
 
 using OctoType.Application;
-using OctoType.Application.Mappers;
-using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Infrastructure.Theme.Models;
-using OctoType.Infrastructure.Theme.Mappers;
+using OctoType.Infrastructure.Theme.Interfaces;
 
 namespace OctoType.Infrastructure.Theme;
 
@@ -18,7 +16,7 @@ public class UserThemesLoader : IThemeLoader
         _AppPathProvider = appPathProvider;
     }
 
-    public async Task<Result<ThemeDto>> LoadAsync(string themeName)
+    public async Task<Result<ThemeFileModel>> LoadAsync(string themeName)
     {
         string path =
             Path.Combine(
@@ -27,7 +25,7 @@ public class UserThemesLoader : IThemeLoader
 
         if (!File.Exists(path))
         {
-            return Result<ThemeDto>
+            return Result<ThemeFileModel>
                 .Fail($"File not found : {path}");
         }
 
@@ -45,17 +43,17 @@ public class UserThemesLoader : IThemeLoader
 
             if (theme == null)
             {
-                return Result<ThemeDto>
+                return Result<ThemeFileModel>
                     .Fail($"Unable to load theme '{themeName}'.");
             }
 
-            return Result<ThemeDto>
-                .Ok(theme.ToDto());
+            return Result<ThemeFileModel>
+                .Ok(theme);
 
         }
         catch (Exception ex)
         {
-            return Result<ThemeDto>
+            return Result<ThemeFileModel>
                 .Fail($"{ex}");
         }
 
