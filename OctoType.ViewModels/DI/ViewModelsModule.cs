@@ -3,6 +3,7 @@
 using OctoType.ViewModels.Exercices;
 using OctoType.ViewModels.Import;
 using OctoType.ViewModels.Typing;
+using OctoType.ViewModels.TypingLauncher;
 
 
 namespace OctoType.ViewModels.DI;
@@ -15,6 +16,7 @@ public static class ViewModelsModule
         services.AddTransient<ImportBookViewModel>();
         services.AddTransient<ImportWordViewModel>();
         services.AddTransient<TypingViewModel>();
+        services.AddTransient<TypingLauncherViewModel>();
         return services;
     }
 }

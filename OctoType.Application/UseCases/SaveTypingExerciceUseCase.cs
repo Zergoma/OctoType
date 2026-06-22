@@ -10,17 +10,17 @@ namespace OctoType.Application.UseCases;
 public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
 {
     private readonly ITypingExerciceSettingFactory _factory;
-    private readonly ITypingExercicesStorage _persistence;
+    private readonly ITypingExercicesStorage _storage;
     private readonly IValidator<TypingExerciseCreateParameters> _typingExerciceSettingValidator;
 
     public SaveTypingExerciceUseCase(
         ITypingExerciceSettingFactory factory,
 
-        ITypingExercicesStorage persistence,
+        ITypingExercicesStorage storage,
         IValidator<TypingExerciseCreateParameters> typingExerciceSettingValidator)
     {
         _factory = factory;
-        _persistence = persistence;
+        _storage = storage;
         _typingExerciceSettingValidator = typingExerciceSettingValidator;
     }
 
@@ -47,7 +47,7 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
 
         exerciceManager.AddNewExercice(typingExerciceSettings);
 
-        await _persistence.SaveAsync(exerciceManager.Exercice);
+        await _storage.SaveAsync(exerciceManager.Exercice);
         
         return Result<bool>
             .Ok(true);

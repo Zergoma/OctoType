@@ -20,11 +20,11 @@ public partial class TypingViewModel : ObservableObject
     private readonly AppInterfacesTyping.ITypingThemeProvider _typingThemeProvider;
 
 
-    private readonly AppInterfaces.IStringsProviderService _stringsProviderService;
+    private readonly AppInterfaces.IStringsProvider _stringsProviderService;
     private readonly AppInterfaces.IInputCharMapperService _charMapper;
 
     public TypingViewModel(
-        AppInterfaces.IStringsProviderService stringsProviderService,
+        AppInterfaces.IStringsProvider stringsProviderService,
         AppInterfaces.IInputCharMapperService charMapper,
         AppInterfacesTyping.ITypingThemeProvider typingThemeProvider)
     {

@@ -6,8 +6,8 @@
     xmlns:views="clr-namespace:OctoType.MVVM.Views"
     xmlns:local="clr-namespace:OctoType"
     Title="OctoType"
-    FlyoutWidth="200"
-    Shell.FlyoutBehavior="{OnIdiom Desktop=Locked, Default=Flyout}">
+    FlyoutWidth="300"
+    >
 
 
     <Shell.ItemTemplate>
@@ -22,13 +22,18 @@
     </Shell.ItemTemplate>
 
 
+    <FlyoutItem Title="Dactylo launcher">
+        <ShellContent Title="Dactylo launcher"
+                      Route="TypingLauncherView"
+                      ContentTemplate="{DataTemplate views:TypingLauncherView}"/>
 
-    <FlyoutItem Title="Dactylo">
-        <Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Dev Dactylo">
             <ShellContent Title="Dactylo"
                           Route="TypingView"
                           ContentTemplate="{DataTemplate views:TypingView}"/>
-        </Tab>
+        
     </FlyoutItem>
 
     <FlyoutItem Title="Import">
@@ -49,5 +54,6 @@
                       Route="ExerciceGeneratorView"
                       ContentTemplate="{DataTemplate views:ExerciceGeneratorView}"/>
     </FlyoutItem>
+    
 
 </Shell>

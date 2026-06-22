@@ -1,6 +1,6 @@
 ﻿namespace OctoType.Application.Interfaces;
 
-public interface IStringsProviderService
+public interface IStringsProvider
 {
     Task<IEnumerable<string>> GetStringsAsync();
 }

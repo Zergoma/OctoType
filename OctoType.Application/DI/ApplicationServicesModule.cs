@@ -17,7 +17,7 @@ internal static class ApplicationServicesModule
         services.AddTransient<IKeyBoardLayoutAvailableService, KeyBoardLayoutAvailableService>();
         services.AddTransient<ILanguageAvailableService, LanguageAvailableService>();
         services.AddTransient<IPseudoWordGeneratorService, PseudoWordGeneratorService>();
-        services.AddTransient<IStringsProviderService, StringsProviderService>();
+        services.AddTransient<IStringsProvider, DevStringsProvider>();
 
         // TODO
         // need to add qwerty etc keyboard keys locators

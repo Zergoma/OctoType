@@ -2,9 +2,8 @@
 
 namespace OctoType.Application.Services;
 
-public class StringsProviderService : IStringsProviderService
+public class DevStringsProvider : IStringsProvider
 {
-
     public Task<IEnumerable<string>> GetStringsAsync()
     {
         IEnumerable<string> data =
