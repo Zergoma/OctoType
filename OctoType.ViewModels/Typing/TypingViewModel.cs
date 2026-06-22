@@ -8,6 +8,8 @@ using AppInterfaces = OctoType.Application.Interfaces;
 using AppInterfacesTyping = OctoType.Application.Interfaces.Typing;
 
 using OctoType.Application;
+using OctoType.Domain.Typing;
+using System.Diagnostics;
 
 namespace OctoType.ViewModels.Typing;
 
@@ -98,8 +100,16 @@ public partial class TypingViewModel : ObservableObject
             return;
         }
 
-        string[] dataLines =
-            [.. (await _stringsProviderService.GetStringsAsync())];
+        Result<IEnumerable<string>> getStringResult =
+            await _stringsProviderService.GetStringsAsync();
+
+        if(!getStringResult.Success)
+        {
+            Debug.WriteLine(getStringResult.Error);
+            return;
+        }
+
+        string[] dataLines = [.. getStringResult.GetValue];
 
         ArgumentOutOfRangeException.ThrowIfLessThan(dataLines.Length, 1);
 
@@ -117,6 +127,8 @@ public partial class TypingViewModel : ObservableObject
 
     public DomainTyping.TypingStatus ProcessInput(char input)
     {
-        return Session.ProcessInput(input, _charMapper.Map);
+        TypingStatus processStatus = Session.ProcessInput(input, _charMapper.Map);
+
+        return processStatus;
     }
 }

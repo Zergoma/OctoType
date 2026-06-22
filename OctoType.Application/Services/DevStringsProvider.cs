@@ -4,7 +4,7 @@ namespace OctoType.Application.Services;
 
 public class DevStringsProvider : IStringsProvider
 {
-    public Task<IEnumerable<string>> GetStringsAsync()
+    public async Task<Result<IEnumerable<string>>> GetStringsAsync()
     {
         IEnumerable<string> data =
         [
@@ -22,6 +22,6 @@ public class DevStringsProvider : IStringsProvider
             "cplusplus is still alive"
         ];
 
-        return Task.FromResult(data);
+        return Result<IEnumerable<string>>.Ok(data);
     }
 }

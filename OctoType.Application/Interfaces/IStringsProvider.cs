@@ -2,5 +2,5 @@
 
 public interface IStringsProvider
 {
-    Task<IEnumerable<string>> GetStringsAsync();
+    Task<Result<IEnumerable<string>>> GetStringsAsync();
 }
