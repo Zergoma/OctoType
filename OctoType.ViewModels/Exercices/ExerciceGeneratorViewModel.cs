@@ -44,12 +44,16 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
-        TypingExercices? exercicesLoaded =
+        Result<TypingExercices> exercicesLoadedResult =
             await _typingExercicePersistence.LoadAsync();
 
-        if (exercicesLoaded is not null)
+        if (exercicesLoadedResult.Success )
         {
-            _typingExerciceManager.Exercice = exercicesLoaded;
+            _typingExerciceManager.Exercice = exercicesLoadedResult.GetValue;
+        }
+        else
+        {
+            _typingExerciceManager.Exercice = new();
         }
     }
 

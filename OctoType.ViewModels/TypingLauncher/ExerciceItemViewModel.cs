@@ -20,20 +20,29 @@ public partial class ExerciceItemViewModel : ObservableObject
     [ObservableProperty] public partial bool IsSelected { get; set; }
      
     public string Name => _exercice.Name;
+    public string Desciption => _exercice.Description;
+
+
     public string Letters
     {
         get
         {
             if (IsStatic)
             {
-                return $"letters: {_exercice.Static.Variants[0].Configuration.AllowedLetters}";
+                // TODO
+                // dev mode -> need to do better
+                return _exercice.Static!.Variants[0].Configuration.AllowedLetters;
             }
-            return "";
+
+            // TODO
+            // dev mode -> need to do better
+            return _exercice.Dynamic!.Configurations[0].AllowedLetters;
 
         }
     }
 
     public bool IsStatic => _exercice.Static != null;
+    public bool IsDynamic => _exercice.Dynamic != null;
 
 
 }

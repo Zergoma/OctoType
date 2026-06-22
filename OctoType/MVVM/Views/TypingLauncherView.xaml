@@ -118,47 +118,40 @@
                        FontSize="40"
                        HorizontalOptions="Center"
                        VerticalOptions="Center"/>
-                
-                
+
+
                 <VerticalStackLayout IsVisible="{Binding IsSelectedExercice}">
+                    <Label Text="{Binding ExerciceName}" TextColor="White" FontSize="34" FontAttributes="Bold" Margin="5,5,0,15" />
+                    
+                    <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10" Margin="0,0,0,30">
+                        <VerticalStackLayout>
+                            <Label Text="Description:" TextColor="White" FontSize="12" Margin="0,0,0,10" />
+                            <Label Text="{Binding ExerciceDescription}" TextColor="White" MinimumHeightRequest="50" />
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10" Margin="0,0,0,30">
+                        <VerticalStackLayout>
+                            <Label Text="Lettres:" TextColor="White" FontSize="12" Margin="0,0,0,10" />
+                            <Label Text="{Binding ExerciceLetters}" TextColor="White" />
+                        </VerticalStackLayout>
+                    </Border>
 
-                <Label Text="Nom exercice" TextColor="White" FontSize="34" FontAttributes="Bold" Margin="5,5,0,15" />
-                <Border StyleClass="BorderRounded10, BorderBgDescription"
-                        Padding="10"
-                        Margin="0,0,0,30">
-                    <VerticalStackLayout>
+                    <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10">
+                        <Grid ColumnDefinitions="auto,*">
+                            <Label Text="Nombre de mot:" TextColor="White" Margin="0,0,0,0" />
+                            <Picker Grid.Column="1" BackgroundColor="Yellow" Margin="10,0,0,0" />
+                        </Grid>
+                    </Border>
 
-                        <Label Text="Description:" TextColor="White" FontSize="12" Margin="0,0,0,10" />
-                        <Label Text="Ce joli exercice juste " TextColor="White" MinimumHeightRequest="50" />
-                    </VerticalStackLayout>
-
-                </Border>
-                <Border StyleClass="BorderRounded10, BorderBgDescription"
-                        Padding="10"
-                        Margin="0,0,0,30">
-                    <Grid ColumnDefinitions="auto,auto">
-                        <Label Text="Lettres:" TextColor="White" Margin="0,0,0,0" />
-                        <Label Grid.Column="1" Text="abcdf" TextColor="White" MinimumHeightRequest="10"
-                               Margin="5,0,0,0" />
-                    </Grid>
-                </Border>
-
-                <Border StyleClass="BorderRounded10, BorderBgDescription"
-                        Padding="10">
-                    <Grid ColumnDefinitions="auto,*">
-                        <Label Text="Nombre de mot:" TextColor="White" Margin="0,0,0,0" />
-                        <Picker Grid.Column="1" BackgroundColor="Yellow" Margin="10,0,0,0" />
-                    </Grid>
-                </Border>
-
-                <Button HorizontalOptions="End" MinimumWidthRequest="70" MaximumWidthRequest="200" Text="Lancer !"
+                    <Button HorizontalOptions="End" MinimumWidthRequest="70" MaximumWidthRequest="200" Text="Lancer !"
                         StyleClass="ButtonHoverLaunch"
                         HeightRequest="90"
                         FontSize="20"
                         Margin="10,40,50,10" />
 
 
-            </VerticalStackLayout>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 
@@ -197,7 +190,7 @@
                                         <TapGestureRecognizer 
                                                 Command="{Binding BindingContext.SelectCommand, Source={x:Reference RootPage}}"
                                                 CommandParameter="{Binding .}"/>
-                                        
+
                                     </Border.GestureRecognizers>
 
                                     <Border.Triggers>
@@ -235,7 +228,7 @@
                                             </Setter>
                                         </DataTrigger>
                                     </Border.Triggers>
-                                    
+
                                     <Grid RowDefinitions="*,*">
                                         <Label Text="{Binding Name}" TextColor="White" 
                                                 HorizontalOptions="Center"

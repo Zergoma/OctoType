@@ -13,6 +13,11 @@ internal static class InfrastructureProvidersModule
         services.AddTransient<IImportFilePathProvider, ImportFilePathProvider>();
         services.AddTransient<IFileCopyProvider, FileCopyProvider>();
         services.AddTransient<IExercicesSettingPathProvider, ExercicesSettingPathProvider>();
+        
+        
+        //services.AddTransient<ITypingExercicesFileNameProvider, JsonTypingExercicesFileNameProvider>();
+        services.AddTransient<ITypingExercicesFileNameProvider, PbTypingExercicesFileNameProvider>();
+
         return services;
     }
 }

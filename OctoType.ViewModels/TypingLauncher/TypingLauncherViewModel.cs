@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using OctoType.Application;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.Application.Models.Typing.Exercices;
 
@@ -28,17 +29,18 @@ public partial class TypingLauncherViewModel : ObservableObject
         }
         _isInit = true;
 
-        TypingExercices? exercicesLoaded =
+        Result<TypingExercices> exercicesLoadedResult =
             await _typingExerciceStorage.LoadAsync();
 
-        if (exercicesLoaded is not null)
+        if (exercicesLoadedResult.Success)
         {
             AllExercice.Clear();
-            
-            for(int i =0; i< exercicesLoaded.Exercices.Count; i++)// (TypingExercise item in exercicesLoaded.Exercices)
+
+            List<TypingExercise> exercises = exercicesLoadedResult.GetValue.Exercices;
+
+            for (int i =0; i< exercises.Count; i++)
             {
-                var item = exercicesLoaded.Exercices[i];
-                AllExercice.Add(new ExerciceItemViewModel(item, i));
+                AllExercice.Add(new ExerciceItemViewModel(exercises[i], i));
             }
         }
     }
@@ -53,7 +55,18 @@ public partial class TypingLauncherViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSelectedExercice))]
     [NotifyPropertyChangedFor(nameof(IsNoSelection))]
+    [NotifyPropertyChangedFor(nameof(ExerciceName))]
+    [NotifyPropertyChangedFor(nameof(ExerciceDescription))]
+    [NotifyPropertyChangedFor(nameof(ExerciceLetters))]
     public partial ExerciceItemViewModel? ExerciceSelected { get; set; }
+
+
+
+    public string ExerciceName => ExerciceSelected?.Name ?? "Exercice Name";
+    public string ExerciceDescription => ExerciceSelected?.Desciption ?? "Exercice Description";
+    public string ExerciceLetters => ExerciceSelected?.Letters?? "Exercice Letters";
+
+
 
     [RelayCommand]
     public void Select(ExerciceItemViewModel exerciceSelected)

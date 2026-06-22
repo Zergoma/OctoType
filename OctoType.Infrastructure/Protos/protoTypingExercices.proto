@@ -1,0 +1,49 @@
+﻿syntax="proto3";
+
+package OctoType.Infrastructure.Protos;
+
+
+message ProtoKeyboardLayout {
+    enum ProtoKeyboardLayoutType {
+        AZERTYFr = 0;
+        QWERTYUS = 1;
+        QWERTZDE = 2;
+        BEPO = 3;
+    }
+    ProtoKeyboardLayoutType layout = 1;
+    string name = 2;
+}
+
+message ProtoTypingExerciceConfiguration {
+    ProtoKeyboardLayout keyboard_layout = 1;
+    string allowed_characters = 2;
+}
+
+message ProtoStaticExerciceVariant{
+    string generatedText = 1;
+    ProtoTypingExerciceConfiguration configuration = 2;
+}
+
+message ProtoExerciceStatic {
+    repeated ProtoStaticExerciceVariant variants = 1;
+}
+
+message ProtoExerciceDynamic {
+    repeated ProtoTypingExerciceConfiguration configuration = 1;
+}
+
+
+message ProtoTypingExercice {
+    string name = 1;
+    string description = 2;
+    string language = 3;
+
+    oneof exercice_type {
+        ProtoExerciceStatic static_exercice = 4;
+        ProtoExerciceDynamic dynamic_exercice = 5;
+    }
+}
+
+message ProtoTypingExerciceList {
+    repeated ProtoTypingExercice exercices = 1;
+}

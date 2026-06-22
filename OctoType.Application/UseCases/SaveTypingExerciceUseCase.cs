@@ -45,11 +45,10 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
             _ => _factory.GenerateDynamicTypingExercices(parameters),
         };
 
+        // Add fresh new exercice
         exerciceManager.AddNewExercice(typingExerciceSettings);
 
-        await _storage.SaveAsync(exerciceManager.Exercice);
-        
-        return Result<bool>
-            .Ok(true);
+        // Record all exercices
+        return await _storage.SaveAsync(exerciceManager.Exercice);
     }
 }

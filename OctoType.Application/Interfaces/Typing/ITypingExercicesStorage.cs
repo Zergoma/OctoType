@@ -4,6 +4,6 @@ namespace OctoType.Application.Interfaces.Typing;
 
 public interface ITypingExercicesStorage
 {
-    Task<TypingExercices> LoadAsync();
-    Task SaveAsync(TypingExercices? exercices);
+    Task<Result<TypingExercices>> LoadAsync();
+    Task<Result<bool>> SaveAsync(TypingExercices? exercices);
 }

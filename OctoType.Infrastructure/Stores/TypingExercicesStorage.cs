@@ -1,3 +1,4 @@
+using OctoType.Application;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.Application.Models.Typing.Exercices;
@@ -13,29 +14,28 @@ public class TypingExercicesStorage : ITypingExercicesStorage
 
     public TypingExercicesStorage(
         IExerciseSettingsStore exerciceStrore,
-        IExercicesSettingPathProvider exercicePathProvider)
+        IExercicesSettingPathProvider exercicePathProvider,
+        ITypingExercicesFileNameProvider exerciceFilenameProvider)
     {
         _exerciceStrore = exerciceStrore;
         _exercicePathProvider = exercicePathProvider;
         string exerciceFolder = _exercicePathProvider.ExerciceSettingPath();
+        
         _fullPath = Path.Combine(
             exerciceFolder,
-            "Exercices.json");
+            exerciceFilenameProvider.GetFileName());
     }
-    
-    public async Task<TypingExercices> LoadAsync()
-    {
-        TypingExercices? loadResu =
-            await _exerciceStrore.LoadAsync(_fullPath) ?? new TypingExercices();
 
-        return loadResu;
-    }
+    public async Task<Result<TypingExercices>> LoadAsync()
+        => await _exerciceStrore.LoadAsync(_fullPath);
     
-    public async Task SaveAsync(TypingExercices? exercices)
+    
+    public async Task<Result<bool>> SaveAsync(TypingExercices? exercices)
     {
         if (exercices == null)
-            return;
-        
-        await _exerciceStrore.SaveAsync(exercices, _fullPath);
+            return Result<bool>
+                .Fail("exercices are empty");
+
+        return await _exerciceStrore.SaveAsync(exercices, _fullPath);
     }
 }

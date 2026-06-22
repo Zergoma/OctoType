@@ -10,8 +10,14 @@ internal static class InfrastructureStroresModule
 {
     public static IServiceCollection AddStrores(this IServiceCollection services)
     {
-        services.AddTransient<IExerciseSettingsStore, JsonTypingExercisesStore>();
+        //services.AddTransient<IExerciseSettingsStore, JsonTypingExercisesStore>();
+        services.AddTransient<IExerciseSettingsStore, ProtobufTypingExercisesStore>(); 
+
+
         services.AddTransient<ITypingExercicesStorage, TypingExercicesStorage>();
+        
+
+
         return services;
     }
 }
