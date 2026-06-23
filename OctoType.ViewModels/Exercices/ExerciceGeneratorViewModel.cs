@@ -5,6 +5,7 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Mappers;
 using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
@@ -20,6 +21,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
     private readonly List<string> _languageAvailableElem;
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
+    private readonly List<GeneratedTypeSourceDto> _generationTypeSourcAvailableElem;
 
     public ExerciceGeneratorViewModel(
         IPseudoWordBatchGenerator pseudoWordBatchGenerator,
@@ -27,7 +29,8 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
         ITypingExercicesManager typingExerciceManager,
         ITypingExercicesStorage typingExercicePersistence,
-        ISaveTypingExerciceUseCase saveUseCase)
+        ISaveTypingExerciceUseCase saveUseCase,
+        IGenerationTypeSourceAvailableService generationTypeSource)
     {
         _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
         AllowedChars = "abcdefghijklmnopqrstuvwxyz";
@@ -36,6 +39,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         MaxLengthWord = 3;
         _languageAvailableElem = languageAvailableService.GetAvailableLanguage();
         _keyboardLayoutAvailableElem = keyboardLayoutAvailableService.GetKeyBoardAvailable();
+        _generationTypeSourcAvailableElem = generationTypeSource.GetGenerationTypeSourceAvailable();
 
         _typingExerciceManager = typingExerciceManager;
         _typingExercicePersistence = typingExercicePersistence;
@@ -47,7 +51,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         Result<TypingExercices> exercicesLoadedResult =
             await _typingExercicePersistence.LoadAsync();
 
-        if (exercicesLoadedResult.Success )
+        if (exercicesLoadedResult.Success)
         {
             _typingExerciceManager.Exercice = exercicesLoadedResult.GetValue;
         }
@@ -62,6 +66,10 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
     public IReadOnlyList<KeyBoardLayoutDto> KeyboardLayoutAvailable => _keyboardLayoutAvailableElem;
     public KeyBoardLayoutDto? KeyboardLayoutSelected { get; set; }
+
+
+    public IReadOnlyList<GeneratedTypeSourceDto> GenerationTypeSourceAvailable => _generationTypeSourcAvailableElem;
+    public GeneratedTypeSourceDto? GenerationTypeSourceSelected { get; set; }
 
 
     [ObservableProperty] public partial string GeneratedText { get; set; }
@@ -89,7 +97,10 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StaticDynamicText))]
+    [NotifyPropertyChangedFor(nameof(IsDynamic))]
     public partial bool IsStaticGenerated { get; set; } = true;
+
+    public bool IsDynamic => !IsStaticGenerated;
 
     public string StaticDynamicText => IsStaticGenerated ? "Static" : "Dynamic";
 
@@ -179,19 +190,20 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             return;
         }
 
+
         // AllowedLetters could be changed to nothing, or with letter unrelated to generated text
         // we can no longer trust it
         // we want all the keys present in generated text, nothing more, nothing less
         // but not changing the allow by user
-        List<char> detectedChar = 
-            [.. GeneratedText
+        List<char> detectedChar =
+        [.. GeneratedText
                 .Where(c =>!char.IsWhiteSpace(c))
                 .Distinct()
                 .Order()];
-        
+
         string AllowedCharsStrict = string.Join(null, detectedChar);
 
-        TypingExerciseCreateParameters settingbase = new() 
+        TypingExerciseCreateParameters settingbase = new()
         {
             Name = ExerciceName,
             Description = Description,
@@ -200,13 +212,46 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             AllowedLetters = AllowedCharsStrict
         };
 
+        TypingTextDataDynamic? dynamicTypingTextData = null;
 
-        var resu = 
+        if (!IsStaticGenerated)
+        {
+            if (GenerationTypeSourceSelected is GeneratedTypeSourceDto generationTypeSourceDto)
+            {
+                var generationTypeSourceMapResult = generationTypeSourceDto.ToModel();
+                if(!generationTypeSourceMapResult.Success)
+                {
+                    ErrorMessageTxt = generationTypeSourceMapResult.Error;
+                    return;
+                }
+
+                // TODO
+                // creating dto for this ? (for GeneratedTypeSource, model not dto)
+                dynamicTypingTextData = new()
+                {
+                    LengthMax = Math.Max(MaxLengthWord, MinLengthWord),
+                    LengthMin = Math.Min(MaxLengthWord, MinLengthWord),
+                    LanguagesSelected =
+                        LanguageSelected != null
+                        ? [LanguageSelected]
+                        : [],
+                    GeneratedTypeSource = generationTypeSourceMapResult.GetValue
+                };
+            }
+            else
+            {
+                ErrorMessageTxt = "You need to select a Generation Type source";
+                return;
+            }
+        }
+
+        var resu =
             await _saveUseCase.ExecuteAsync(
                 settingbase,
                 IsStaticGenerated,
                 GeneratedText,
-                _typingExerciceManager);
+                _typingExerciceManager,
+                dynamicTypingTextData);
 
         if (!resu.Success)
         {

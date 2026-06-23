@@ -27,22 +27,19 @@ public partial class ExerciceItemViewModel : ObservableObject
     {
         get
         {
-            if (IsStatic)
-            {
                 // TODO
                 // dev mode -> need to do better
-                return _exercice.Static!.Variants[0].Configuration.AllowedLetters;
-            }
-
-            // TODO
-            // dev mode -> need to do better
-            return _exercice.Dynamic!.Configurations[0].AllowedLetters;
-
+                return _exercice.ExerciceConfigs[0].TextData.AllowedLetters;
         }
     }
 
-    public bool IsStatic => _exercice.Static != null;
-    public bool IsDynamic => _exercice.Dynamic != null;
+    // TODO
+    // dev mode -> need to do better
+    public bool IsStatic => _exercice.ExerciceConfigs[0].TextData.StaticTextData != null;
+
+    // TODO
+    // dev mode -> need to do better
+    public bool IsDynamic => _exercice.ExerciceConfigs[0].TextData.DynamicTextData != null;
 
 
 }

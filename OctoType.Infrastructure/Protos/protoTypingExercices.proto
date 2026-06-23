@@ -14,34 +14,40 @@ message ProtoKeyboardLayout {
     string name = 2;
 }
 
+message ProtoTypingTextDataStatic {
+    string generatedText = 1;
+}
+
+message ProtoTypingTextDataDynamic {
+    enum ProtoGeneratedTypeSource {
+        PSEUDOWORDS = 0;    // pseudo words generator source
+        WORDS = 1;          // bdd source 
+    }
+    ProtoGeneratedTypeSource generated_type_source =1;
+    uint32 length_min = 2;
+    uint32 length_max = 3;
+    repeated string languages_selected = 4;
+}
+
+message ProtoTypingTextData {
+    string allowed_characters = 1;
+    oneof text_data_Type {
+        ProtoTypingTextDataStatic static_text_data = 2;
+        ProtoTypingTextDataDynamic dynamic_text_data = 3;
+    }
+}
+
 message ProtoTypingExerciceConfiguration {
     ProtoKeyboardLayout keyboard_layout = 1;
-    string allowed_characters = 2;
-}
-
-message ProtoStaticExerciceVariant{
-    string generatedText = 1;
-    ProtoTypingExerciceConfiguration configuration = 2;
-}
-
-message ProtoExerciceStatic {
-    repeated ProtoStaticExerciceVariant variants = 1;
-}
-
-message ProtoExerciceDynamic {
-    repeated ProtoTypingExerciceConfiguration configuration = 1;
+    ProtoTypingTextData text_data = 2;
 }
 
 
 message ProtoTypingExercice {
     string name = 1;
     string description = 2;
-    string language = 3;
 
-    oneof exercice_type {
-        ProtoExerciceStatic static_exercice = 4;
-        ProtoExerciceDynamic dynamic_exercice = 5;
-    }
+    repeated ProtoTypingExerciceConfiguration exercices_configs= 3;
 }
 
 message ProtoTypingExerciceList {

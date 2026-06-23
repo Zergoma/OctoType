@@ -97,7 +97,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Infrastructure\Themes\" />
 	  <Folder Include="Resources\Themes\" />
 	</ItemGroup>
 

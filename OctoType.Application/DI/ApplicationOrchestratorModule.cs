@@ -16,6 +16,8 @@ static internal class ApplicationOrchestratorModule
         services.AddTransient<IWordImportOrchestrator, WordImportOrchestrator>();                   // depends ->  IWordBatchProcessorOrchestrator
         // ****************************************************************************************************
 
+        services.AddTransient<ICreateStringProviderOrchestrator, CreateStringProviderOrchestrator>();
+
         return services;
     }
 }

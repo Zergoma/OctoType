@@ -122,15 +122,17 @@
 
         </Grid>
 
-        <Grid ColumnDefinitions="*,*,*"
+        <Grid ColumnDefinitions="*,*,*,*"
               RowDefinitions="*,*"
               ColumnSpacing="10"
               WidthRequest="500">
 
             <Picker Grid.Column="0" ItemsSource="{Binding LanguageAvailable}" SelectedItem="{Binding LanguageSelected}"/>
             <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" />
+            <Picker Grid.Column="2" ItemsSource="{Binding GenerationTypeSourceAvailable}" SelectedItem="{Binding GenerationTypeSourceSelected}"
+                    IsVisible="{Binding IsDynamic}"/>
 
-            <Button Grid.Column="2" Text="Save"
+            <Button Grid.Column="3" Text="Save"
                     StyleClass="button_hover"
                     Command="{Binding SaveNewExerciceSettingCommand}"/>
 

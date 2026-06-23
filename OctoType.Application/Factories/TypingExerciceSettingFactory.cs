@@ -10,36 +10,31 @@ public class TypingExerciceSettingFactory : ITypingExerciceSettingFactory
         TypingExerciseCreateParameters  typingExerciceSetting,
         string generatedText)
     {
-        var (baseSettings, baseExerciceConfig) 
+        var (typingExercice, typingExerciceConfiguration) 
             = GenerateCommonBaseConfiguration(typingExerciceSetting);
-        
-        TypingExerciseStatic staticsetting = new()
+
+        typingExerciceConfiguration.TextData.StaticTextData = new()
         {
-            Variants =
-            [
-                new StaticExerciseVariant()
-                {
-                    Configuration = baseExerciceConfig,
-                    GeneratedText = generatedText,
-                }
-            ]
+            GeneratedText = generatedText
         };
-        baseSettings.Static = staticsetting;
-        return baseSettings;
+
+        typingExercice.ExerciceConfigs.Add(typingExerciceConfiguration);
+        return typingExercice;
     }
 
-    public TypingExercise GenerateDynamicTypingExercices(TypingExerciseCreateParameters typingExerciceSetting)
+    public TypingExercise GenerateDynamicTypingExercices(
+        TypingExerciseCreateParameters typingExerciceSetting,
+        TypingTextDataDynamic dynamicTypingTextData)
     {
-        var (baseSettings, baseExerciceConfig) 
+        var (typingExercice, typingExerciceConfiguration) 
             = GenerateCommonBaseConfiguration(typingExerciceSetting);
 
 
-        TypingExerciseDynamic dynamicSetting = new()
-        {
-            Configurations = [baseExerciceConfig]
-        };
-        baseSettings.Dynamic = dynamicSetting;
-        return baseSettings;
+        typingExerciceConfiguration.TextData.DynamicTextData = dynamicTypingTextData;
+
+
+        typingExercice.ExerciceConfigs.Add(typingExerciceConfiguration);
+        return typingExercice;
     }
     
     private static (TypingExercise, TypingExerciseConfiguration) GenerateCommonBaseConfiguration(
@@ -51,15 +46,13 @@ public class TypingExerciceSettingFactory : ITypingExerciceSettingFactory
             Description = typingExerciceSetting.Description,
         };
 
-        if (typingExerciceSetting.Language is { } language)
-        {
-            baseSettings.Language = language;
-        }
-
         TypingExerciseConfiguration baseExerciceConfig = new()
         {
             KeyboardLayout = typingExerciceSetting.KeyBoardLayoutDto,
-            AllowedLetters = typingExerciceSetting.AllowedLetters
+            TextData = new TypingTextData()
+            {
+                AllowedLetters = typingExerciceSetting.AllowedLetters,
+            }
         };
         
         return (baseSettings, baseExerciceConfig);

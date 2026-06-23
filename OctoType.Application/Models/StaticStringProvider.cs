@@ -9,6 +9,7 @@ public class StaticStringProvider : IStringsProvider
     {
         _lines = lines;
     }
-    public Task<IEnumerable<string>> GetStringsAsync()
-        => Task.FromResult<IEnumerable<string>>(_lines);
+    public async Task<Result<IEnumerable<string>>> GetStringsAsync()
+        => Result<IEnumerable<string>>.Ok(_lines);
+
 }

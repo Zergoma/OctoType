@@ -1,4 +1,5 @@
 ﻿using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 
 namespace OctoType.Application.Interfaces
@@ -9,6 +10,7 @@ namespace OctoType.Application.Interfaces
             TypingExerciseCreateParameters parameters,
             bool isStatic,
             string? generatedText,
-            ITypingExercicesManager exercicesManager);
+            ITypingExercicesManager exercicesManager,
+            TypingTextDataDynamic? typingTextData);
     }
 }

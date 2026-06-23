@@ -9,5 +9,7 @@ public interface ITypingExerciceSettingFactory
         TypingExerciseCreateParameters  typingExerciceSetting,
         string generatedText);
 
-    TypingExercise GenerateDynamicTypingExercices(TypingExerciseCreateParameters typingExerciceSetting);
+    TypingExercise GenerateDynamicTypingExercices(
+        TypingExerciseCreateParameters typingExerciceSetting,
+        TypingTextDataDynamic dynamicTypingTextData);
 }

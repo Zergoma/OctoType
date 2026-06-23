@@ -28,7 +28,8 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
         TypingExerciseCreateParameters parameters,
         bool isStatic,
         string? generatedText,
-        ITypingExercicesManager exerciceManager)
+        ITypingExercicesManager exerciceManager,
+        TypingTextDataDynamic? dynamicTypingTextData)
     {
         ValidationResult validationResu =
             _typingExerciceSettingValidator.Validate(parameters);
@@ -39,10 +40,16 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
                 .Fail(validationResu.ToString());
         }
 
+        if(!isStatic && dynamicTypingTextData==null)
+        {
+            return Result<bool>
+                .Fail("Data for dynamic are null");
+        }
+
         TypingExercise typingExerciceSettings = isStatic switch
         {
             true => _factory.GenerateStaticTypingExercices(parameters, generatedText!),
-            _ => _factory.GenerateDynamicTypingExercices(parameters),
+            _ => _factory.GenerateDynamicTypingExercices(parameters, dynamicTypingTextData!),
         };
 
         // Add fresh new exercice
