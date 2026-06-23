@@ -5,7 +5,8 @@
              xmlns:converters="clr-namespace:OctoType.Converters"
              x:Class="OctoType.MVVM.Views.TypingView"
              x:DataType="vm:TypingViewModel"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
     <ContentPage.Resources>
         <converters:StringToColorConverter x:Key="stringToColor"/>
 

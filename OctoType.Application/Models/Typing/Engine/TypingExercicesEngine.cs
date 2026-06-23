@@ -4,7 +4,7 @@ namespace OctoType.Application.Models.Typing.Engine;
 
 public class TypingExercicesEngine
 {
-    public TypingExercices Exercice { get; set; }
+    private TypingExercices Exercice { get; set; }
     private int _idx = 0;
     public TypingExercicesEngine(TypingExercices exercice, int idx)
     {
@@ -45,5 +45,15 @@ public class TypingExercicesEngine
 
         return Result<TypingExercise>
             .Ok(Exercice.Exercices[_idx]);
+    }
+
+    public Result<bool> SetIdx(int idx)
+    {
+        if (idx < 0 || idx >= Exercice.Exercices.Count)
+            return Result<bool>.Fail($"Out of range for idx: {idx}");
+
+        _idx = idx;
+        return Result<bool>
+            .Ok(true);
     }
 }

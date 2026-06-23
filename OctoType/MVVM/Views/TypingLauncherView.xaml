@@ -145,10 +145,11 @@
                     </Border>
 
                     <Button HorizontalOptions="End" MinimumWidthRequest="70" MaximumWidthRequest="200" Text="Lancer !"
-                        StyleClass="ButtonHoverLaunch"
-                        HeightRequest="90"
-                        FontSize="20"
-                        Margin="10,40,50,10" />
+                            Command="{Binding LaunchCommand}"
+                            StyleClass="ButtonHoverLaunch"
+                            HeightRequest="90"
+                            FontSize="20"
+                            Margin="10,40,50,10" />
 
 
                 </VerticalStackLayout>

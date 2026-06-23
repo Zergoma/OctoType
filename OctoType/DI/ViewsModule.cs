@@ -1,4 +1,7 @@
-﻿using OctoType.MVVM.Views;
+﻿using OctoType.Application.Interfaces;
+using OctoType.Factories;
+using OctoType.MVVM.Views;
+using OctoType.Services;
 
 namespace OctoType.DI;
 
@@ -11,6 +14,13 @@ public static class ViewsModule
         services.AddTransient<ImportBookView>();
         services.AddTransient<ExerciceGeneratorView>();
         services.AddTransient<TypingLauncherView>();
+
+
+
+        services.AddTransient<ITypingViewFactory, TypingViewFactory>(); 
+        services.AddTransient<INavigationService, MauiNavigationService>();
+
+
         return services;
     }
 }

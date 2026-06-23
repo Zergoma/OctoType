@@ -1,7 +1,6 @@
 using System.Diagnostics;
 
 using Microsoft.UI.Xaml.Input;
-using OctoType.Domain.Typing;
 using OctoType.ViewModels.Typing;
 
 

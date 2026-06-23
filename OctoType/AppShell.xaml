@@ -29,13 +29,6 @@
 
     </FlyoutItem>
 
-    <FlyoutItem Title="Dev Dactylo">
-            <ShellContent Title="Dactylo"
-                          Route="TypingView"
-                          ContentTemplate="{DataTemplate views:TypingView}"/>
-        
-    </FlyoutItem>
-
     <FlyoutItem Title="Import">
         <Tab Title="Sélectionnez l'import">
             <ShellContent Title="Import mots"
