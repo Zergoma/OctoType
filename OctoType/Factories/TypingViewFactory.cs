@@ -1,5 +1,7 @@
-﻿using OctoType.Application.Interfaces;
+﻿using OctoType.Application;
+using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.MVVM.Views;
 using OctoType.ViewModels.Typing;
 
@@ -8,25 +10,26 @@ namespace OctoType.Factories;
 public class TypingViewFactory : ITypingViewFactory
 {
     private readonly ITypingThemeProvider _typingThemeProvider;
-    private readonly IStringsProvider _stringsProviderService;
     private readonly IInputCharMapperService _charMapper;
 
     public TypingViewFactory(
         ITypingThemeProvider typingThemeProvider,
-        IStringsProvider stringsProviderService,
         IInputCharMapperService charMapper)
     {
         _typingThemeProvider = typingThemeProvider;
-        _stringsProviderService = stringsProviderService;
         _charMapper = charMapper;
     }
 
-    public ContentPage CreateTypingView()
+    public async Task<Result<ContentPage>> CreateTypingViewAsync(
+        IStringsProvider stringProvider,
+        INavigationService navigationService)
     {
-        TypingViewModel typingviewmodel = new(_stringsProviderService, _charMapper, _typingThemeProvider);
+        TypingViewModel typingviewmodel = new(_charMapper, _typingThemeProvider);
+        await typingviewmodel.LoadTextAsync(stringProvider);
 
-        TypingView typingView = new (typingviewmodel);
+        TypingView typingView = new(typingviewmodel, navigationService);
 
-        return typingView;
+        return Result<ContentPage>
+            .Ok(typingView);
     }
 }

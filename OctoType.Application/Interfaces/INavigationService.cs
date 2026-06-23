@@ -2,5 +2,7 @@
 
 public interface INavigationService
 {
-    Task NavigateToTypingExerciseAsync();
+    Task<Result<bool>> NavigateToTypingExerciseAsync(IStringsProvider stringProvider);
+
+    Task PopBackAsync();
 }

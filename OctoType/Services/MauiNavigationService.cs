@@ -1,4 +1,5 @@
-﻿using OctoType.Application.Interfaces;
+﻿using OctoType.Application;
+using OctoType.Application.Interfaces;
 using OctoType.Factories;
 
 namespace OctoType.Services;
@@ -12,9 +13,22 @@ public class MauiNavigationService : INavigationService
         _typingViewFactory = typingViewFactory;
     }
 
-    public async Task NavigateToTypingExerciseAsync()
+    public async Task<Result<bool>> NavigateToTypingExerciseAsync(IStringsProvider stringProvider)
     {
-        ContentPage typingview = _typingViewFactory.CreateTypingView();
-        await Shell.Current.Navigation.PushAsync(typingview);
+        Result<ContentPage> typingviewResult =
+            await _typingViewFactory.CreateTypingViewAsync(stringProvider, this);
+        if(!typingviewResult.Success)
+        {
+            return Result<bool>.Fail(typingviewResult.Error);
+        }
+
+        await Shell.Current.Navigation.PushAsync(typingviewResult.GetValue);
+
+        return Result<bool>.Ok(true);
+    }
+
+    public async Task PopBackAsync()
+    {
+        await Shell.Current.Navigation.PopAsync();
     }
 }

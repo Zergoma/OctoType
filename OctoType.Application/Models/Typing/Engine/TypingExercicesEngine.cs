@@ -1,8 +1,9 @@
-﻿using OctoType.Application.Models.Typing.Exercices;
+﻿using OctoType.Application.Interfaces;
+using OctoType.Application.Models.Typing.Exercices;
 
 namespace OctoType.Application.Models.Typing.Engine;
 
-public class TypingExercicesEngine
+public class TypingExercicesEngine : ITypingExercicesEngine
 {
     private TypingExercices Exercice { get; set; }
     private int _idx = 0;

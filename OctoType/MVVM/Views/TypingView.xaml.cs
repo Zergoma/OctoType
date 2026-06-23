@@ -1,6 +1,9 @@
 using System.Diagnostics;
 
 using Microsoft.UI.Xaml.Input;
+
+using OctoType.Application.Interfaces;
+using OctoType.Domain.Typing;
 using OctoType.ViewModels.Typing;
 
 
@@ -8,10 +11,31 @@ namespace OctoType.MVVM.Views;
 
 public partial class TypingView : ContentPage
 {
-	public TypingView(TypingViewModel vm)
-	{
-		InitializeComponent();
-		BindingContext = vm;
+    private event Action TextEnded;
+    private readonly INavigationService _navigationService;
+    private TypingStatus Status
+    {
+        get;
+        set
+        {
+            field = value;
+            if(field == TypingStatus.Ended)
+            {
+                TextEnded?.Invoke();
+            }
+        }
+    }
+
+    
+
+    public TypingView(
+        TypingViewModel vm,
+        INavigationService navigationService)
+    {
+        InitializeComponent();
+        BindingContext = vm;
+
+        TextEnded += OnTextEndDetected;
 
         #region Keyboard Focus
 
@@ -37,20 +61,17 @@ public partial class TypingView : ContentPage
                 ScrollToCurrentLine(lineNumber);
             });
         };
+        _navigationService = navigationService;
+    }
+
+    private async void OnTextEndDetected()
+    {
+        await _navigationService.PopBackAsync();
     }
 
     protected override async void OnAppearing()
 	{
         base.OnAppearing();
-
-        if (BindingContext is TypingViewModel vm)
-		{
-            // need to load asset outise the UI thread
-            await Task.Run(async () =>
-            {
-                await vm.LoadTextAsync();
-            });
-        }
 
         await Dispatcher.DispatchAsync(async () =>
         {
@@ -71,10 +92,9 @@ public partial class TypingView : ContentPage
         }
         
         char input = e.NewTextValue[^1];
-
-        vm.ProcessInput(input);
-
         HiddenInput.Text = string.Empty;
+
+        Status = vm.ProcessInput(input);
     }
 
     protected override void OnHandlerChanged()
@@ -102,19 +122,19 @@ public partial class TypingView : ContentPage
         switch (key)
         {
             case Windows.System.VirtualKey.Back:
-                vm.ProcessInput('\b');
                 e.Handled = true;
+                Status = vm.ProcessInput('\b');
                 break;
 
             case Windows.System.VirtualKey.Enter:
-                vm.ProcessInput('\n');
                 e.Handled = true;
                 HiddenInput.Text = string.Empty;
+                Status = vm.ProcessInput('\n');
                 break;
 
             case Windows.System.VirtualKey.F5:
-                vm.Session.ResetProgression();
                 e.Handled = true;
+                vm.Session.ResetProgression();
                 break;
         }
     }

@@ -1,36 +1,32 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using DomainTyping = OctoType.Domain.Typing;
+using OctoType.Application;
+using OctoType.Application.Interfaces;
+
 using AppInterfaces = OctoType.Application.Interfaces;
 using AppInterfacesTyping = OctoType.Application.Interfaces.Typing;
-
-using OctoType.Application;
-using OctoType.Domain.Typing;
-using System.Diagnostics;
+using DomainTyping = OctoType.Domain.Typing;
 
 namespace OctoType.ViewModels.Typing;
 
 public partial class TypingViewModel : ObservableObject
 {
     public event Action<int>? LineChanged;
+
     public DomainTyping.TypingSession Session { get; } = new();
     public ObservableCollection<TypingLineStateViewModel> LinesStates { get; } = [];
 
     private readonly AppInterfacesTyping.ITypingThemeProvider _typingThemeProvider;
-
-
-    private readonly AppInterfaces.IStringsProvider _stringsProviderService;
     private readonly AppInterfaces.IInputCharMapperService _charMapper;
 
     public TypingViewModel(
-        AppInterfaces.IStringsProvider stringsProviderService,
         AppInterfaces.IInputCharMapperService charMapper,
         AppInterfacesTyping.ITypingThemeProvider typingThemeProvider)
     {
-        _stringsProviderService = stringsProviderService;
         _charMapper = charMapper;
 
         Session.LineChanged += (int lineNumber) =>
@@ -82,10 +78,7 @@ public partial class TypingViewModel : ObservableObject
     public string BackReturnTxt
         => BackReturnEnable ? "Retour arrière activé" : "Retour arrière interdit";
 
-    // TODO
-    // This fct is for dev purpose
-    // A sort of will be required to get exercices
-    public async Task LoadTextAsync()
+    public async Task LoadTextAsync(IStringsProvider stringProvider)
     {
         Session.Lines.Clear();
         LinesStates.Clear();
@@ -101,7 +94,7 @@ public partial class TypingViewModel : ObservableObject
         }
 
         Result<IEnumerable<string>> getStringResult =
-            await _stringsProviderService.GetStringsAsync();
+            await stringProvider.GetStringsAsync();
 
         if(!getStringResult.Success)
         {
@@ -126,9 +119,6 @@ public partial class TypingViewModel : ObservableObject
     }
 
     public DomainTyping.TypingStatus ProcessInput(char input)
-    {
-        TypingStatus processStatus = Session.ProcessInput(input, _charMapper.Map);
-
-        return processStatus;
-    }
+        => Session.ProcessInput(input, _charMapper.Map);
+    
 }

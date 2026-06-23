@@ -27,7 +27,7 @@ public class CreateStringProviderOrchestrator : ICreateStringProviderOrchestrato
         KeyBoardLayoutDto selectedKeyboard)
     {
         List<TypingExerciseConfiguration> selectedKeyboardTypingExerciceConfigurations
-            = [.. exercice.ExerciceConfigs.Where(x => x.KeyboardLayout == selectedKeyboard)];
+            = [.. exercice.ExerciceConfigs.Where(x => x.KeyboardLayout.KeyBoardCode == selectedKeyboard.KeyBoardCode)];
 
         if (selectedKeyboardTypingExerciceConfigurations.Count == 0)
         {
