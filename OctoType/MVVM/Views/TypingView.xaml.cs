@@ -26,8 +26,6 @@ public partial class TypingView : ContentPage
         }
     }
 
-    
-
     public TypingView(
         TypingViewModel vm,
         INavigationService navigationService)
@@ -73,8 +71,11 @@ public partial class TypingView : ContentPage
 	{
         base.OnAppearing();
 
+        await Task.Yield(); // laisse le layout se faire
+
         await Dispatcher.DispatchAsync(async () =>
         {
+            await Task.Delay(100);
             HiddenInput.Focus();
         });
     }
@@ -135,6 +136,11 @@ public partial class TypingView : ContentPage
             case Windows.System.VirtualKey.F5:
                 e.Handled = true;
                 vm.Session.ResetProgression();
+                break;
+
+            case Windows.System.VirtualKey.Tab:
+                e.Handled = true;
+                Status = vm.ProcessInput('\t');
                 break;
         }
     }

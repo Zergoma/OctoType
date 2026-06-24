@@ -9,6 +9,11 @@ public class InputCharMapperService : IInputCharMapperService
         {
             return '↵';
         }
+        
+        if (value == '\b')
+        {
+            return '⟶';
+        }
 
         return value;
     }

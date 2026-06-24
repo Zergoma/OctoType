@@ -22,9 +22,11 @@
             <Entry Placeholder="Set the exercice name" 
                 WidthRequest="200"
                 HorizontalOptions="Start"
+                IsSpellCheckEnabled="False"
+                IsTextPredictionEnabled="False"
                 Text="{Binding ExerciceName}"/>
 
-            <Editor 
+            <Editor
                 Placeholder="Set a description here"
                 StyleClass="editor_no_spell_no_prediction"
                 AutoSize="TextChanges"
@@ -45,9 +47,9 @@
                     Text="{Binding AllowedChars}"/>
             </Grid>
         </VerticalStackLayout>
-        
-        
-        
+
+
+
         <Grid ColumnDefinitions="*,auto"
               Margin="10,5,10,5"
               ColumnSpacing="5"
@@ -63,7 +65,7 @@
                     VerticalOptions="Fill"
                     HorizontalOptions="Fill"
                     FontSize="24"/>
-            
+
             <Button Grid.Column="1"
                     StyleClass="button_hover"
                     Text="Generate"
@@ -118,7 +120,7 @@
                 </Entry.Behaviors>
             </Entry>
 
-            
+
 
         </Grid>
 
