@@ -11,15 +11,18 @@ public class CreateStringProviderOrchestrator : ICreateStringProviderOrchestrato
     private readonly IPseudoWordBatchGenerator _pseudoWordBatchGenerator;
     private readonly ITypingExerciseWordNumberService _typingExerciceWordNumberService;
     private readonly ITypingExerciseLineNumberService _typingExerciceLineNumberService;
+    private readonly IEditorSplitCharProvider _editorSplitCharProvider;
 
     public CreateStringProviderOrchestrator(
         IPseudoWordBatchGenerator pseudoWordBatchGenerator,
         ITypingExerciseWordNumberService typingExerciceWordNumberService,
-        ITypingExerciseLineNumberService typingExerciceLineNumberService)
+        ITypingExerciseLineNumberService typingExerciceLineNumberService,
+        IEditorSplitCharProvider editorSplitCharProvider)
     {
         _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
         _typingExerciceWordNumberService = typingExerciceWordNumberService;
         _typingExerciceLineNumberService = typingExerciceLineNumberService;
+        _editorSplitCharProvider = editorSplitCharProvider;
     }
 
     public Result<IStringsProvider> Create(
@@ -41,7 +44,7 @@ public class CreateStringProviderOrchestrator : ICreateStringProviderOrchestrato
         if (staticConfiguration != null)
         {
             return Result<IStringsProvider>
-                .Ok(new TypingExerciceStaticDataProducer(staticConfiguration));
+                .Ok(new TypingExerciceStaticDataProducer(staticConfiguration, _editorSplitCharProvider));
         }
 
         TypingExerciseConfiguration? dynamicPseudoWordConfiguration
@@ -81,20 +84,38 @@ public class CreateStringProviderOrchestrator : ICreateStringProviderOrchestrato
     }
 }
 
-
 public class TypingExerciceStaticDataProducer : IStringsProvider
 {
     private readonly TypingExerciseConfiguration _exerciceConfiguration;
+    private readonly char _splitChar;
 
-    public TypingExerciceStaticDataProducer(TypingExerciseConfiguration exerciceConfiguration)
+    public TypingExerciceStaticDataProducer(
+        TypingExerciseConfiguration exerciceConfiguration,
+        IEditorSplitCharProvider editorSplitCharProvider)
     {
         _exerciceConfiguration = exerciceConfiguration;
+        _splitChar = editorSplitCharProvider.GetSplitCharacter();
     }
 
     public async Task<Result<IEnumerable<string>>> GetStringsAsync()
     {
+        string generatedRawStored = _exerciceConfiguration.TextData.StaticTextData!.GeneratedText;
+
+        string[] rawList = generatedRawStored.Split(_splitChar);
+        List<string> filteredLines = [];
+        foreach (var line in rawList)
+        {
+            // For stability, we filtred the control char
+            string cleaned = new([.. line.Where(c => !char.IsControl(c))]);
+            if(string.IsNullOrWhiteSpace(cleaned))
+            {
+                continue;
+            }
+            filteredLines.Add(cleaned);
+        }
+
         return Result<IEnumerable<string>>
-            .Ok(_exerciceConfiguration.TextData.StaticTextData!.GeneratedText.Split('↵'));
+            .Ok(filteredLines);
     }
 }
 

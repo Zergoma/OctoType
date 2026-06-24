@@ -88,11 +88,11 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         AllowedChars += string.Join(null, detectedChar);
     }
 
-    [ObservableProperty] public partial string ExerciceName { get; set; }
+    [ObservableProperty] public partial string ExerciceName { get; set; } = string.Empty;
 
-    [ObservableProperty] public partial string Description { get; set; }
+    [ObservableProperty] public partial string Description { get; set; } = string.Empty;
 
-    [ObservableProperty] public partial string AllowedChars { get; set; }
+    [ObservableProperty] public partial string AllowedChars { get; set; } = string.Empty;
 
 
     [ObservableProperty]

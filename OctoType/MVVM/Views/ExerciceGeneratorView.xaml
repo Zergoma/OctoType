@@ -56,6 +56,7 @@
               HorizontalOptions="Fill">
 
             <Editor Grid.Column="0"
+                    x:Name="EditorGenerateText"
                     Text="{Binding GeneratedText}"
                     AutoSize="TextChanges"
                     StyleClass="editor_no_spell_no_prediction"
@@ -64,7 +65,15 @@
                     Placeholder="pseudo-words or words will be generated here, you can modify them if you want"
                     VerticalOptions="Fill"
                     HorizontalOptions="Fill"
-                    FontSize="24"/>
+                    FontSize="24">
+                <FlyoutBase.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Add Enter ↵ mark" Clicked="MenuFlyoutItem_AddEnterMarkClicked"/>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem Text="Add Tab ⟶ mark" Clicked="MenuFlyoutItem_AddTabMarkClicked"/>
+                    </MenuFlyout>
+                </FlyoutBase.ContextFlyout>
+            </Editor>
 
             <Button Grid.Column="1"
                     StyleClass="button_hover"

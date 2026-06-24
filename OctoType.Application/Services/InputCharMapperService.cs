@@ -10,7 +10,7 @@ public class InputCharMapperService : IInputCharMapperService
             return '↵';
         }
         
-        if (value == '\b')
+        if (value == '\t')
         {
             return '⟶';
         }
