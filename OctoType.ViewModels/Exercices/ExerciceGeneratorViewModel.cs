@@ -9,6 +9,7 @@ using OctoType.Application.Mappers;
 using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
+using OctoType.Domain.Typing;
 
 namespace OctoType.ViewModels.Exercices;
 
@@ -72,7 +73,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     public GeneratedTypeSourceDto? GenerationTypeSourceSelected { get; set; }
 
 
-    [ObservableProperty] public partial string GeneratedText { get; set; }
+    [ObservableProperty] public partial string GeneratedText { get; set; } = string.Empty;
 
     // User can type text in the editor too
     // we add new letter in the allowed
@@ -190,18 +191,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             return;
         }
 
-
-        // AllowedLetters could be changed to nothing, or with letter unrelated to generated text
-        // we can no longer trust it
-        // we want all the keys present in generated text, nothing more, nothing less
-        // but not changing the allow by user
-        List<char> detectedChar =
-        [.. GeneratedText
-                .Where(c =>!char.IsWhiteSpace(c))
-                .Distinct()
-                .Order()];
-
-        string AllowedCharsStrict = string.Join(null, detectedChar);
+        string allowedCharsStrict = AllowedLettersExtractor.ExtractAllowedLetters(AllowedChars, GeneratedText);
 
         TypingExerciseCreateParameters settingbase = new()
         {
@@ -209,7 +199,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             Description = Description,
             Language = LanguageSelected,
             KeyBoardLayoutDto = KeyboardLayoutSelected,
-            AllowedLetters = AllowedCharsStrict
+            AllowedLetters = allowedCharsStrict
         };
 
         TypingTextDataDynamic? dynamicTypingTextData = null;

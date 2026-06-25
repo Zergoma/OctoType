@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OctoType.Application\OctoType.Application.csproj" />
+    <ProjectReference Include="..\OctoType.Domain\OctoType.Domain.csproj" />
+    <ProjectReference Include="..\OctoType.ViewModels\OctoType.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
