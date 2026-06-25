@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 using OctoType.Infrastructure.DbContexts;
 
+using System.Diagnostics;
+
 namespace OctoType.Infrastructure.DI;
 
 public static class InfrastructureDbInitModule
@@ -11,11 +13,18 @@ public static class InfrastructureDbInitModule
     {
         using IServiceScope scope =
             services.CreateScope();
+        try
+        {
+            DactyloDbContext dbContext =
+                scope.ServiceProvider
+                    .GetRequiredService<DactyloDbContext>();
 
-        DactyloDbContext dbContext =
-            scope.ServiceProvider
-                .GetRequiredService<DactyloDbContext>();
+            dbContext.Database.Migrate();
 
-        dbContext.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
     }
 }

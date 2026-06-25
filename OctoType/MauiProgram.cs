@@ -54,26 +54,34 @@ public static class MauiProgram
 
             // define in the maui projet
             // presenters are used inside App Orchestrators
-            .AddPresenters()            
-            
+            .AddPresenters()
+
             .AddOctoTypeApplication()
 
             .AddViewModelsModule()
             .AddViews();
-        
+
         string databasePath =
             Path.Combine(
                 FileSystem.AppDataDirectory,
                 "dactylo.db3");
 
         builder.Services.AddDbContextFactory<DactyloDbContext>(
-            options => 
+            options =>
                 options.UseSqlite($"Data Source={databasePath}"));
 
         var app = builder.Build();
 
-        // Infrastructure operation : init or upgrade db according to migration state
-        InfrastructureDbInitModule.InitUpgradeInfrastructure(app.Services);
+        try
+        {
+            // Infrastructure operation : init or upgrade db according to migration state
+            InfrastructureDbInitModule.InitUpgradeInfrastructure(app.Services);
+
+        }
+        catch (Exception)
+        {
+
+        }
 
         return app;
     }
