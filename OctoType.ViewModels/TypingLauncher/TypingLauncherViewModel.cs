@@ -7,6 +7,7 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Managers;
 using OctoType.Application.Models.Typing.Engine;
 using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.Orchestrators;
@@ -17,8 +18,9 @@ public partial class TypingLauncherViewModel : ObservableObject
 {
     private readonly ITypingExercicesStorage _typingExerciceStorage;
     private readonly INavigationService _navigation;
+    private readonly ICreateStringProviderOrchestrator _createStringProviderOrchestrator;
+    private readonly IUserKeyboardLayoutPreferenceService _userKeyboardPreferenceService;
     private ITypingExercicesEngine? _typingExerciceEngine;
-    private ICreateStringProviderOrchestrator _createStringProviderOrchestrator;
 
     public ObservableCollection<ExerciceItemViewModel> AllExercice { get; set; } = [];
     private bool _isInit = false;
@@ -28,16 +30,44 @@ public partial class TypingLauncherViewModel : ObservableObject
         ITypingExercicesStorage typingExerciceStorage,
         INavigationService navigation,
         ICreateStringProviderOrchestrator createStringProviderOrchestrator,
-        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService)
+        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
+        IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService)
     {
         _typingExerciceStorage = typingExerciceStorage;
         _navigation = navigation;
         _createStringProviderOrchestrator = createStringProviderOrchestrator;
         _keyboardLayoutAvailableElem = keyboardLayoutAvailableService.GetKeyBoardAvailable();
+
+        AllExercice.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(HasExercice));
+            OnPropertyChanged(nameof(HasNoExercice));
+        };
+        _userKeyboardPreferenceService = userKeyboardPreferenceService;
+
+        Result<int> keyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
+        if (keyboardCodeResult.Success)
+        {
+            KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == keyboardCodeResult.GetValue);
+            KeyboardLayoutSelected = itemKeyboard;
+        }
     }
 
     public IReadOnlyList<KeyBoardLayoutDto> KeyboardLayoutAvailable => _keyboardLayoutAvailableElem;
-    public KeyBoardLayoutDto? KeyboardLayoutSelected { get; set; }
+
+    [ObservableProperty]
+    public partial KeyBoardLayoutDto? KeyboardLayoutSelected { get; set; }
+    partial void OnKeyboardLayoutSelectedChanged(KeyBoardLayoutDto? value)
+    {
+        if (value == null)
+            return;
+
+        _userKeyboardPreferenceService.SetKeyboardType(value);
+    }
+
+    public bool HasExercice => AllExercice.Count > 0;
+
+    public bool HasNoExercice => !HasExercice;
 
     public async Task Initilization()
     {
@@ -118,7 +148,7 @@ public partial class TypingLauncherViewModel : ObservableObject
         {
             TypingExercise exer = currentExerciceResult.GetValue;
             Result<IStringsProvider> stringProviderResult = _createStringProviderOrchestrator.Create(exer, keyboardLayoutDto);
-            if(!stringProviderResult.Success)
+            if (!stringProviderResult.Success)
             {
                 return;
             }

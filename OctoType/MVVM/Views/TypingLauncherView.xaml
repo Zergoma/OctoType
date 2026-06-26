@@ -122,14 +122,14 @@
 
                 <VerticalStackLayout IsVisible="{Binding IsSelectedExercice}">
                     <Label Text="{Binding ExerciceName}" TextColor="White" FontSize="34" FontAttributes="Bold" Margin="5,5,0,15" />
-                    
+
                     <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10" Margin="0,0,0,30">
                         <VerticalStackLayout>
                             <Label Text="Description:" TextColor="White" FontSize="12" Margin="0,0,0,10" />
                             <Label Text="{Binding ExerciceDescription}" TextColor="White" MinimumHeightRequest="50" />
                         </VerticalStackLayout>
                     </Border>
-                    
+
                     <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10" Margin="0,0,0,30">
                         <VerticalStackLayout>
                             <Label Text="Lettres:" TextColor="White" FontSize="12" Margin="0,0,0,10" />
@@ -155,8 +155,8 @@
                                     Margin="10,0,0,0"/>
                         </Grid>
                     </Border>
-                    
-                    
+
+
 
                     <Button HorizontalOptions="End" MinimumWidthRequest="70" MaximumWidthRequest="200" Text="Lancer !"
                             Command="{Binding LaunchCommand}"
@@ -176,7 +176,7 @@
                 Padding="10">
 
 
-            <Grid RowDefinitions="auto,*">
+            <Grid RowDefinitions="auto,auto">
                 <Label Grid.Row="0"
                        Grid.ColumnSpan="2"
                        Text="Exercices !"
@@ -186,84 +186,102 @@
                        VerticalOptions="Center"
                        HorizontalOptions="Center"
                        FlowDirection="LeftToRight" />
+
                 <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always">
+                    <Grid >
+                        <Label Text="Ajoutez des exercices !"
+                           TextColor="White"
+                           IsVisible="{Binding HasNoExercice}"
+ 
+                           WidthRequest="400"
+                           HeightRequest="400"/>
 
+                        <FlexLayout Wrap="Wrap"
+                            IsVisible="{Binding HasExercice}"
+                            Direction="Row"
+                            AlignContent="Start"
+                            Padding="5"
+                            BindableLayout.ItemsSource="{Binding AllExercice}">
 
-                    <FlexLayout Wrap="Wrap"
-                                Direction="Row"
-                                AlignContent="Start"
-                                Padding="5"
-                                BindableLayout.ItemsSource="{Binding AllExercice}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ExerciceItemViewModel">
+                                    <Border HeightRequest="120" WidthRequest="120"
+                                            StyleClass="BorderBgBlue,BorderRounded10,BorderHoverLaunch"
+                                            Margin="5,5,0,0">
 
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="vm:ExerciceItemViewModel">
-                                <Border HeightRequest="120" WidthRequest="120"
-                                        StyleClass="BorderBgBlue,BorderRounded10,BorderHoverLaunch"
-                                        Margin="5,5,0,0">
-
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer 
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer 
                                                 Command="{Binding BindingContext.SelectCommand, Source={x:Reference RootPage}}"
                                                 CommandParameter="{Binding .}"/>
 
-                                    </Border.GestureRecognizers>
+                                        </Border.GestureRecognizers>
 
-                                    <Border.Triggers>
-                                        <DataTrigger TargetType="Border"
-                                                     Binding="{Binding IsSelected}"
-                                                     Value="True">
-                                            <Setter Property="BackgroundColor" Value="#FF2000"/>
-                                            <Setter Property="StrokeThickness" Value="2" />
-                                            <Setter Property="Stroke" Value="#FF5500" />
-                                            <Setter Property="Scale" Value="1.05" />
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border"
+                                                         Binding="{Binding IsSelected}"
+                                                         Value="True">
+                                                <Setter Property="BackgroundColor" Value="#FF2000"/>
+                                                <Setter Property="StrokeThickness" Value="2" />
+                                                <Setter Property="Stroke" Value="#FF5500" />
+                                                <Setter Property="Scale" Value="1.05" />
 
 
-                                            <Setter Property="VisualStateManager.VisualStateGroups">
+                                                <Setter Property="VisualStateManager.VisualStateGroups">
 
-                                                <VisualStateGroupList>
+                                                    <VisualStateGroupList>
 
-                                                    <VisualStateGroup Name="CommonStates">
+                                                        <VisualStateGroup Name="CommonStates">
 
-                                                        <VisualState Name="Normal">
-                                                            <VisualState.Setters>
-                                                                <Setter Property="BackgroundColor" Value="#FF2000" />
-                                                            </VisualState.Setters>
-                                                        </VisualState>
+                                                            <VisualState Name="Normal">
+                                                                <VisualState.Setters>
+                                                                    <Setter Property="BackgroundColor" Value="#FF2000" />
+                                                                </VisualState.Setters>
+                                                            </VisualState>
 
-                                                        <VisualState Name="PointerOver">
-                                                            <VisualState.Setters>
-                                                                <Setter Property="BackgroundColor" Value="#FF5500" />
-                                                            </VisualState.Setters>
-                                                        </VisualState>
+                                                            <VisualState Name="PointerOver">
+                                                                <VisualState.Setters>
+                                                                    <Setter Property="BackgroundColor" Value="#FF5500" />
+                                                                </VisualState.Setters>
+                                                            </VisualState>
 
-                                                    </VisualStateGroup>
+                                                        </VisualStateGroup>
 
-                                                </VisualStateGroupList>
+                                                    </VisualStateGroupList>
 
-                                            </Setter>
-                                        </DataTrigger>
-                                    </Border.Triggers>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Border.Triggers>
 
-                                    <Grid RowDefinitions="*,*">
-                                        <Label Text="{Binding Name}" TextColor="White" 
-                                                HorizontalOptions="Center"
-                                                VerticalOptions="Center"
-                                                Margin="5,5,0,0"/>
-                                        <Label Grid.Row="1" Text="{Binding Letters}" FontSize="10" Margin="10,0"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+                                        <Grid RowDefinitions="auto,auto,auto">
 
-                        <BindableLayout.EmptyView>
-                            <Grid>
-                                <Label Text="Et non y a rien!"
-                                       TextColor="White"/>
-                            </Grid>
-                        </BindableLayout.EmptyView>
+                                            <Label Grid.Row="0" Text="{Binding Name}" 
+                                                   TextColor="White"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   FontSize="17"
+                                                   Margin="0,0,0,15"/>
 
-                    </FlexLayout>
+                                            <Label Grid.Row="1" Text="{Binding Letters}" 
+                                                   FontSize="10"
+                                                   Margin="10,0"/>
 
+                                            <Border Grid.Row="2"
+                                                IsVisible="{Binding IsDynamic}"
+                                                StrokeShape="RoundRectangle 6" HorizontalOptions="End"
+                                                Padding="5,0,5,2" Margin="0,10,5,0">
+
+                                                <Label Text="{Binding TextType}" HorizontalOptions="End"
+                                                       VerticalOptions="End"
+                                                        FontSize="12" TextColor="White"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+
+                        </FlexLayout>
+                    </Grid>
                 </ScrollView>
             </Grid>
         </Border>

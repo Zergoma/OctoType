@@ -19,6 +19,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     private readonly ITypingExercicesManager _typingExerciceManager;
     private readonly ITypingExercicesStorage _typingExercicePersistence;
     private readonly ISaveTypingExerciceUseCase _saveUseCase;
+    private readonly IUserKeyboardLayoutPreferenceService _userKeyboardPreferenceService;
 
     private readonly List<string> _languageAvailableElem;
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
@@ -31,7 +32,8 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         ITypingExercicesManager typingExerciceManager,
         ITypingExercicesStorage typingExercicePersistence,
         ISaveTypingExerciceUseCase saveUseCase,
-        IGenerationTypeSourceAvailableService generationTypeSource)
+        IGenerationTypeSourceAvailableService generationTypeSource,
+        IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService)
     {
         _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
         AllowedChars = "abcdefghijklmnopqrstuvwxyz";
@@ -45,6 +47,14 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         _typingExerciceManager = typingExerciceManager;
         _typingExercicePersistence = typingExercicePersistence;
         _saveUseCase = saveUseCase;
+        _userKeyboardPreferenceService = userKeyboardPreferenceService;
+
+        Result<int> keyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
+        if (keyboardCodeResult.Success)
+        {
+            KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == keyboardCodeResult.GetValue);
+            KeyboardLayoutSelected = itemKeyboard;
+        }
     }
 
     public async Task InitializeAsync()
@@ -66,7 +76,8 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     public string? LanguageSelected { get; set; }
 
     public IReadOnlyList<KeyBoardLayoutDto> KeyboardLayoutAvailable => _keyboardLayoutAvailableElem;
-    public KeyBoardLayoutDto? KeyboardLayoutSelected { get; set; }
+    [ObservableProperty]
+    public partial KeyBoardLayoutDto? KeyboardLayoutSelected { get; set; }
 
 
     public IReadOnlyList<GeneratedTypeSourceDto> GenerationTypeSourceAvailable => _generationTypeSourcAvailableElem;

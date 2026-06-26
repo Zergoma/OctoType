@@ -18,7 +18,7 @@ public partial class ExerciceItemViewModel : ObservableObject
     public int Idx => _idx;
 
     [ObservableProperty] public partial bool IsSelected { get; set; }
-     
+
     public string Name => _exercice.Name;
     public string Desciption => _exercice.Description;
 
@@ -27,9 +27,9 @@ public partial class ExerciceItemViewModel : ObservableObject
     {
         get
         {
-                // TODO
-                // dev mode -> need to do better
-                return _exercice.ExerciceConfigs[0].TextData.AllowedLetters;
+            // TODO
+            // dev mode -> need to do better
+            return _exercice.ExerciceConfigs[0].TextData.AllowedLetters;
         }
     }
 
@@ -41,5 +41,13 @@ public partial class ExerciceItemViewModel : ObservableObject
     // dev mode -> need to do better
     public bool IsDynamic => _exercice.ExerciceConfigs[0].TextData.DynamicTextData != null;
 
+    public string TextType
+    {
+        get
+        {
+            if (IsStatic) return "";
+            return "Dynamic";
+        }
+    }
 
 }
