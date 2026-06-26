@@ -176,9 +176,9 @@ public class TypingExerciceDynamicPseudoWordsProducer : IStringsProvider
 }
 
 
-public class TypingExerciceDynamicWords
-{
-    public Result<string> GetData { get; set; }
+//public class TypingExerciceDynamicWords
+//{
+//    public Result<string> GetData { get; set; }
 
-    // repository à la bdd requit => request la bdd avec les critères
-}
+//    // repository à la bdd requit => request la bdd avec les critères
+//}

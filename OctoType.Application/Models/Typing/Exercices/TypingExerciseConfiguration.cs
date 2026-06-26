@@ -4,8 +4,8 @@ namespace OctoType.Application.Models.Typing.Exercices;
 
 public class TypingExerciseConfiguration
 {
-    public KeyBoardLayoutDto KeyboardLayout { get; set; }
-    public TypingTextData TextData{ get; set; }
+    public required KeyBoardLayoutDto KeyboardLayout { get; set; }
+    public required TypingTextData TextData{ get; set; }
 }
 
 public class TypingTextData

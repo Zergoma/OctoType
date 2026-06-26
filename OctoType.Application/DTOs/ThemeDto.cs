@@ -2,19 +2,19 @@
 
 public class ThemeDto
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public ThemeStateDto Pending { get; set; }
-    public ThemeStateDto Current { get; set; }
-    public ThemeStateDto Correct { get; set; }
-    public ThemeStateDto CorrectWithError { get; set; }
-    public ThemeStateDto CurrentWrong { get; set; }
+    public required ThemeStateDto Pending { get; set; }
+    public required ThemeStateDto Current { get; set; }
+    public required ThemeStateDto Correct { get; set; }
+    public required ThemeStateDto CorrectWithError { get; set; }
+    public required ThemeStateDto CurrentWrong { get; set; }
 }
 
 public class ThemeStateDto
 {
-    public string TextColor { get; set; }
-    public string BackgroundColor { get; set; }
-    public string BorderColor { get; set; }
+    public string TextColor { get; set; } = string.Empty;
+    public string BackgroundColor { get; set; } = string.Empty;
+    public string BorderColor { get; set; } = string.Empty;
     public int BorderThickness { get; set; }
 }

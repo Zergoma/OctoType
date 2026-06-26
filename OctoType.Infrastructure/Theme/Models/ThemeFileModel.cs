@@ -2,7 +2,7 @@
 
 public class ThemeFileModel
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public ThemeStateFileModel Pending { get; set; } = new();
     public ThemeStateFileModel Current { get; set; } = new();
     public ThemeStateFileModel CurrentWrong { get; set; } = new();

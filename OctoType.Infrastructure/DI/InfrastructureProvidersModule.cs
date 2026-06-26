@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using OctoType.Application.Interfaces;
+using OctoType.Application.Services;
 using OctoType.Infrastructure.Providers;
 
 namespace OctoType.Infrastructure.DI;
@@ -17,6 +18,11 @@ internal static class InfrastructureProvidersModule
         
         //services.AddTransient<ITypingExercicesFileNameProvider, JsonTypingExercicesFileNameProvider>();
         services.AddTransient<ITypingExercicesFileNameProvider, PbTypingExercicesFileNameProvider>();
+        
+
+        // Specific Windows
+        services.AddTransient<IKeyboardLayoutDetector, WindowsKeyboardLayoutDetector>();
+
 
         return services;
     }
