@@ -10,15 +10,14 @@ public class TypingExerciceSettingFactory : ITypingExerciceSettingFactory
         TypingExerciseCreateParameters  typingExerciceSetting,
         string generatedText)
     {
-        var (typingExercice, typingExerciceConfiguration) 
+        TypingExercise typingExercice 
             = GenerateCommonBaseConfiguration(typingExerciceSetting);
 
-        typingExerciceConfiguration.TextData.StaticTextData = new()
-        {
-            GeneratedText = generatedText
-        };
-
-        typingExercice.ExerciceConfigs.Add(typingExerciceConfiguration);
+        typingExercice.TextDataType =
+            new TypingTextDataStatic()
+            {
+                GeneratedText = generatedText
+            };
         return typingExercice;
     }
 
@@ -26,35 +25,20 @@ public class TypingExerciceSettingFactory : ITypingExerciceSettingFactory
         TypingExerciseCreateParameters typingExerciceSetting,
         TypingTextDataDynamic dynamicTypingTextData)
     {
-        var (typingExercice, typingExerciceConfiguration) 
+        TypingExercise typingExercice 
             = GenerateCommonBaseConfiguration(typingExerciceSetting);
 
-
-        typingExerciceConfiguration.TextData.DynamicTextData = dynamicTypingTextData;
-
-
-        typingExercice.ExerciceConfigs.Add(typingExerciceConfiguration);
+        typingExercice.TextDataType = dynamicTypingTextData;
         return typingExercice;
     }
     
-    private static (TypingExercise, TypingExerciseConfiguration) GenerateCommonBaseConfiguration(
-        TypingExerciseCreateParameters typingExerciceSetting)
-    {
-        TypingExercise baseSettings = new()
+    private static TypingExercise GenerateCommonBaseConfiguration(
+        TypingExerciseCreateParameters typingExerciceSetting) =>
+        
+        new()
         {
             Name = typingExerciceSetting.Name,
             Description = typingExerciceSetting.Description,
+            AllowedCharacters = typingExerciceSetting.AllowedLetters,
         };
-
-        TypingExerciseConfiguration baseExerciceConfig = new()
-        {
-            KeyboardLayout = typingExerciceSetting.KeyBoardLayoutDto,
-            TextData = new TypingTextData()
-            {
-                AllowedLetters = typingExerciceSetting.AllowedLetters,
-            }
-        };
-        
-        return (baseSettings, baseExerciceConfig);
-    }
 }

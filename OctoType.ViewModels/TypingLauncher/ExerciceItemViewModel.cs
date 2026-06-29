@@ -8,11 +8,15 @@ public partial class ExerciceItemViewModel : ObservableObject
 {
     private readonly TypingExercise _exercice;
     private readonly int _idx;
+    private readonly bool _isStatic;
+    private readonly bool _isDynamic;
     public ExerciceItemViewModel(TypingExercise exercice, int idx)
     {
         _exercice = exercice;
         _idx = idx;
         IsSelected = false;
+        _isStatic = _exercice.TextDataType is TypingTextDataStatic;
+        _isDynamic = _exercice.TextDataType is TypingTextDataDynamic;
     }
 
     public int Idx => _idx;
@@ -23,23 +27,11 @@ public partial class ExerciceItemViewModel : ObservableObject
     public string Desciption => _exercice.Description;
 
 
-    public string Letters
-    {
-        get
-        {
-            // TODO
-            // dev mode -> need to do better
-            return _exercice.ExerciceConfigs[0].TextData.AllowedLetters;
-        }
-    }
+    public string Letters => _exercice.AllowedCharacters;
 
-    // TODO
-    // dev mode -> need to do better
-    public bool IsStatic => _exercice.ExerciceConfigs[0].TextData.StaticTextData != null;
+    public bool IsStatic => _isStatic;
 
-    // TODO
-    // dev mode -> need to do better
-    public bool IsDynamic => _exercice.ExerciceConfigs[0].TextData.DynamicTextData != null;
+    public bool IsDynamic => _isDynamic;
 
     public string TextType
     {

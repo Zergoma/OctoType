@@ -183,19 +183,6 @@
                     </Border>
 
 
-                    <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10">
-                        <Grid ColumnDefinitions="auto,*">
-                            <Label Text="Type de clavier" TextColor="White" Margin="0,0,0,0" 
-                                   VerticalOptions="Center"/>
-                            <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" 
-                                    TextColor="white"
-                                    BackgroundColor="#444"
-                                    Margin="10,0,0,0"/>
-                        </Grid>
-                    </Border>
-
-
-
                     <Button HorizontalOptions="End" MinimumWidthRequest="70" MaximumWidthRequest="200" Text="Lancer !"
                             Command="{Binding LaunchCommand}"
                             StyleClass="ButtonHoverLaunch"
@@ -215,15 +202,31 @@
 
 
             <Grid RowDefinitions="auto,*, 0.15*">
-                <Label Grid.Row="0"
+                
+                <Grid RowDefinitions="*,*">
+
+                    <Label Grid.Row="0"
                        Grid.ColumnSpan="2"
                        Text="Exercices !"
                        TextColor="White"
                        FontSize="34"
                        FontAttributes="Bold"
                        VerticalOptions="Center"
-                       HorizontalOptions="Center"
-                       FlowDirection="LeftToRight" />
+                       HorizontalOptions="Center"/>
+
+                    <Border Grid.Row="1" StyleClass="BorderRounded10, BorderBgDescription" Padding="10"
+                            HeightRequest="70">
+                        <Grid ColumnDefinitions="auto,*">
+                            <Label Text="Type de clavier" TextColor="White" Margin="0,0,0,0" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" 
+                                TextColor="white"
+                                BackgroundColor="#444"
+                                Margin="10,0,0,0"
+                                    VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
 
                 <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always">
                     <Grid >
@@ -321,7 +324,7 @@
                         </FlexLayout>
                     </Grid>
                 </ScrollView>
-                
+
                 <Button Grid.Row="2"
                     Text="+" CornerRadius="30" HeightRequest="60" WidthRequest="60"
                         StyleClass="ButtonHoverAddExercice"

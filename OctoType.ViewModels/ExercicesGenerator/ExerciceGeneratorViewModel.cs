@@ -11,7 +11,7 @@ using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
 using OctoType.Domain.Typing;
 
-namespace OctoType.ViewModels.Exercices;
+namespace OctoType.ViewModels.ExercicesGenerator;
 
 public partial class ExerciceGeneratorViewModel : ObservableObject
 {
@@ -19,7 +19,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     private readonly ITypingExercicesManager _typingExerciceManager;
     private readonly ITypingExercicesStorage _typingExercicePersistence;
     private readonly ISaveTypingExerciceUseCase _saveUseCase;
-    private readonly IUserKeyboardLayoutPreferenceService _userKeyboardPreferenceService;
+
 
     private readonly List<string> _languageAvailableElem;
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
@@ -30,8 +30,8 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         ITypingExercicesManager typingExerciceManager,
         ITypingExercicesStorage typingExercicePersistence,
         ISaveTypingExerciceUseCase saveUseCase,
-        IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService,
-        
+        //IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService,
+
         IGenerationTypeSourceAvailableService generationTypeSource,
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
         ILanguageAvailableService languageAvailableService)
@@ -48,29 +48,25 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         _typingExerciceManager = typingExerciceManager;
         _typingExercicePersistence = typingExercicePersistence;
         _saveUseCase = saveUseCase;
-        _userKeyboardPreferenceService = userKeyboardPreferenceService;
+        //_userKeyboardPreferenceService = userKeyboardPreferenceService;
 
-        Result<int> keyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
-        if (keyboardCodeResult.Success)
-        {
-            KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == keyboardCodeResult.GetValue);
-            KeyboardLayoutSelected = itemKeyboard;
-        }
+        //Result<int> keyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
+        //if (keyboardCodeResult.Success)
+        //{
+        //    KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == keyboardCodeResult.GetValue);
+        //    KeyboardLayoutSelected = itemKeyboard;
+        //}
     }
 
-    public async Task InitializeAsync()
+    private void SetKeyboardLayout(int id)
     {
-        Result<TypingExercices> exercicesLoadedResult =
-            await _typingExercicePersistence.LoadAsync();
+        KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == id);
+        KeyboardLayoutSelected = itemKeyboard;
+    }
 
-        if (exercicesLoadedResult.Success)
-        {
-            _typingExerciceManager.Exercice = exercicesLoadedResult.GetValue;
-        }
-        else
-        {
-            _typingExerciceManager.Exercice = new();
-        }
+    public async Task InitializeAsync(int keyboardLayoutDtoId)
+    {
+        SetKeyboardLayout(keyboardLayoutDtoId);
     }
 
     public IReadOnlyList<string> LanguageAvailable => _languageAvailableElem;
@@ -221,7 +217,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             if (GenerationTypeSourceSelected is GeneratedTypeSourceDto generationTypeSourceDto)
             {
                 var generationTypeSourceMapResult = generationTypeSourceDto.ToModel();
-                if(!generationTypeSourceMapResult.Success)
+                if (!generationTypeSourceMapResult.Success)
                 {
                     ErrorMessageTxt = generationTypeSourceMapResult.Error;
                     return;
@@ -247,21 +243,42 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             }
         }
 
-        var resu =
-            await _saveUseCase.ExecuteAsync(
-                settingbase,
-                IsStaticGenerated,
-                GeneratedText,
-                _typingExerciceManager,
-                dynamicTypingTextData);
 
-        if (!resu.Success)
+        if (KeyboardLayoutSelected is KeyBoardLayoutDto keyboardLayoutDto)
         {
-            ErrorMessageTxt = resu.Error;
-        }
-        else
-        {
-            SuccessMessageTxt = "Exercice succesfully saved !";
+            Result<TypingExercices> exercicesLoadedResult =
+                await _typingExercicePersistence.LoadAsync(keyboardLayoutDto.KeyBoardCode);
+
+            if (exercicesLoadedResult.Success)
+            {
+                _typingExerciceManager.Exercice = exercicesLoadedResult.GetValue;
+            }
+            else
+            {
+                // file not found, first time
+                _typingExerciceManager.Exercice =
+                    new()
+                    {
+                        KeyboardLayout = keyboardLayoutDto,
+                    };
+            }
+
+            var resu =
+                await _saveUseCase.ExecuteAsync(
+                    settingbase,
+                    IsStaticGenerated,
+                    GeneratedText,
+                    _typingExerciceManager,
+                    dynamicTypingTextData);
+
+            if (!resu.Success)
+            {
+                ErrorMessageTxt = resu.Error;
+            }
+            else
+            {
+                SuccessMessageTxt = "Exercice succesfully saved !";
+            }
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using OctoType.Application.Interfaces;
-using OctoType.Application.Models.Typing.Exercices;
+﻿using Google.Protobuf;
 
-using OctoType.Infrastructure.Protos;
-using OctoType.Infrastructure.Mappers;
 using OctoType.Application;
-
-using Google.Protobuf;
+using OctoType.Application.DTOs;
+using OctoType.Application.Interfaces;
+using OctoType.Application.Models.Typing.Exercices;
+using OctoType.Infrastructure.Mappers;
+using OctoType.Infrastructure.Protos;
 
 namespace OctoType.Infrastructure.Stores;
 
@@ -23,11 +23,25 @@ public class ProtobufTypingExercisesStore : IExerciseSettingsStore
             exercicesList = ProtoTypingExerciceList.Parser.ParseFrom(input);
         }
 
-        TypingExercices toReturnList = new();
+
+        var resu = exercicesList.KeyboardLayout.Layout.MapToDtoEnum();
+        if (!resu.Success)
+            return Result<TypingExercices>.Fail(resu.Error);
+
+        KeyBoardLayoutDto keyboarddto =
+            new (
+                resu.GetValue,
+                exercicesList.KeyboardLayout.Name);
+
+        TypingExercices toReturnList = new()
+        {
+            KeyboardLayout = keyboarddto,
+        };
+
         foreach (ProtoTypingExercice protoExerciceItem in exercicesList.Exercices)
         {
             Result<TypingExercise> typingExerciceResult
-                = ProtoTypingExerciceMapper.ToModel(protoExerciceItem);
+                = ProtoTypingExercicePbToModelMapper.ToModel(protoExerciceItem);
 
             if(!typingExerciceResult.Success)
             {
@@ -44,7 +58,7 @@ public class ProtobufTypingExercisesStore : IExerciseSettingsStore
     public async Task<Result<bool>> SaveAsync(TypingExercices settings, string path)
     {
         Result<ProtoTypingExerciceList> resu
-            = ProtoTypingExerciceMapper.ToProtobuf(settings);
+            = ProtoTypingExerciceModeltoPbMapper.ToProtobuf(settings);
 
         if (!resu.Success)
             return Result<bool>

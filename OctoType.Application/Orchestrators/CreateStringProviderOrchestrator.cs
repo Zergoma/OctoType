@@ -29,151 +29,138 @@ public class CreateStringProviderOrchestrator : ICreateStringProviderOrchestrato
         TypingExercise exercice,
         KeyBoardLayoutDto selectedKeyboard)
     {
-        List<TypingExerciseConfiguration> selectedKeyboardTypingExerciceConfigurations
-            = [.. exercice.ExerciceConfigs.Where(x => x.KeyboardLayout.KeyBoardCode == selectedKeyboard.KeyBoardCode)];
 
-        if (selectedKeyboardTypingExerciceConfigurations.Count == 0)
+        if (exercice.TextDataType is TypingTextDataStatic itemStatic)
         {
             return Result<IStringsProvider>
-                .Fail($"No configuration found for keyboard type {selectedKeyboard.KeyBoardHumanFriendly}");
+                .Ok(new TypingExerciceStaticDataProducer(_editorSplitCharProvider, itemStatic));
         }
 
-        TypingExerciseConfiguration? staticConfiguration
-             = selectedKeyboardTypingExerciceConfigurations.FirstOrDefault(x => x.TextData.StaticTextData != null);
-
-        if (staticConfiguration != null)
+        if (exercice.TextDataType is TypingTextDataDynamic itemDynamic)
         {
-            return Result<IStringsProvider>
-                .Ok(new TypingExerciceStaticDataProducer(staticConfiguration, _editorSplitCharProvider));
+            if (itemDynamic.GeneratedTypeSource == GeneratedTypeSource.PseudoWords)
+            {
+                return Result<IStringsProvider>
+                    .Ok(new TypingExerciceDynamicPseudoWordsProducer(
+                        _pseudoWordBatchGenerator,
+                        _typingExerciceWordNumberService,
+                        _typingExerciceLineNumberService,
+                        itemDynamic,
+                        exercice.AllowedCharacters
+                        ));
+            }
+
+            if (itemDynamic.GeneratedTypeSource == GeneratedTypeSource.Words)
+            {
+                // TODO
+                // need db access
+                return Result<IStringsProvider>
+                    .Fail("not yet implemented");
+
+                //return Result<IStringsProvider>
+                //    .Ok(new TypingExerciceDynamicPseudoWordsProducer(
+                //        dynamicPseudoWordConfiguration,
+                //        _pseudoWordBatchGenerator,
+                //        _typingExerciceWordNumberService
+                //        ));
+
+            }
+
         }
-
-        TypingExerciseConfiguration? dynamicPseudoWordConfiguration
-             = selectedKeyboardTypingExerciceConfigurations.FirstOrDefault(x => x.TextData.DynamicTextData?.GeneratedTypeSource == GeneratedTypeSource.PseudoWords);
-
-        if (dynamicPseudoWordConfiguration != null)
-        {
-            return Result<IStringsProvider>
-                .Ok(new TypingExerciceDynamicPseudoWordsProducer(
-                    dynamicPseudoWordConfiguration,
-                    _pseudoWordBatchGenerator,
-                    _typingExerciceWordNumberService,
-                    _typingExerciceLineNumberService
-                    ));
-        }
-
-
-        TypingExerciseConfiguration? dynamicWordConfiguration
-             = selectedKeyboardTypingExerciceConfigurations.FirstOrDefault(x => x.TextData.DynamicTextData?.GeneratedTypeSource == GeneratedTypeSource.Words);
-        if (dynamicWordConfiguration != null)
-        {
-            // TODO
-            // need db access
-            return Result<IStringsProvider>
-                .Fail("not yet implemented");
-
-            //return Result<IStringsProvider>
-            //    .Ok(new TypingExerciceDynamicPseudoWordsProducer(
-            //        dynamicPseudoWordConfiguration,
-            //        _pseudoWordBatchGenerator,
-            //        _typingExerciceWordNumberService
-            //        ));
-        }
-
         return Result<IStringsProvider>
             .Fail("No static or dynamic configuration found");
-    }
-}
 
-public class TypingExerciceStaticDataProducer : IStringsProvider
-{
-    private readonly TypingExerciseConfiguration _exerciceConfiguration;
-    private readonly char _splitChar;
-
-    public TypingExerciceStaticDataProducer(
-        TypingExerciseConfiguration exerciceConfiguration,
-        IEditorSplitCharProvider editorSplitCharProvider)
-    {
-        _exerciceConfiguration = exerciceConfiguration;
-        _splitChar = editorSplitCharProvider.GetSplitCharacter();
     }
 
-    public async Task<Result<IEnumerable<string>>> GetStringsAsync()
+    public class TypingExerciceStaticDataProducer : IStringsProvider
     {
-        string generatedRawStored = _exerciceConfiguration.TextData.StaticTextData!.GeneratedText;
+        private readonly char _splitChar;
+        private readonly TypingTextDataStatic _staticItem;
 
-        string[] rawList = generatedRawStored.Split(_splitChar);
-        List<string> filteredLines = [];
-        foreach (var line in rawList)
+        public TypingExerciceStaticDataProducer(
+            IEditorSplitCharProvider editorSplitCharProvider,
+            TypingTextDataStatic staticItem)
         {
-            // For stability, we filtred the control char
-            string cleaned = new([.. line.Where(c => !char.IsControl(c))]);
-            if(string.IsNullOrWhiteSpace(cleaned))
-            {
-                continue;
-            }
-            filteredLines.Add(cleaned);
+            _splitChar = editorSplitCharProvider.GetSplitCharacter();
+            _staticItem = staticItem;
         }
 
-        return Result<IEnumerable<string>>
-            .Ok(filteredLines);
-    }
-}
-
-public class TypingExerciceDynamicPseudoWordsProducer : IStringsProvider
-{
-    private readonly TypingExerciseConfiguration _exerciceConfiguration;
-    private readonly IPseudoWordBatchGenerator _pseudoWordBatchGenerator;
-    private readonly ITypingExerciseWordNumberService _typingExerciceWordNumberService;
-    private readonly ITypingExerciseLineNumberService _typingExerciceLineNumberService;
-
-    public TypingExerciceDynamicPseudoWordsProducer(
-        TypingExerciseConfiguration exerciceConfiguration,
-        IPseudoWordBatchGenerator pseudoWordBatchGenerator,
-        ITypingExerciseWordNumberService typingExerciceWordNumberService,
-        ITypingExerciseLineNumberService typingExerciceLineNumberService)
-    {
-        _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
-        _typingExerciceWordNumberService = typingExerciceWordNumberService;
-        _exerciceConfiguration = exerciceConfiguration;
-        _typingExerciceLineNumberService = typingExerciceLineNumberService;
-    }
-
-    public async Task<Result<IEnumerable<string>>> GetStringsAsync()
-    {
-        TypingTextData typingTextData = _exerciceConfiguration.TextData;
-
-
-        List<string> all = [];
-
-        for (int i = 0; i < _typingExerciceLineNumberService.LineNumber; i++)
+        public async Task<Result<IEnumerable<string>>> GetStringsAsync()
         {
-            Result<List<string>> generatedPseudoWordResult =
-                _pseudoWordBatchGenerator.Generate(
-                    _typingExerciceWordNumberService.ItemNumber,
-                    new PseudoWordOptions()
-                    {
-                        AllowedChars = typingTextData.AllowedLetters,
-                        MinLength = typingTextData.DynamicTextData!.LengthMin,
-                        MaxLength = typingTextData.DynamicTextData!.LengthMax,
-                    });
+            string generatedRawStored = _staticItem.GeneratedText;
 
-            if (!generatedPseudoWordResult.Success)
+            string[] rawList = generatedRawStored.Split(_splitChar);
+            List<string> filteredLines = [];
+            foreach (var line in rawList)
             {
-                return Result<IEnumerable<string>>
-                    .Fail(generatedPseudoWordResult.Error);
+                // For stability, we filtred the control char
+                string cleaned = new([.. line.Where(c => !char.IsControl(c))]);
+                if (string.IsNullOrWhiteSpace(cleaned))
+                {
+                    continue;
+                }
+                filteredLines.Add(cleaned);
             }
 
-            all.Add(string.Join(' ', generatedPseudoWordResult.GetValue));
+            return Result<IEnumerable<string>>
+                .Ok(filteredLines);
         }
-
-
-
-        return Result<IEnumerable<string>>
-            .Ok(all);
     }
 
+    public class TypingExerciceDynamicPseudoWordsProducer : IStringsProvider
+    {
+        private readonly IPseudoWordBatchGenerator _pseudoWordBatchGenerator;
+        private readonly ITypingExerciseWordNumberService _typingExerciceWordNumberService;
+        private readonly ITypingExerciseLineNumberService _typingExerciceLineNumberService;
+        private readonly TypingTextDataDynamic _itemDynamic;
+        private readonly string _allowedLetters;
 
+        public TypingExerciceDynamicPseudoWordsProducer(
+            IPseudoWordBatchGenerator pseudoWordBatchGenerator,
+            ITypingExerciseWordNumberService typingExerciceWordNumberService,
+            ITypingExerciseLineNumberService typingExerciceLineNumberService,
+            TypingTextDataDynamic itemDynamic,
+            string allowedLetters)
+        {
+            _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
+            _typingExerciceWordNumberService = typingExerciceWordNumberService;
+            _typingExerciceLineNumberService = typingExerciceLineNumberService;
+            _itemDynamic = itemDynamic;
+            _allowedLetters = allowedLetters;
+        }
+
+        public async Task<Result<IEnumerable<string>>> GetStringsAsync()
+        {
+            List<string> all = [];
+
+            for (int i = 0; i < _typingExerciceLineNumberService.LineNumber; i++)
+            {
+                Result<List<string>> generatedPseudoWordResult =
+                    _pseudoWordBatchGenerator.Generate(
+                        _typingExerciceWordNumberService.ItemNumber,
+                        new PseudoWordOptions()
+                        {
+                            AllowedChars = _allowedLetters,
+                            MinLength = _itemDynamic.LengthMin,
+                            MaxLength = _itemDynamic.LengthMax,
+                        });
+
+                if (!generatedPseudoWordResult.Success)
+                {
+                    return Result<IEnumerable<string>>
+                        .Fail(generatedPseudoWordResult.Error);
+                }
+
+                all.Add(string.Join(' ', generatedPseudoWordResult.GetValue));
+            }
+
+            return Result<IEnumerable<string>>
+                .Ok(all);
+        }
+    }
 }
+
+
 
 
 //public class TypingExerciceDynamicWords

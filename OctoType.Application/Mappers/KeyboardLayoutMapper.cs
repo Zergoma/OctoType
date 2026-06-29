@@ -1,7 +1,4 @@
-﻿
-using System.Reflection.Metadata.Ecma335;
-
-using OctoType.Application.DTOs;
+﻿using OctoType.Application.DTOs;
 using OctoType.Application.Factories;
 using OctoType.Domain.Enums;
 
@@ -55,5 +52,17 @@ static public class KeyboardLayoutMapper
         }
 
         return s_factoryKeyboardDto.Create(entityToAppEnumResult.Value!);
+    }
+
+    public static Result<string> ToHumanFriendly(this KeyboardLayoutEnumDto keylayout)
+    {
+        return keylayout switch
+        {
+            KeyboardLayoutEnumDto.AzertyFr => Result<string>.Ok("AzertyFr"),
+            KeyboardLayoutEnumDto.QwertyUs => Result<string>.Ok("QwertyUs"),
+            KeyboardLayoutEnumDto.QwertzDe => Result<string>.Ok("QwertzDe"),
+            KeyboardLayoutEnumDto.Bepo => Result<string>.Ok("Bepo"),
+            _ => Result<string>.Fail($"Layout {keylayout} is not implemented")
+        };
     }
 }

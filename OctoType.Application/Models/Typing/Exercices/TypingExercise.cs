@@ -1,11 +1,27 @@
 ﻿namespace OctoType.Application.Models.Typing.Exercices;
 
+
 public class TypingExercise
 {
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;
 
-
-    public List<TypingExerciseConfiguration> ExerciceConfigs { get; set; } = [];
+    public string AllowedCharacters { get; set; } = string.Empty;
+    public TypingTextData TextDataType { get; set; }
 }
 
+public union TypingTextData(TypingTextDataStatic, TypingTextDataDynamic);
+
+public class TypingTextDataStatic
+{
+    public string GeneratedText { get; set; } = string.Empty;
+}
+
+public class TypingTextDataDynamic
+{
+    public GeneratedTypeSource GeneratedTypeSource { get; set; }
+    public int LengthMin { get; set; }
+    public int LengthMax { get; set; }
+
+    public List<string> LanguagesSelected { get; set; } = [];
+}

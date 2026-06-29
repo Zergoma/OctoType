@@ -1,4 +1,4 @@
-using VM = OctoType.ViewModels.Exercices;
+using VM = OctoType.ViewModels.ExercicesGenerator;
 
 namespace OctoType.MVVM.Views;
 

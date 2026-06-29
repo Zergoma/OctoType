@@ -37,19 +37,20 @@ message ProtoTypingTextData {
     }
 }
 
-message ProtoTypingExerciceConfiguration {
-    ProtoKeyboardLayout keyboard_layout = 1;
-    ProtoTypingTextData text_data = 2;
-}
-
 
 message ProtoTypingExercice {
     string name = 1;
     string description = 2;
 
-    repeated ProtoTypingExerciceConfiguration exercices_configs= 3;
+    string allowed_characters = 3;
+    
+    oneof text_data_Type {
+        ProtoTypingTextDataStatic static_text_data = 4;
+        ProtoTypingTextDataDynamic dynamic_text_data = 5;
+    }
 }
 
 message ProtoTypingExerciceList {
-    repeated ProtoTypingExercice exercices = 1;
+    ProtoKeyboardLayout keyboard_layout = 1;
+    repeated ProtoTypingExercice exercices = 2;
 }

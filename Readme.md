@@ -20,20 +20,27 @@ flowchart LR
 Domain["Domain"]
 Application["Application"]
 UI["Maui"]
+ViewModels["ViewModels"]
 Infrastucture["Infrastructure"]
 
-UI --> Application 
-Application --> Domain
 Infrastucture --> Application
+UI ---> Application
+UI --> ViewModels
+ViewModels --> Application
+Application --> Domain
 
 ```
 
 ----
 ## Technos
 .NET11 preview5  
-MAUI  
-EF Core  
-Sqlite
+MAUI11.0.0-preview.5  
+EF Core 11.0.0-preview.5  
+Sqlite 11.0.0-preview.5  
+CommunityToolkit.Mvvm 8.4.2  
+CommunityToolkit.Maui 14.2.0  
+Google.Protobuf 3.35.1  
+Grpc.Tools 2.81.1  
 
 ----
 

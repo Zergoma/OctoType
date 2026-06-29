@@ -14,22 +14,21 @@ namespace OctoType.ViewModels.TypingLauncher;
 
 public partial class TypingLauncherViewModel : ObservableObject
 {
+    public event Func<int, Task>? KeyboardLayoutChanged;
+
     private readonly ITypingExercicesStorage _typingExerciceStorage;
     private readonly INavigationService _navigation;
     private readonly ICreateStringProviderOrchestrator _createStringProviderOrchestrator;
-    private readonly IUserKeyboardLayoutPreferenceService _userKeyboardPreferenceService;
     private ITypingExercicesEngine? _typingExerciceEngine;
 
     public ObservableCollection<ExerciceItemViewModel> AllExercice { get; set; } = [];
-    private bool _isInit = false;
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
 
     public TypingLauncherViewModel(
         ITypingExercicesStorage typingExerciceStorage,
         INavigationService navigation,
         ICreateStringProviderOrchestrator createStringProviderOrchestrator,
-        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
-        IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService)
+        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService)
     {
         _typingExerciceStorage = typingExerciceStorage;
         _navigation = navigation;
@@ -41,14 +40,12 @@ public partial class TypingLauncherViewModel : ObservableObject
             OnPropertyChanged(nameof(HasExercice));
             OnPropertyChanged(nameof(HasNoExercice));
         };
-        _userKeyboardPreferenceService = userKeyboardPreferenceService;
+    }
 
-        Result<int> keyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
-        if (keyboardCodeResult.Success)
-        {
-            KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == keyboardCodeResult.GetValue);
-            KeyboardLayoutSelected = itemKeyboard;
-        }
+    private void SetKeyboardLayout(int id)
+    {
+        KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == id);
+        KeyboardLayoutSelected = itemKeyboard;
     }
 
     public IReadOnlyList<KeyBoardLayoutDto> KeyboardLayoutAvailable => _keyboardLayoutAvailableElem;
@@ -60,17 +57,24 @@ public partial class TypingLauncherViewModel : ObservableObject
         if (value == null)
             return;
 
-        _userKeyboardPreferenceService.SetKeyboardType(value);
+        KeyboardLayoutChanged?.Invoke((int)value.KeyBoardCode);
     }
 
     public bool HasExercice => AllExercice.Count > 0;
 
     public bool HasNoExercice => !HasExercice;
 
-    public async Task Initilization()
+    public async Task<Result<bool>> InitilizationAsync(int keyboardLayoutDtoId)
     {
+        SetKeyboardLayout(keyboardLayoutDtoId);
+        if (KeyboardLayoutSelected == null)
+        {
+            return Result<bool>
+                .Fail($"keyboard id {keyboardLayoutDtoId} doesn't exist");
+        }
+
         Result<TypingExercices> exercicesListLoadedResult =
-            await _typingExerciceStorage.LoadAsync();
+            await _typingExerciceStorage.LoadAsync(KeyboardLayoutSelected.KeyBoardCode);
 
         if (exercicesListLoadedResult.Success)
         {
@@ -84,7 +88,12 @@ public partial class TypingLauncherViewModel : ObservableObject
             {
                 AllExercice.Add(new ExerciceItemViewModel(exercises[i], i));
             }
+            Result<bool>
+                .Ok(true);
         }
+        
+        return Result<bool>
+            .Fail(exercicesListLoadedResult.Error);
     }
 
 

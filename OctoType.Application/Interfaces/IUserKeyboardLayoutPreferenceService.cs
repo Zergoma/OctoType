@@ -5,6 +5,6 @@ namespace OctoType.Application.Interfaces
     public interface IUserKeyboardLayoutPreferenceService
     {
         Result<int> GetKeyboardType();
-        void SetKeyboardType(KeyBoardLayoutDto keyBoardLayoutDto);
+        void SetKeyboardType(int keyBoardLayoutDtoId);
     }
 }

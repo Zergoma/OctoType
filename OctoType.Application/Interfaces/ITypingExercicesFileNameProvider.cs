@@ -1,7 +1,9 @@
-﻿namespace OctoType.Application.Interfaces
+﻿using OctoType.Application.DTOs;
+
+namespace OctoType.Application.Interfaces
 {
     public interface ITypingExercicesFileNameProvider
     {
-        string GetFileName();
+        Result<string> GetFileName(KeyboardLayoutEnumDto keyboard);
     }
 }

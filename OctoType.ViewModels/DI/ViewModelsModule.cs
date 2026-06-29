@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using OctoType.ViewModels.Exercices;
+using OctoType.ViewModels.ExercicesGenerator;
 using OctoType.ViewModels.Import;
 using OctoType.ViewModels.Typing;
 using OctoType.ViewModels.TypingLauncher;

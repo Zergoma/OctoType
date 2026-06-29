@@ -2,7 +2,7 @@
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.MVVM.Views;
-using OctoType.ViewModels.Exercices;
+using OctoType.ViewModels.ExercicesGenerator;
 
 namespace OctoType.Factories;
 
@@ -49,13 +49,19 @@ public class ExerciceGeneratorViewFactory : IExerciceGeneratorViewFactory
                 _typingExerciceManager,
                 _typingExercicePersistence,
                 _saveUseCase,
-                _userKeyboardPreferenceService,
                 _generationTypeSource,
                 _keyboardLayoutAvailableService,
                 _languageAvailableService);
 
 
-        await typingviewmodel.InitializeAsync();
+        Result<int> userPreferenceKeyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
+        if (!userPreferenceKeyboardCodeResult.Success)
+        {
+            return Result<ContentPage>
+                .Fail(userPreferenceKeyboardCodeResult.Error);
+        }
+
+        await typingviewmodel.InitializeAsync(userPreferenceKeyboardCodeResult.GetValue);
 
         ExerciceGeneratorView typingView = new(typingviewmodel);
 

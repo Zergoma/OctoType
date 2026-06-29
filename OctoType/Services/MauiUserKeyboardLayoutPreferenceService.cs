@@ -23,22 +23,22 @@ public class MauiUserKeyboardLayoutPreferenceService : IUserKeyboardLayoutPrefer
             .Ok(Preferences.Default.Get("selected_keyboard", (int)KeyboardLayoutEnumDto.AzertyFr));
     }
 
-    public void SetKeyboardType(KeyBoardLayoutDto keyBoardLayoutDto)
+    public void SetKeyboardType(int keyBoardLayoutId)
     {
         var itemResu = GetKeyboardType();
         if(!itemResu.Success)
         {
             Preferences.Default.Set(
              "selected_keyboard",
-             (int)keyBoardLayoutDto.KeyBoardCode);
+             keyBoardLayoutId);
             return;
         }
 
-        if (itemResu.GetValue == (int)keyBoardLayoutDto.KeyBoardCode)
+        if (itemResu.GetValue == keyBoardLayoutId)
             return;
 
         Preferences.Default.Set(
              "selected_keyboard",
-             (int)keyBoardLayoutDto.KeyBoardCode);
+             keyBoardLayoutId);
     }
 }

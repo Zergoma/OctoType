@@ -1,4 +1,6 @@
-﻿namespace OctoType.Application.Services;
+﻿using OctoType.Application;
+
+namespace OctoType.Infrastructure.Providers.Windows;
 
 using System.Runtime.InteropServices;
 

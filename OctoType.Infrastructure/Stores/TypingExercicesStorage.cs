@@ -1,4 +1,5 @@
 using OctoType.Application;
+using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.Application.Models.Typing.Exercices;
@@ -8,9 +9,8 @@ namespace OctoType.Infrastructure.Stores;
 public class TypingExercicesStorage : ITypingExercicesStorage
 {
     private readonly IExerciseSettingsStore _exerciceStrore;
-    private readonly IExercicesSettingPathProvider _exercicePathProvider;
-    
-    private readonly string _fullPath;
+    private readonly ITypingExercicesFileNameProvider _exerciceFilenameProvider;
+    private readonly string _exerciceFolder;
 
     public TypingExercicesStorage(
         IExerciseSettingsStore exerciceStrore,
@@ -18,16 +18,24 @@ public class TypingExercicesStorage : ITypingExercicesStorage
         ITypingExercicesFileNameProvider exerciceFilenameProvider)
     {
         _exerciceStrore = exerciceStrore;
-        _exercicePathProvider = exercicePathProvider;
-        string exerciceFolder = _exercicePathProvider.ExerciceSettingPath();
-        
-        _fullPath = Path.Combine(
-            exerciceFolder,
-            exerciceFilenameProvider.GetFileName());
+        _exerciceFilenameProvider = exerciceFilenameProvider;
+        _exerciceFolder = exercicePathProvider.ExerciceSettingPath();
     }
 
-    public async Task<Result<TypingExercices>> LoadAsync()
-        => await _exerciceStrore.LoadAsync(_fullPath);
+    public async Task<Result<TypingExercices>> LoadAsync(KeyboardLayoutEnumDto keyboard)
+    {
+        Result<string> filenameResult = 
+            _exerciceFilenameProvider.GetFileName(keyboard);
+
+        if (!filenameResult.Success)
+            return Result<TypingExercices>.Fail(filenameResult.Error);
+
+        string _fullPath = Path.Combine(
+            _exerciceFolder,
+            filenameResult.GetValue);
+
+        return await _exerciceStrore.LoadAsync(_fullPath);
+    }
     
     
     public async Task<Result<bool>> SaveAsync(TypingExercices? exercices)
@@ -35,6 +43,14 @@ public class TypingExercicesStorage : ITypingExercicesStorage
         if (exercices == null)
             return Result<bool>
                 .Fail("exercices are empty");
+
+        
+        Result<string> filenameResult =
+            _exerciceFilenameProvider.GetFileName(exercices.KeyboardLayout.KeyBoardCode);
+
+        string _fullPath = Path.Combine(
+            _exerciceFolder,
+            filenameResult.GetValue);
 
         return await _exerciceStrore.SaveAsync(exercices, _fullPath);
     }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using OctoType.Application.Interfaces;
-using OctoType.Application.Services;
 using OctoType.Infrastructure.Providers;
+using OctoType.Infrastructure.Providers.Windows;
 
 namespace OctoType.Infrastructure.DI;
 

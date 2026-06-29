@@ -1,6 +1,5 @@
 ﻿using OctoType.Application;
 using OctoType.Application.DTOs;
-using OctoType.Infrastructure.Protos;
 
 using static OctoType.Infrastructure.Protos.ProtoKeyboardLayout.Types;
 
