@@ -27,13 +27,14 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
     public ExerciceGeneratorViewModel(
         IPseudoWordBatchGenerator pseudoWordBatchGenerator,
-        ILanguageAvailableService languageAvailableService,
-        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
         ITypingExercicesManager typingExerciceManager,
         ITypingExercicesStorage typingExercicePersistence,
         ISaveTypingExerciceUseCase saveUseCase,
+        IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService,
+        
         IGenerationTypeSourceAvailableService generationTypeSource,
-        IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService)
+        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
+        ILanguageAvailableService languageAvailableService)
     {
         _pseudoWordBatchGenerator = pseudoWordBatchGenerator;
         AllowedChars = "abcdefghijklmnopqrstuvwxyz";

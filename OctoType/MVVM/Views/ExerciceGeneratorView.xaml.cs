@@ -10,14 +10,6 @@ public partial class ExerciceGeneratorView : ContentPage
 		BindingContext = vm;
 	}
 
-    protected override async void OnAppearing()
-    {
-        if(BindingContext is VM.ExerciceGeneratorViewModel viewModel)
-		{
-			await viewModel.InitializeAsync();
-		}
-    }
-
     private static void InsertTextInEditor(string text, Editor edito)
     {
         string currentText = edito.Text ?? string.Empty;

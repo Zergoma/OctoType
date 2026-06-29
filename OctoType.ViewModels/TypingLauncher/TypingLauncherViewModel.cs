@@ -7,10 +7,8 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
-using OctoType.Application.Managers;
 using OctoType.Application.Models.Typing.Engine;
 using OctoType.Application.Models.Typing.Exercices;
-using OctoType.Application.Orchestrators;
 
 namespace OctoType.ViewModels.TypingLauncher;
 
@@ -71,12 +69,6 @@ public partial class TypingLauncherViewModel : ObservableObject
 
     public async Task Initilization()
     {
-        if (_isInit)
-        {
-            return;
-        }
-        _isInit = true;
-
         Result<TypingExercices> exercicesListLoadedResult =
             await _typingExerciceStorage.LoadAsync();
 
@@ -161,5 +153,11 @@ public partial class TypingLauncherViewModel : ObservableObject
             // So next time
             await _navigation.NavigateToTypingExerciseAsync(stringProviderResult.GetValue);
         }
+    }
+
+    [RelayCommand]
+    public async Task GoToExerciceGenerator()
+    {
+        await _navigation.NavigateToExerciceGeneratorAsync();
     }
 }

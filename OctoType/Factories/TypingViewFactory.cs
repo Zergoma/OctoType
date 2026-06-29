@@ -1,7 +1,6 @@
 ﻿using OctoType.Application;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
-using OctoType.Application.Models.Typing.Exercices;
 using OctoType.MVVM.Views;
 using OctoType.ViewModels.Typing;
 

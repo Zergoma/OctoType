@@ -42,11 +42,4 @@
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Title="Générateur d'exercice">
-        <ShellContent Title="Générateur d'exercice"
-                      Route="ExerciceGeneratorView"
-                      ContentTemplate="{DataTemplate views:ExerciceGeneratorView}"/>
-    </FlyoutItem>
-    
-
 </Shell>

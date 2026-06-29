@@ -6,7 +6,8 @@
              xmlns:behaviors="clr-namespace:OctoType.Behaviors"
              Title="Générateur d'exercice"
              x:DataType="vm:ExerciceGeneratorViewModel"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
     <VerticalStackLayout>
         <Label 
             Text="Générateur d'exercice"

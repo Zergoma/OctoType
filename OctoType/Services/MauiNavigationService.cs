@@ -7,10 +7,29 @@ namespace OctoType.Services;
 public class MauiNavigationService : INavigationService
 {
     private readonly ITypingViewFactory _typingViewFactory;
+    private readonly IExerciceGeneratorViewFactory _exerciceViewFactory;
 
-    public MauiNavigationService(ITypingViewFactory typingViewFactory)
+    public MauiNavigationService(
+        ITypingViewFactory typingViewFactory,
+        IExerciceGeneratorViewFactory exerciceViewFactory)
     {
         _typingViewFactory = typingViewFactory;
+        _exerciceViewFactory = exerciceViewFactory;
+    }
+
+    public async Task<Result<bool>> NavigateToExerciceGeneratorAsync()
+    {
+        var exerciceGeneratorViewResult = 
+            await _exerciceViewFactory.CreateExerciceGeneratorView();
+
+        if (!exerciceGeneratorViewResult.Success)
+        {
+            return Result<bool>.Fail(exerciceGeneratorViewResult.Error);
+        }
+
+        await Shell.Current.Navigation.PushAsync(exerciceGeneratorViewResult.GetValue);
+
+        return Result<bool>.Ok(true);
     }
 
     public async Task<Result<bool>> NavigateToTypingExerciseAsync(IStringsProvider stringProvider)

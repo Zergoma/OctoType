@@ -17,6 +17,8 @@ public static class ViewsModule
 
 
 
+        services.AddTransient<IExerciceGeneratorViewFactory, ExerciceGeneratorViewFactory>();
+
         services.AddTransient<ITypingViewFactory, TypingViewFactory>(); 
         services.AddTransient<INavigationService, MauiNavigationService>();
 
