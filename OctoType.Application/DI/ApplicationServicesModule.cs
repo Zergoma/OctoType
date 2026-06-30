@@ -22,6 +22,7 @@ internal static class ApplicationServicesModule
         services.AddTransient<ITypingExerciseWordNumberService, TypingExerciseWordNumberService>();
         services.AddTransient<ITypingExerciseLineNumberService, TypingExerciseLineNumberService>();
         services.AddTransient<IEditorSplitCharProvider, EditorSplitCharProvider>();
+        services.AddTransient<IGuidProvider, GuidProvider>();
 
         // TODO
         // need to add qwerty etc keyboard keys locators

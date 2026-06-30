@@ -50,6 +50,7 @@ public static class ProtoTypingExercicePbToModelMapper
                 Name = proto.Name,
                 Description = proto.Description,
                 AllowedCharacters = proto.AllowedCharacters,
+                Id = new (proto.Id.ToByteArray()),
             };
 
         Result<TypingTextData> staticDynamicResult = proto.TextDataTypeCase switch
@@ -107,6 +108,7 @@ public static class ProtoTypingExerciceModeltoPbMapper
                 Name = typingExercice.Name,
                 Description = typingExercice.Description,
                 AllowedCharacters = typingExercice.AllowedCharacters,
+                Id = Google.Protobuf.ByteString.CopyFrom(typingExercice.Id.ToByteArray()),
             };
 
 

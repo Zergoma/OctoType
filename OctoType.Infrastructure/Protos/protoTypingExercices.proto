@@ -48,6 +48,7 @@ message ProtoTypingExercice {
         ProtoTypingTextDataStatic static_text_data = 4;
         ProtoTypingTextDataDynamic dynamic_text_data = 5;
     }
+    bytes id = 6;
 }
 
 message ProtoTypingExerciceList {
