@@ -7,10 +7,13 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models;
 using OctoType.Application.Models.Typing.Engine;
 using OctoType.Application.Models.Typing.Exercices;
 
 namespace OctoType.ViewModels.TypingLauncher;
+
+
 
 public partial class TypingLauncherViewModel : ObservableObject
 {
@@ -19,16 +22,22 @@ public partial class TypingLauncherViewModel : ObservableObject
     private readonly ITypingExercicesStorage _typingExerciceStorage;
     private readonly INavigationService _navigation;
     private readonly ICreateStringProviderOrchestrator _createStringProviderOrchestrator;
+    private readonly IThemeChangerService _themeChangerService;
+    private readonly IThemeIconeProvider _themeIconeProvider;
     private ITypingExercicesEngine? _typingExerciceEngine;
 
     public ObservableCollection<ExerciceItemViewModel> AllExercice { get; set; } = [];
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
 
+    IconeThemeState _themeSwitch = IconeThemeState.Dark;
+
     public TypingLauncherViewModel(
         ITypingExercicesStorage typingExerciceStorage,
         INavigationService navigation,
         ICreateStringProviderOrchestrator createStringProviderOrchestrator,
-        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService)
+        IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
+        IThemeChangerService themeChangerService,
+        IThemeIconeProvider themeIconeProvider)
     {
         _typingExerciceStorage = typingExerciceStorage;
         _navigation = navigation;
@@ -40,6 +49,12 @@ public partial class TypingLauncherViewModel : ObservableObject
             OnPropertyChanged(nameof(HasExercice));
             OnPropertyChanged(nameof(HasNoExercice));
         };
+
+        _themeChangerService = themeChangerService;
+        _themeSwitch = _themeChangerService.ApplyUserSelectedTheme();
+        
+        _themeIconeProvider = themeIconeProvider;
+        IconeTheme = _themeIconeProvider.GetIconeCode(_themeSwitch);
     }
 
     private void SetKeyboardLayout(int id)
@@ -168,5 +183,32 @@ public partial class TypingLauncherViewModel : ObservableObject
     public async Task GoToExerciceGenerator()
     {
         await _navigation.NavigateToExerciceGeneratorAsync();
+    }
+
+
+    [ObservableProperty]
+    public partial string IconeTheme { get; set; }
+
+    [RelayCommand]
+    public void ChangeTheme()
+    {
+        _themeSwitch = _themeSwitch switch
+        {
+            IconeThemeState.Dark => IconeThemeState.Light,
+            IconeThemeState.Light => IconeThemeState.System,
+            IconeThemeState.System => IconeThemeState.Dark,
+            _ => throw new NotImplementedException(),
+        };
+
+
+        switch(_themeSwitch)
+        {
+            case IconeThemeState.Dark: _themeChangerService.SetDark();break;
+            case IconeThemeState.Light: _themeChangerService.SetLight();break;
+            case IconeThemeState.System: _themeChangerService.SetToSystem();break;
+            default: throw new NotImplementedException();
+        };
+
+        IconeTheme = _themeIconeProvider.GetIconeCode(_themeSwitch);
     }
 }

@@ -5,7 +5,8 @@
              xmlns:vm="clr-namespace:OctoType.ViewModels.Import;assembly=OctoType.ViewModels"
              Title="ImportWordView"
              x:DataType="vm:ImportWordViewModel"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             StyleClass="xylotype_page_bg">
     
     <Grid RowDefinitions="0.2*,0.8*"
           HorizontalOptions="Center"

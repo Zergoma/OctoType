@@ -30,7 +30,6 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         ITypingExercicesManager typingExerciceManager,
         ITypingExercicesStorage typingExercicePersistence,
         ISaveTypingExerciceUseCase saveUseCase,
-        //IUserKeyboardLayoutPreferenceService userKeyboardPreferenceService,
 
         IGenerationTypeSourceAvailableService generationTypeSource,
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
@@ -48,14 +47,6 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         _typingExerciceManager = typingExerciceManager;
         _typingExercicePersistence = typingExercicePersistence;
         _saveUseCase = saveUseCase;
-        //_userKeyboardPreferenceService = userKeyboardPreferenceService;
-
-        //Result<int> keyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
-        //if (keyboardCodeResult.Success)
-        //{
-        //    KeyBoardLayoutDto? itemKeyboard = _keyboardLayoutAvailableElem.Find(k => (int)k.KeyBoardCode == keyboardCodeResult.GetValue);
-        //    KeyboardLayoutSelected = itemKeyboard;
-        //}
     }
 
     private void SetKeyboardLayout(int id)
@@ -158,8 +149,25 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         }
     }
 
-    [ObservableProperty] public partial string ErrorMessageTxt { get; set; } = string.Empty;
-    [ObservableProperty] public partial string SuccessMessageTxt { get; set; } = string.Empty;
+    public bool IsMessageVisible
+    {
+        get
+        {
+            if(!string.IsNullOrWhiteSpace(ErrorMessageTxt) || !string.IsNullOrWhiteSpace(SuccessMessageTxt))
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMessageVisible))]
+    public partial string ErrorMessageTxt { get; set; } = string.Empty;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMessageVisible))]
+    public partial string SuccessMessageTxt { get; set; } = string.Empty;
 
     [RelayCommand]
     private void GenerateWords()

@@ -6,7 +6,8 @@
              x:Class="OctoType.MVVM.Views.TypingView"
              x:DataType="vm:TypingViewModel"
              Shell.NavBarIsVisible="False"
-             Shell.FlyoutBehavior="Disabled">
+             Shell.FlyoutBehavior="Disabled"
+             StyleClass="xylotype_page_bg">
     <ContentPage.Resources>
         <converters:StringToColorConverter x:Key="stringToColor"/>
 

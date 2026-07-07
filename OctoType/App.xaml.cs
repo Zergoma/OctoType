@@ -22,6 +22,5 @@ public partial class App : MauiAppNS.Application
         win.MinimumWidth = 800;
 #endif
         return win;
-        //return new Window(_serviceProvider.GetRequiredService<TypingView>());
     }
 }

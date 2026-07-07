@@ -2,6 +2,13 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
+
+
+    <Style TargetType="Page" ApplyToDerivedTypes="True" Class="xylotype_page_bg">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource PageBgDark}}" />
+    </Style>
+
+
     <Style TargetType="Label" Class="label_hv_center">
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="VerticalOptions" Value="Center" />
@@ -40,42 +47,6 @@
         <Setter Property="IsSpellCheckEnabled" Value="False" />
     </Style>
 
-           
-
-    <Style TargetType="Button" Class="button_hover">
-        <Setter Property="BackgroundColor" Value="#333"/>
-        <Setter Property="TextColor" Value="White"/>
-
-        <Setter Property="VisualStateManager.VisualStateGroups">
-
-            <VisualStateGroupList>
-
-                <VisualStateGroup Name="CommonStates">
-
-                    <VisualState Name="Normal">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="#333"/>
-                        </VisualState.Setters>
-                    </VisualState>
-
-                    <VisualState Name="PointerOver">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="#555"/>
-                        </VisualState.Setters>
-                    </VisualState>
-
-                    <VisualState Name="Pressed">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="#777"/>
-                            <Setter Property="Scale" Value="0.98"/>
-                        </VisualState.Setters>
-                    </VisualState>
-
-                </VisualStateGroup>
-
-            </VisualStateGroupList>
-
-        </Setter>
-    </Style>
+    
 
 </ResourceDictionary>

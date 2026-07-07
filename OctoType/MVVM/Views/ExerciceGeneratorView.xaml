@@ -7,56 +7,64 @@
              Title="Générateur d'exercice"
              x:DataType="vm:ExerciceGeneratorViewModel"
              Shell.NavBarIsVisible="False"
-             Shell.FlyoutBehavior="Disabled">
+             Shell.FlyoutBehavior="Disabled"
+             StyleClass="xylotype_page_bg">
     <VerticalStackLayout>
+
         <Label 
             Text="Générateur d'exercice"
             FontSize="40"
             VerticalOptions="Center" 
             HorizontalOptions="Center" 
-            Margin="0,20,0,20"/>
+            Margin="0,10,0,10"/>
 
-        <VerticalStackLayout
-                             Margin="10"
-                             Spacing="5">
+        <VerticalStackLayout Margin="10,0" Spacing="5">
 
-            <Entry Placeholder="Set the exercice name" 
-                WidthRequest="200"
-                HorizontalOptions="Start"
-                IsSpellCheckEnabled="False"
-                IsTextPredictionEnabled="False"
-                Text="{Binding ExerciceName}"/>
+            <Border StyleClass="BorderRounded10, BorderBgStd" Padding="10">
 
-            <Editor
-                Placeholder="Set a description here"
-                StyleClass="editor_no_spell_no_prediction"
-                AutoSize="TextChanges"
-                MinimumHeightRequest="100"
-                MaximumHeightRequest="100"
-                VerticalOptions="Fill"
-                HorizontalOptions="Fill"
-                Text="{Binding Description}"/>
+                <VerticalStackLayout Margin="10" Spacing="7">
+                    <Entry Placeholder="Set the exercice name" 
+                            WidthRequest="200"
+                            HorizontalOptions="Start"
+                            IsSpellCheckEnabled="False"
+                            IsTextPredictionEnabled="False"
+                            Text="{Binding ExerciceName}"/>
 
-            <Grid ColumnDefinitions="*,*"
-                  HorizontalOptions="Start"
-                  ColumnSpacing="5">
-                <Label Text="Allowed characters" StyleClass="label_text_h_end,label_text_v_center"/>
-                <Entry Grid.Column="1"
-                    Keyboard="Text"
-                    WidthRequest="300"
-                    StyleClass="entry_no_spell_no_prediction, entry_small"
-                    Text="{Binding AllowedChars}"/>
-            </Grid>
+                    <Editor Placeholder="Set a description here"
+                            StyleClass="editor_no_spell_no_prediction"
+                            AutoSize="TextChanges"
+                            MinimumHeightRequest="100"
+                            MaximumHeightRequest="100"
+                            VerticalOptions="Fill"
+                            HorizontalOptions="Fill"
+                            Text="{Binding Description}"/>
+                </VerticalStackLayout>
+
+            </Border>
+
+            <Border StyleClass="BorderRounded10, BorderBgStd" Padding="10">
+
+                <Grid ColumnDefinitions="auto,auto"
+                      HorizontalOptions="Start"
+                      ColumnSpacing="10">
+                    <Label Text="Allowed characters" StyleClass="label_text_h_end,label_text_v_center"/>
+                    <Entry Grid.Column="1"
+                        Keyboard="Text"
+                        WidthRequest="300"
+                        StyleClass="entry_no_spell_no_prediction, entry_small"
+                        Text="{Binding AllowedChars}"/>
+                </Grid>
+            </Border>
         </VerticalStackLayout>
 
 
-
-        <Grid ColumnDefinitions="*,auto"
+        <Border StyleClass="BorderRounded10, BorderBgStd" Padding="10" Margin="30,20,30,15">
+            <Grid ColumnDefinitions="*,auto"
               Margin="10,5,10,5"
-              ColumnSpacing="5"
+              ColumnSpacing="10"
               HorizontalOptions="Fill">
 
-            <Editor Grid.Column="0"
+                <Editor Grid.Column="0"
                     x:Name="EditorGenerateText"
                     Text="{Binding GeneratedText}"
                     AutoSize="TextChanges"
@@ -67,100 +75,108 @@
                     VerticalOptions="Fill"
                     HorizontalOptions="Fill"
                     FontSize="24">
-                <FlyoutBase.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="Add Enter ↵ mark" Clicked="MenuFlyoutItem_AddEnterMarkClicked"/>
-                        <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Add Tab ⟶ mark" Clicked="MenuFlyoutItem_AddTabMarkClicked"/>
-                    </MenuFlyout>
-                </FlyoutBase.ContextFlyout>
-            </Editor>
+                    <FlyoutBase.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Add Enter ↵ mark" Clicked="MenuFlyoutItem_AddEnterMarkClicked"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Text="Add Tab ⟶ mark" Clicked="MenuFlyoutItem_AddTabMarkClicked"/>
+                        </MenuFlyout>
+                    </FlyoutBase.ContextFlyout>
+                </Editor>
 
-            <Button Grid.Column="1"
-                    StyleClass="button_hover"
+                <Button Grid.Column="1"
+                    StyleClass="ButtonHoverAddExercice"
                     Text="Generate"
                     Command="{Binding GenerateWordsCommand}"/>
-        </Grid>
-
-        <Label Text="{Binding ErrorMessageTxt}"
-               TextColor="OrangeRed"/>
-
-        <Label Text="{Binding SuccessMessageTxt}"
-               TextColor="#047AA6"/>
-
-
-        <Grid 
-              RowDefinitions="*,*,*,*"
-              ColumnDefinitions="auto,50,80,80,80"
-              ColumnSpacing="5"
-              HorizontalOptions="Center"
-              RowSpacing="5"
-              Margin="10">
-
-            <Label Text="Number Words" StyleClass="label_text_h_end,label_text_v_center"/>
-            <Entry Grid.Column="1"
-                Keyboard="Numeric"
-                StyleClass="entry_no_spell_no_prediction, entry_small"
-                Text="{Binding NumberWords}">
-                <Entry.Behaviors>
-                    <behaviors:DigitsOnlyBehavior />
-                </Entry.Behaviors>
-            </Entry>
-
-
-            <Label Grid.Row="1" Text="Min Lenght Word" StyleClass="label_text_h_end,label_text_v_center" />
-            <Entry Grid.Row="1"
-                Grid.Column="1"
-                Keyboard="Numeric"
-                StyleClass="entry_no_spell_no_prediction, entry_small"
-                Text="{Binding MinLengthWord}">
-                <Entry.Behaviors>
-                    <behaviors:DigitsOnlyBehavior />
-                </Entry.Behaviors>
-            </Entry>
-
-            <Label Grid.Row="2" Text="Max Lenght Word" StyleClass="label_text_h_end,label_text_v_center"/>
-            <Entry Grid.Row="2"
-                Grid.Column="1"
-                Keyboard="Numeric"
-                StyleClass="entry_no_spell_no_prediction, entry_small"
-                Text="{Binding MaxLengthWord}">
-                <Entry.Behaviors>
-                    <behaviors:DigitsOnlyBehavior />
-                </Entry.Behaviors>
-            </Entry>
-
-
-
-        </Grid>
-
-        <Grid ColumnDefinitions="*,*,*,*"
-              RowDefinitions="*,*"
-              ColumnSpacing="10"
-              WidthRequest="500">
-
-            <Picker Grid.Column="0" ItemsSource="{Binding LanguageAvailable}" SelectedItem="{Binding LanguageSelected}"/>
-            <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" />
-            <Picker Grid.Column="2" ItemsSource="{Binding GenerationTypeSourceAvailable}" SelectedItem="{Binding GenerationTypeSourceSelected}"
-                    IsVisible="{Binding IsDynamic}"/>
-
-            <Button Grid.Column="3" Text="Save"
-                    StyleClass="button_hover"
-                    Command="{Binding SaveNewExerciceSettingCommand}"/>
-
-            <Grid Grid.Row="1"
-                ColumnDefinitions="auto,auto"
-                ColumnSpacing="2">
-                <Switch IsToggled="{Binding IsStaticGenerated}"/>
-                <Label Grid.Column="1"
-                   Text="{Binding StaticDynamicText}"
-                   StyleClass="label_text_v_center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SwitchStaticDynamicCommand}"></TapGestureRecognizer>
-                    </Label.GestureRecognizers>
-                </Label>
             </Grid>
+        </Border>
+
+        <Grid ColumnDefinitions="auto,auto, *">
+
+            <Border StyleClass="BorderRounded10, BorderBgStd" Padding="20" Margin="30,0">
+                <Grid Grid.Column="0"
+                      RowDefinitions="*,*,*,*"
+                      ColumnDefinitions="auto,50"
+                      ColumnSpacing="5"
+                      HorizontalOptions="Center"
+                      RowSpacing="5"
+                      Margin="10">
+
+                    <Label Text="Number Words" StyleClass="label_text_h_end,label_text_v_center"/>
+                    <Entry Grid.Column="1"
+                            Keyboard="Numeric"
+                            StyleClass="entry_no_spell_no_prediction, entry_small"
+                            Text="{Binding NumberWords}">
+                        <Entry.Behaviors>
+                            <behaviors:DigitsOnlyBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+
+
+                    <Label Grid.Row="1" Text="Min Lenght Word" StyleClass="label_text_h_end,label_text_v_center" />
+                    <Entry Grid.Row="1"
+                           Grid.Column="1"
+                           Keyboard="Numeric"
+                           StyleClass="entry_no_spell_no_prediction, entry_small"
+                           Text="{Binding MinLengthWord}">
+                        <Entry.Behaviors>
+                            <behaviors:DigitsOnlyBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+
+                    <Label Grid.Row="2" Text="Max Lenght Word" StyleClass="label_text_h_end,label_text_v_center"/>
+                    <Entry Grid.Row="2"
+                           Grid.Column="1"
+                           Keyboard="Numeric"
+                           StyleClass="entry_no_spell_no_prediction, entry_small"
+                           Text="{Binding MaxLengthWord}">
+                        <Entry.Behaviors>
+                            <behaviors:DigitsOnlyBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" StyleClass="BorderRounded10, BorderBgStd" Padding="20" Margin="30,0">
+                <Grid ColumnDefinitions="*,*,*,*"
+                  RowDefinitions="auto,auto"
+                  ColumnSpacing="10">
+
+                    <Picker Grid.Column="0" ItemsSource="{Binding LanguageAvailable}" SelectedItem="{Binding LanguageSelected}"/>
+                    <Picker Grid.Column="1" ItemsSource="{Binding KeyboardLayoutAvailable}" SelectedItem="{Binding KeyboardLayoutSelected}" />
+                    <Picker Grid.Column="2" ItemsSource="{Binding GenerationTypeSourceAvailable}" SelectedItem="{Binding GenerationTypeSourceSelected}" IsVisible="{Binding IsDynamic}"/>
+
+                    <Button Grid.Column="3" Text="Save"
+                        Grid.RowSpan="2"
+                        WidthRequest="80"
+                            StyleClass="ButtonHoverLaunch"
+                            Command="{Binding SaveNewExerciceSettingCommand}"/>
+
+                    <Grid Grid.Row="1"
+                          ColumnDefinitions="auto,auto"
+                          ColumnSpacing="2">
+
+                        <Switch IsToggled="{Binding IsStaticGenerated}"/>
+                        <Label Grid.Column="1"
+                           Text="{Binding StaticDynamicText}"
+                           StyleClass="label_text_v_center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SwitchStaticDynamicCommand}"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2"  StyleClass="BorderRounded10, BorderBgStd" Padding="50,30" Margin="30,0" IsVisible="{Binding IsMessageVisible}">
+                <VerticalStackLayout>
+                    <Label Text="{Binding ErrorMessageTxt}" TextColor="OrangeRed"/>
+                    <Label Text="{Binding SuccessMessageTxt}" TextColor="#047AA6"/>
+                </VerticalStackLayout>
+            </Border>
         </Grid>
+
+        
 
     </VerticalStackLayout>
 </ContentPage>

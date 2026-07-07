@@ -9,7 +9,10 @@ public static class PresenterModule
     public static IServiceCollection AddMauiPresenters(this IServiceCollection services)
     {
         services.AddTransient<IChoosePath, MauiChooseFilePresenter>();
-        
+        services.AddTransient<IThemeChangerService, MauiThemeChangerService>();
+        services.AddTransient<IThemeIconeProvider, ThemeIconeProvider>();
+
+
         // TODO
         // move or delete
         // Preferences are not as flexible as expected

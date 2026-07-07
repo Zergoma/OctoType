@@ -4,7 +4,8 @@
              x:DataType="vm:StatisticViewModelMauiAdapter"
              Title="StatisticView"
              Shell.NavBarIsVisible="False"
-             Shell.FlyoutBehavior="Disabled">
+             Shell.FlyoutBehavior="Disabled"
+             StyleClass="xylotype_page_bg">
 
     <VerticalStackLayout>
         <Label Text="Statistics"

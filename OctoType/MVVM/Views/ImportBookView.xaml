@@ -5,7 +5,8 @@
              xmlns:vm="clr-namespace:OctoType.ViewModels.Import;assembly=OctoType.ViewModels"
              Title="Import Book"
              x:DataType="vm:ImportBookViewModel"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             StyleClass="xylotype_page_bg">
     
     <Grid RowDefinitions="0.2*,0.8*"
       HorizontalOptions="Fill"

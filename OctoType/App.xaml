@@ -8,7 +8,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                
+                <ResourceDictionary Source="Resources/Styles/OctoTypeColors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/OctoTypeStyle.xaml" />
+                <ResourceDictionary Source="Resources/Styles/OctoTypeStyleBorder.xaml" />
+                <ResourceDictionary Source="Resources/Styles/OctoTypeStyleButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -9,7 +9,6 @@
     FlyoutWidth="300"
     >
 
-
     <Shell.ItemTemplate>
         <DataTemplate>
             <Label Text="{Binding Title}"
