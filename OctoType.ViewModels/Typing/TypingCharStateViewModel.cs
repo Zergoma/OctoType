@@ -12,7 +12,9 @@ public partial class TypingCharStateViewModel : ObservableObject
     private readonly AppInterfacesTyping.ITypingTheme _typingTheme;
     public TypingChar Model { get; }
     public char Character => Model.Character;
-    
+    public List<char> Errors => Model.Errors;
+    public TimeSpan ResponseTime => Model.RespondeTime;
+
     // private to restrain domain access
     private TypingCharState State => Model.State;
 

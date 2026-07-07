@@ -1,0 +1,59 @@
+<ContentPage x:Class="OctoType.MVVM.Views.StatisticView"
+             xmlns:vm ="clr-namespace:OctoType.MVVM.ViewModels"
+             xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:DataType="vm:StatisticViewModelMauiAdapter"
+             Title="StatisticView"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
+
+    <VerticalStackLayout>
+        <Label Text="Statistics"
+               FontSize="45"
+               Margin="10"
+               />
+
+        <Border Margin="30,30"
+            StrokeShape="RoundRectangle 10">
+
+            <Grid ColumnDefinitions="auto,*">
+
+                <Label Grid.Column="0" 
+                Text="Words per minute: "
+                   Margin="10"
+                    FontSize="30"/>
+
+                <Label Grid.Column="1" 
+                    Text="{Binding WordsPerMinuteText}"
+                    Margin="10"
+                    FontSize="30"
+                    TextColor="DarkSlateGray"/>
+            </Grid>
+        </Border>
+
+        <Border Margin="30,30"
+                StrokeShape="RoundRectangle 10">
+
+            <Grid RowDefinitions="*,*,*">
+                <Label Grid.Row="0"
+                    Text="Response time(ms)"
+                       Margin="10"
+                       FontSize="30"
+                       TextColor="Blue"/>
+
+                <Label Grid.Row="1"
+                        Text="The less, the better"
+                        Margin="10"
+                        FontSize="15"
+                        TextColor="DarkSlateGray"/>
+
+                <micro:ChartView  Grid.Row="2"
+            Chart="{Binding TheChart}" 
+                         HeightRequest="300"
+                         WidthRequest="800"
+                         />
+            </Grid>
+        </Border>
+
+    </VerticalStackLayout>
+
+</ContentPage>

@@ -6,7 +6,7 @@ namespace OctoType.DI;
 
 public static class PresenterModule
 {
-    public static IServiceCollection AddPresenters(this IServiceCollection services)
+    public static IServiceCollection AddMauiPresenters(this IServiceCollection services)
     {
         services.AddTransient<IChoosePath, MauiChooseFilePresenter>();
         

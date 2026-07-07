@@ -1,27 +1,16 @@
-﻿using OctoType.Application.Interfaces;
-using OctoType.Factories;
-using OctoType.MVVM.Views;
-using OctoType.Services;
+﻿using OctoType.MVVM.Views;
 
 namespace OctoType.DI;
 
 public static class ViewsModule
 {
-    public static IServiceCollection AddViews(this IServiceCollection services)
+    public static IServiceCollection AddMauiViews(this IServiceCollection services)
     {
         services.AddTransient<TypingView>();
         services.AddTransient<ImportWordView>();
         services.AddTransient<ImportBookView>();
         services.AddTransient<ExerciceGeneratorView>();
         services.AddTransient<TypingLauncherView>();
-
-
-
-        services.AddTransient<IExerciceGeneratorViewFactory, ExerciceGeneratorViewFactory>();
-
-        services.AddTransient<ITypingViewFactory, TypingViewFactory>(); 
-        services.AddTransient<INavigationService, MauiNavigationService>();
-
 
         return services;
     }

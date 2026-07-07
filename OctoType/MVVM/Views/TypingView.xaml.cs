@@ -1,9 +1,8 @@
-using System.Diagnostics;
-
 using Microsoft.UI.Xaml.Input;
 
 using OctoType.Application.Interfaces;
 using OctoType.Domain.Typing;
+using OctoType.Domain.Typing.Analysis;
 using OctoType.ViewModels.Typing;
 
 
@@ -40,13 +39,11 @@ public partial class TypingView : ContentPage
         HiddenInput.Focused += (_, __) =>
         {
             TakeFocusButton.IsVisible = false;
-            Debug.WriteLine("FOCUSED");
         };
 
         HiddenInput.Unfocused += (_, __) =>
         {
             TakeFocusButton.IsVisible = true;
-            Debug.WriteLine("UNFOCUSED");
         };
         #endregion
 
@@ -64,7 +61,15 @@ public partial class TypingView : ContentPage
 
     private async void OnTextEndDetected()
     {
-        await _navigationService.PopBackAsync();
+        if (BindingContext is TypingViewModel vm)
+        {
+            Dictionary<char, CharStats> stat = vm.GetTotalCharStats();
+
+            // TODO
+            // Make it better
+            await _navigationService.PopBackAsync();
+            await _navigationService.NavigateToStatisticAsync(stat);
+        }
     }
 
     protected override async void OnAppearing()

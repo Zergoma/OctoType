@@ -28,8 +28,14 @@ public class TypingChar
 
     public List<char> Errors { get; } = [];
 
-    public bool ChallengeValue(char input)
+    public TimeSpan RespondeTime{ get; set; } = TimeSpan.Zero;
+     
+
+    public bool ChallengeValue(char input, TimeSpan responseTime)
     {
+        // Not related to success or false
+        RespondeTime = responseTime;
+
         if (input == Character)
         {
             State = NbError switch

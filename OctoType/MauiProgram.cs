@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Maui;
 
+using Microcharts.Maui;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using OctoType.Application.DI;
 using OctoType.DI;
+using OctoType.Application.DI;
 using OctoType.Infrastructure.DbContexts;
 using OctoType.Infrastructure.DI;
 using OctoType.ViewModels.DI;
@@ -38,6 +40,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseMicrocharts()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -52,15 +55,17 @@ public static class MauiProgram
             .AddMauiInfrastructure()        // declare a IAssetReader
             .AddOctoTypeInfrastructure()    // need a IAssetReader
 
-            // define in the maui projet
             // presenters are used inside App Orchestrators
-            .AddPresenters()
+            .AddMauiPresenters()
 
             .AddOctoTypeApplication()
-
             .AddViewModelsModule()
-            .AddViews();
 
+            .AddMauiViewFactories()
+            .AddMauiService()
+            .AddMauiViews();
+
+        // DB context factory
         string databasePath =
             Path.Combine(
                 FileSystem.AppDataDirectory,
@@ -72,6 +77,10 @@ public static class MauiProgram
 
         var app = builder.Build();
 
+
+
+        // INFRASTRUCTURE
+        // DB
         try
         {
             // Infrastructure operation : init or upgrade db according to migration state

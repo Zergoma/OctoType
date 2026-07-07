@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using OctoType.Application;
 using OctoType.Application.Interfaces;
+using OctoType.Domain.Typing.Analysis;
 
 using AppInterfaces = OctoType.Application.Interfaces;
 using AppInterfacesTyping = OctoType.Application.Interfaces.Typing;
@@ -87,8 +88,8 @@ public partial class TypingViewModel : ObservableObject
         // to property, + user access
         Result<AppInterfacesTyping.ITypingTheme> themeResu =
             await _typingThemeProvider.GetThemeAsync("OctoType_Typing_Theme");
-        
-        if(!themeResu.Success)
+
+        if (!themeResu.Success)
         {
             return;
         }
@@ -96,7 +97,7 @@ public partial class TypingViewModel : ObservableObject
         Result<IEnumerable<string>> getStringResult =
             await stringProvider.GetStringsAsync();
 
-        if(!getStringResult.Success)
+        if (!getStringResult.Success)
         {
             Debug.WriteLine(getStringResult.Error);
             return;
@@ -108,10 +109,10 @@ public partial class TypingViewModel : ObservableObject
 
         foreach (string line in dataLines)
         {
-            DomainTyping.TypingLine typingLine = new (line);
+            DomainTyping.TypingLine typingLine = new(line);
             Session.Lines.Add(typingLine);
 
-            TypingLineStateViewModel typingLineState =  new (themeResu.GetValue, typingLine);
+            TypingLineStateViewModel typingLineState = new(themeResu.GetValue, typingLine);
             LinesStates.Add(typingLineState);
         }
 
@@ -120,5 +121,30 @@ public partial class TypingViewModel : ObservableObject
 
     public DomainTyping.TypingStatus ProcessInput(char input)
         => Session.ProcessInput(input, _charMapper.Map);
-    
+
+
+    public Dictionary<char, CharStats> GetTotalCharStats()
+    {
+        Dictionary<char, CharStats> total = [];
+
+        foreach (TypingLineStateViewModel itemLine in LinesStates)
+        {
+            Dictionary<char, CharStats> stat = itemLine.GetLineCharStats();
+            
+            foreach (KeyValuePair<char, CharStats> item in stat)
+            {
+                if (total.TryGetValue(item.Key, out CharStats? charstat))
+                {
+                    total[item.Key] = charstat.Add(item.Value);
+                }
+                else
+                {
+                    total[item.Key] = item.Value;
+                }
+            }
+        }
+        return total;
+    }
+
+
 }

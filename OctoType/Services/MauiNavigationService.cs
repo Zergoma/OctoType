@@ -1,5 +1,6 @@
 ﻿using OctoType.Application;
 using OctoType.Application.Interfaces;
+using OctoType.Domain.Typing.Analysis;
 using OctoType.Factories;
 
 namespace OctoType.Services;
@@ -8,13 +9,16 @@ public class MauiNavigationService : INavigationService
 {
     private readonly ITypingViewFactory _typingViewFactory;
     private readonly IExerciceGeneratorViewFactory _exerciceViewFactory;
+    private readonly IStatisticViewFactory _statisticViewFactory;
 
     public MauiNavigationService(
         ITypingViewFactory typingViewFactory,
-        IExerciceGeneratorViewFactory exerciceViewFactory)
+        IExerciceGeneratorViewFactory exerciceViewFactory,
+        IStatisticViewFactory statisticViewFactory)
     {
         _typingViewFactory = typingViewFactory;
         _exerciceViewFactory = exerciceViewFactory;
+        _statisticViewFactory = statisticViewFactory;
     }
 
     public async Task<Result<bool>> NavigateToExerciceGeneratorAsync()
@@ -45,6 +49,23 @@ public class MauiNavigationService : INavigationService
 
         return Result<bool>.Ok(true);
     }
+
+
+    public async Task<Result<bool>> NavigateToStatisticAsync(Dictionary<char, CharStats> stat)
+    {
+        Result<ContentPage> viewCReationResult = await _statisticViewFactory.Create(stat);
+
+        if(!viewCReationResult.Success)
+        {
+            return Result<bool>
+                .Fail(viewCReationResult.Error);
+        }
+
+        await Shell.Current.Navigation.PushAsync(viewCReationResult.GetValue);
+
+        return Result<bool>.Ok(true);
+    }
+
 
     public async Task PopBackAsync()
     {

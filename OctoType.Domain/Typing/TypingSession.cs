@@ -1,4 +1,6 @@
-﻿namespace OctoType.Domain.Typing;
+﻿using System.Diagnostics;
+
+namespace OctoType.Domain.Typing;
 
 public class TypingSession
 {
@@ -13,6 +15,9 @@ public class TypingSession
 
     public bool BackReturnEnable { get; set; } = true;
     public bool StopOnError { get; set; } = true;
+
+    private readonly Stopwatch _stopwatch = new();
+    private bool _isFirstChar = true;
 
     private void SetPosition(int lineIndex, int characterIndex, bool forceRefresh = false)
     {
@@ -54,6 +59,7 @@ public class TypingSession
 
         _previousCurrent = null;
         SetPosition(0, 0, true);
+        _isFirstChar = true;
     }
 
 
@@ -94,7 +100,7 @@ public class TypingSession
         }
     }
 
-    public TypingChar? CurrentCharacter
+    private TypingChar? CurrentCharacter
     {
         get
         {
@@ -214,6 +220,12 @@ public class TypingSession
 
     public TypingStatus ProcessInput(char input, Func<char, char> mapper)
     {
+        if(_isFirstChar)
+        {
+            _isFirstChar = false;
+            _stopwatch.Restart();
+        }
+
         // BACKSPACE
         if (input == '\b')
         {
@@ -241,12 +253,17 @@ public class TypingSession
             return TypingStatus.Ended;
         }
 
-        bool success = current.ChallengeValue(mapper(input));
+        bool success = current.ChallengeValue(mapper(input), _stopwatch.Elapsed);
 
         if (success || !StopOnError)
         {
-            if (!MoveForward())
+            if(MoveForward())
             {
+                _stopwatch.Restart();
+            }
+            else
+            {
+                _stopwatch.Stop();
                 return TypingStatus.Ended;
             }
         }
