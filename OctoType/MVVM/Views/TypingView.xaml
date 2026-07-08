@@ -89,6 +89,7 @@
                 HeightRequest="30"
                 WidthRequest="300"/>
 
+        <!-- typing flow settings -->
         <Border Grid.Row="3" StyleClass="BorderTypingRounded10, BorderBgTyping" Padding="30" Margin="70">
             <Grid Grid.Row="3"
               RowDefinitions="*,*"

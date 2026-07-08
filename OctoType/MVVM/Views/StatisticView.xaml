@@ -17,18 +17,43 @@
             StyleClass="BorderTypingRounded10, BorderBgTyping"
                 Padding="10">
 
-            <Grid ColumnDefinitions="auto,*">
+            <Grid ColumnDefinitions="*,*">
 
-                <Label Grid.Column="0" 
-                Text="Words per minute: "
-                   Margin="10"
-                    FontSize="30"/>
+                <Grid Grid.Column="0"
+                      HorizontalOptions="Center"
+                    ColumnDefinitions="auto,*">
 
-                <Label Grid.Column="1" 
-                    Text="{Binding WordsPerMinuteText}"
-                    Margin="10"
-                    FontSize="30"
-                    TextColor="DarkSlateGray"/>
+                    <Label Grid.Column="1" 
+                        Text="WPM"
+                        Margin="10"
+                        FontSize="25"
+                        VerticalOptions="Center"/>
+
+                    <Label Grid.Column="0" 
+                        Text="{Binding WordsPerMinuteText}"
+                        Margin="10,0"
+                        FontSize="30"
+                           VerticalOptions="Center"
+                        TextColor="DarkSlateGray"/>
+                </Grid>
+
+                <Grid Grid.Column="1"
+                      HorizontalOptions="Center"
+                    ColumnDefinitions="auto,*">
+
+                    <Label Grid.Column="1" 
+                        Text="LPM"
+                        Margin="10,0"
+                        FontSize="25"
+                           VerticalOptions="Center"/>
+
+                    <Label Grid.Column="0" 
+                        Text="{Binding LetterPerMinuteText}"
+                        Margin="10"
+                        FontSize="30"
+                        TextColor="DarkSlateGray"
+                           VerticalOptions="Center"/>
+                </Grid>
             </Grid>
         </Border>
 
@@ -38,7 +63,7 @@
 
             <Grid RowDefinitions="*,*,*">
                 <Label Grid.Row="0"
-                    Text="Response time(ms)"
+                    Text="Response time(s)"
                        Margin="10,0"
                        FontSize="30"/>
 
@@ -48,7 +73,7 @@
                         FontSize="15"
                         TextColor="DarkSlateGray"/>
 
-                    <micro:ChartView  Grid.Row="2" 
+                <micro:ChartView  Grid.Row="2" 
                             Chart="{Binding TheChart}" 
                              HeightRequest="300"
                              WidthRequest="800"

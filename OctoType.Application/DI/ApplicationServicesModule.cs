@@ -23,6 +23,7 @@ internal static class ApplicationServicesModule
         services.AddTransient<ITypingExerciseLineNumberService, TypingExerciseLineNumberService>();
         services.AddTransient<IEditorSplitCharProvider, EditorSplitCharProvider>();
         services.AddTransient<IGuidProvider, GuidProvider>();
+        services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorsProvider>();
 
         // TODO
         // need to add qwerty etc keyboard keys locators

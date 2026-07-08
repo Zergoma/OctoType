@@ -2,6 +2,8 @@
 
 using Microcharts;
 
+using OctoType.Application.Interfaces;
+using OctoType.Application.Models.Themes;
 using OctoType.Domain.Typing.Analysis;
 using OctoType.ViewModels.Statistic;
 
@@ -9,37 +11,24 @@ using SkiaSharp;
 
 namespace OctoType.MVVM.ViewModels;
 
+
 public partial class StatisticViewModelMauiAdapter : ObservableObject
 {
     private StatisticViewModel _statisticViewModel;
 
     public BarChart TheChart { get; set; }
 
+    private readonly IChartResponseTimeColorsProvider _chartResponseTimeColorsProvider;
+    private readonly ThemeState _themeState;
 
-    private readonly SKColor[] _colors;
-
-    private static int GetColorIndex(double timeResponse) =>
-        timeResponse switch
-        {
-            < 1.0 => 0,
-            < 2.0 => 1,
-            < 3.0 => 2,
-            < 4.0 => 3,
-            _ => 4
-        };
-
-
-    public StatisticViewModelMauiAdapter(StatisticViewModel statisticViewModel)
+    public StatisticViewModelMauiAdapter(
+        StatisticViewModel statisticViewModel,
+        IChartResponseTimeColorsProvider chartResponseTimeColorsProvider,
+        ThemeState themeState)
     {
         _statisticViewModel = statisticViewModel;
-
-        _colors = [
-            SKColor.Parse("#42E506"),
-            SKColor.Parse("#B5E200"),
-            SKColor.Parse("#E07700"),
-            SKColor.Parse("#DD2400"),
-            SKColor.Parse("#3D0900"),
-            ];
+        _chartResponseTimeColorsProvider = chartResponseTimeColorsProvider;
+        _themeState = themeState;
     }
 
     public int TotalOccurence { get; set; } = 0;
@@ -71,24 +60,33 @@ public partial class StatisticViewModelMauiAdapter : ObservableObject
             // This to avoid to have chart useless because of a pause
             double timeResponseAverage = Math.Min(charStats.ResponseTimeAverage.TotalSeconds, 5.0);
 
+            SKColor colorLabel = SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorTimeResponse(timeResponseAverage, _themeState));
+            SKColor colorText = SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorTxtLabel(_themeState));
+
+            SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorTimeResponse(timeResponseAverage, _themeState));
+
             var entry = new ChartEntry((float)timeResponseAverage)
             {
                 Label = item.Key.ToString(),
                 ValueLabel = $"{timeResponseAverage:f2}",
-                Color = _colors[GetColorIndex(timeResponseAverage)]
+                Color = colorLabel,
+                ValueLabelColor = colorText,
+                TextColor = colorText,
             };
 
             gatherResponseTime.Add(entry);
         }
 
 
+        SKColor colorBg = SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorBg(_themeState));
+
         TheChart = new BarChart()
         {
-            Entries = [.. gatherResponseTime],
+            Entries = [.. gatherResponseTime.OrderByDescending(x => x.Value)],
             MinValue = 0,
             MaxValue = 5,
             LabelOrientation = Orientation.Horizontal,
-
+            BackgroundColor = colorBg,
         };
     }
 
