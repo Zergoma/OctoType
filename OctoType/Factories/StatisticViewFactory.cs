@@ -12,13 +12,16 @@ public class StatisticViewFactory : IStatisticViewFactory
 {
     private readonly IThemeChangerService _themeChangerService;
     private readonly IChartResponseTimeColorsProvider _chartResponseTimeColorsProvider;
+    private readonly IChartErrorProvider _chartErrorColorsProvider;
 
     public StatisticViewFactory(
         IThemeChangerService themeChangerService,
-        IChartResponseTimeColorsProvider chartResponseTimeColorsProvider)
+        IChartResponseTimeColorsProvider chartResponseTimeColorsProvider,
+        IChartErrorProvider chartErrorColorsProvider)
     {
         _themeChangerService = themeChangerService;
         _chartResponseTimeColorsProvider = chartResponseTimeColorsProvider;
+        _chartErrorColorsProvider = chartErrorColorsProvider;
     }
 
     public async Task<Result<ContentPage>> Create(Dictionary<char, CharStats> stat)
@@ -33,6 +36,7 @@ public class StatisticViewFactory : IStatisticViewFactory
             new(
                 vm,
                 _chartResponseTimeColorsProvider,
+                _chartErrorColorsProvider,
                 themeState);
         
         vmadapter.Init();

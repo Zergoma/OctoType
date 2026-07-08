@@ -24,6 +24,7 @@ internal static class ApplicationServicesModule
         services.AddTransient<IEditorSplitCharProvider, EditorSplitCharProvider>();
         services.AddTransient<IGuidProvider, GuidProvider>();
         services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorsProvider>();
+        services.AddTransient<IChartErrorProvider, ChartErrorProvider>();
 
         // TODO
         // need to add qwerty etc keyboard keys locators

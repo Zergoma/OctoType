@@ -14,28 +14,35 @@ namespace OctoType.MVVM.ViewModels;
 
 public partial class StatisticViewModelMauiAdapter : ObservableObject
 {
-    private StatisticViewModel _statisticViewModel;
+    private readonly StatisticViewModel _statisticViewModel;
 
-    public BarChart TheChart { get; set; }
+    [ObservableProperty]
+    public partial BarChart TimeResponseChart { get; set; }
+
+    [ObservableProperty]
+    public partial RadarChart ErrorsChart { get; set; }
 
     private readonly IChartResponseTimeColorsProvider _chartResponseTimeColorsProvider;
+    private readonly IChartErrorProvider _chartErrorColorsProvider;
     private readonly ThemeState _themeState;
 
     public StatisticViewModelMauiAdapter(
         StatisticViewModel statisticViewModel,
         IChartResponseTimeColorsProvider chartResponseTimeColorsProvider,
+        IChartErrorProvider chartErrorColorsProvider,
         ThemeState themeState)
     {
         _statisticViewModel = statisticViewModel;
         _chartResponseTimeColorsProvider = chartResponseTimeColorsProvider;
         _themeState = themeState;
+        _chartErrorColorsProvider = chartErrorColorsProvider;
     }
 
     public int TotalOccurence { get; set; } = 0;
     public double TotalMinute { get; set; } = 0.0;
 
 
-    public double LettersPerMinute => TotalMinute > 0 
+    public double LettersPerMinute => TotalMinute > 0
                                         ? TotalOccurence / TotalMinute
                                         : 0.0;
 
@@ -44,10 +51,13 @@ public partial class StatisticViewModelMauiAdapter : ObservableObject
     public string LetterPerMinuteText => $"{LettersPerMinute:F2}";
     public string WordsPerMinuteText => $"{WordsPerMinute:F2}";
 
+    [ObservableProperty]
+    public partial bool HasError { get; set; } = false;
 
     public void Init()
     {
         List<ChartEntry> gatherResponseTime = [];
+        List<ChartEntry> gatherError = [];
 
         foreach (KeyValuePair<char, CharStats> item in _statisticViewModel.Statistics)
         {
@@ -63,31 +73,66 @@ public partial class StatisticViewModelMauiAdapter : ObservableObject
             SKColor colorLabel = SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorTimeResponse(timeResponseAverage, _themeState));
             SKColor colorText = SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorTxtLabel(_themeState));
 
-            SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorTimeResponse(timeResponseAverage, _themeState));
+            var timeResponseEntry =
+                new ChartEntry((float)timeResponseAverage)
+                {
+                    Label = item.Key.ToString(),
+                    ValueLabel = $"{timeResponseAverage:f2}",
+                    Color = colorLabel,
+                    ValueLabelColor = colorText,
+                    TextColor = colorText,
+                };
 
-            var entry = new ChartEntry((float)timeResponseAverage)
+            gatherResponseTime.Add(timeResponseEntry);
+
+
+            if (charStats.NbCharError > 0)
             {
-                Label = item.Key.ToString(),
-                ValueLabel = $"{timeResponseAverage:f2}",
-                Color = colorLabel,
-                ValueLabelColor = colorText,
-                TextColor = colorText,
-            };
+                double errorPercentage = 
+                    charStats.NbOccurence > 0
+                    ? charStats.NbCharError*100.0 / charStats.NbOccurence
+                    : 100.0;
 
-            gatherResponseTime.Add(entry);
+                SKColor colorError = SKColor.Parse(_chartErrorColorsProvider.GetHexColorError(errorPercentage, _themeState));
+
+                var errorEntry =
+                    new ChartEntry((float)errorPercentage)
+                    {
+                        Label = item.Key.ToString(),
+                        ValueLabel = $"{charStats.NbCharError}/{charStats.NbOccurence} ({errorPercentage:f2})%",
+                        Color = colorError,
+                        ValueLabelColor = colorText,
+                        TextColor = colorText,
+                    };
+                gatherError.Add(errorEntry);
+            }
+
         }
 
 
         SKColor colorBg = SKColor.Parse(_chartResponseTimeColorsProvider.GetHexColorBg(_themeState));
 
-        TheChart = new BarChart()
-        {
-            Entries = [.. gatherResponseTime.OrderByDescending(x => x.Value)],
-            MinValue = 0,
-            MaxValue = 5,
-            LabelOrientation = Orientation.Horizontal,
-            BackgroundColor = colorBg,
-        };
+        TimeResponseChart =
+            new BarChart()
+            {
+                Entries = [.. gatherResponseTime.OrderByDescending(x => x.Value)],
+                MinValue = 0,
+                MaxValue = 5,
+                LabelOrientation = Orientation.Horizontal,
+                BackgroundColor = colorBg,
+                CornerRadius = 5,
+            };
+
+        HasError = gatherError.Count > 0;
+
+        ErrorsChart =
+            new RadarChart()
+            {
+                Entries = [.. gatherError.OrderByDescending(x => x.Value)],
+                MinValue = 0,
+                LabelTextSize = 10,
+                BackgroundColor = colorBg,
+            };
     }
 
 }
