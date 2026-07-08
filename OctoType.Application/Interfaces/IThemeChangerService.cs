@@ -1,4 +1,4 @@
-﻿using OctoType.Application.Models;
+﻿using OctoType.Application.Models.Themes;
 
 namespace OctoType.Application.Interfaces
 {
@@ -8,6 +8,8 @@ namespace OctoType.Application.Interfaces
         void SetLight();
         void SetToSystem();
 
-        public IconeThemeState ApplyUserSelectedTheme();
+        ThemeStateConfiguration ApplyUserSelectedTheme();
+
+        ThemeState GetTheme();
     }
 }

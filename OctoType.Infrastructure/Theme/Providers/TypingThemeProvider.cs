@@ -1,5 +1,6 @@
 ﻿using OctoType.Application;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Models.Themes;
 using OctoType.Infrastructure.Theme.Loaders;
 using OctoType.Infrastructure.Theme.Mappers;
 using OctoType.Infrastructure.Theme.Models;
@@ -23,13 +24,15 @@ public class TypingThemeProvider : ITypingThemeProvider
         return _themes.ContainsKey(name);
     }
 
-    public async Task<Result<ITypingTheme>> GetThemeAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<Result<ITypingTheme>> GetThemeAsync(string name, ThemeState themeState, CancellationToken cancellationToken = default)
     {
-        if (_themes.TryGetValue(name, out ITypingTheme? theme))
-        {
-            return Result<ITypingTheme>
-                .Ok(theme);
-        }
+        // TODO
+        // add force or remove it completelt ?
+        //if (_themes.TryGetValue(name, out ITypingTheme? theme))
+        //{
+        //    return Result<ITypingTheme>
+        //        .Ok(theme);
+        //}
 
 
         Result<ThemeFileModel> userResult =
@@ -37,7 +40,7 @@ public class TypingThemeProvider : ITypingThemeProvider
 
         if (userResult.Success)
         {
-            ITypingTheme userTheme = userResult.GetValue.ToTheme();
+            ITypingTheme userTheme = userResult.GetValue.ToTheme(themeState);
             _themes[name] = userTheme;
             return Result<ITypingTheme>
                 .Ok(userTheme);
@@ -54,7 +57,7 @@ public class TypingThemeProvider : ITypingThemeProvider
                 .Fail($"Theme: {name} doesn't exist");
         }
 
-        ITypingTheme assetTheme = assetResult.GetValue.ToTheme();
+        ITypingTheme assetTheme = assetResult.GetValue.ToTheme(themeState);
         _themes[name] = assetTheme;
         return Result<ITypingTheme>
             .Ok(assetTheme);

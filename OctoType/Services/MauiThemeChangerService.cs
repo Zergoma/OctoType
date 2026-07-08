@@ -1,5 +1,5 @@
 ﻿using OctoType.Application.Interfaces;
-using OctoType.Application.Models;
+using OctoType.Application.Models.Themes;
 
 namespace OctoType.Services;
 
@@ -23,7 +23,7 @@ public class MauiThemeChangerService : IThemeChangerService
         Preferences.Set("Theme", "System");
     }
 
-    public IconeThemeState ApplyUserSelectedTheme()
+    public ThemeStateConfiguration ApplyUserSelectedTheme()
     {
         string? theme = Preferences.Get("Theme", "System");
 
@@ -36,9 +36,18 @@ public class MauiThemeChangerService : IThemeChangerService
 
         return theme switch
         {
-            "Light" => IconeThemeState.Light,
-            "Dark" => IconeThemeState.Dark,
-            _ => IconeThemeState.System
+            "Light" => ThemeStateConfiguration.Light,
+            "Dark" => ThemeStateConfiguration.Dark,
+            _ => ThemeStateConfiguration.System
+        };
+    }
+
+    public ThemeState GetTheme()
+    {
+        return (App.Current?.RequestedTheme ?? AppTheme.Dark) switch
+        {
+            AppTheme.Light => ThemeState.Light,
+            _ => ThemeState.Dark,
         };
     }
 }

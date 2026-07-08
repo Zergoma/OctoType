@@ -43,13 +43,13 @@
         
         <Border Grid.Row="1"
                 Grid.Column="1"
-                StyleClass="BorderRounded10, BorderBgStd"
+                StyleClass="BorderBgStd, BorderTypingRounded10"
                 Padding="10">
 
             <Grid>
 
                 <Label IsVisible="{Binding IsNoSelection}" 
-                    Text="Select an exercice on the left" TextColor="White"
+                    Text="Select an exercice on the left"
                        WidthRequest="200"
                        FontSize="40"
                        HorizontalOptions="Center"
@@ -57,7 +57,7 @@
 
 
                 <VerticalStackLayout IsVisible="{Binding IsSelectedExercice}">
-                    <Label Text="{Binding ExerciceName}" TextColor="White" FontSize="34" FontAttributes="Bold" Margin="5,5,0,15" />
+                    <Label Text="{Binding ExerciceName}" FontSize="34" FontAttributes="Bold" Margin="5,5,0,15" />
 
                     <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10" Margin="0,0,0,30">
                         <VerticalStackLayout>
@@ -97,7 +97,7 @@
         <Border 
             Grid.Row="1"
             Grid.Column="0"
-                StyleClass="BorderRounded10, BorderBgStd"
+                StyleClass="BorderBgStd, BorderTypingRounded10"
                 Padding="10">
 
 
@@ -108,7 +108,6 @@
                     <Label Grid.Row="0"
                        Grid.ColumnSpan="2"
                        Text="Exercices !"
-                       TextColor="White"
                        FontSize="34"
                        FontAttributes="Bold"
                        VerticalOptions="Center"

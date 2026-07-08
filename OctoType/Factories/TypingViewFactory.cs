@@ -10,20 +10,29 @@ public class TypingViewFactory : ITypingViewFactory
 {
     private readonly ITypingThemeProvider _typingThemeProvider;
     private readonly IInputCharMapperService _charMapper;
+    private readonly IThemeChangerService _themeChangerService;
+
 
     public TypingViewFactory(
         ITypingThemeProvider typingThemeProvider,
-        IInputCharMapperService charMapper)
+        IInputCharMapperService charMapper,
+        IThemeChangerService themeChangerService)
     {
         _typingThemeProvider = typingThemeProvider;
         _charMapper = charMapper;
+        _themeChangerService = themeChangerService;
     }
 
     public async Task<Result<ContentPage>> CreateTypingViewAsync(
         IStringsProvider stringProvider,
         INavigationService navigationService)
     {
-        TypingViewModel typingviewmodel = new(_charMapper, _typingThemeProvider);
+        TypingViewModel typingviewmodel =
+            new(
+                _charMapper,
+                _typingThemeProvider,
+                _themeChangerService);
+
         await typingviewmodel.LoadTextAsync(stringProvider);
 
         TypingView typingView = new(typingviewmodel, navigationService);

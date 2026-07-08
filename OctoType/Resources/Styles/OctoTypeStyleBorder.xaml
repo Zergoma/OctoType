@@ -7,6 +7,13 @@
         <Setter Property="Stroke" Value="Transparent" />
     </Style>
 
+    <Style TargetType="Border" Class="BorderTypingRounded10">
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource BorderTypingRounded10BorderLight}, Dark={StaticResource BorderTypingRounded10BorderDark}}" />
+    </Style>
+    
+    
+    
 
     <Style TargetType="Border" Class="BorderBgStd">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgStdLight}, Dark={StaticResource BorderBgStdDark}}" />
@@ -19,5 +26,11 @@
     <Style TargetType="Border" Class="BorderBgBlue">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgBlueLight}, Dark={StaticResource BorderBgBlueDark}}" />
     </Style>
+
+
+    <Style TargetType="Border" Class="BorderBgTyping">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgTypingLight}, Dark={StaticResource BorderBgTypingDark}}" />
+    </Style>
+
 
 </ResourceDictionary>

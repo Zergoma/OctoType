@@ -12,8 +12,8 @@
         <converters:StringToColorConverter x:Key="stringToColor"/>
 
     </ContentPage.Resources>
-    
-    <Grid RowDefinitions="0.1,auto,0.4*,*">
+
+    <Grid RowDefinitions="0.1,auto,0.2*,auto">
 
         <Entry Grid.Row="0"
                x:Name="HiddenInput"
@@ -26,8 +26,9 @@
 
 
         <Border Grid.Row="1"
-                Margin="20,5"
-                StrokeShape="RoundRectangle 10">
+                Margin="20"
+                StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="10">
 
             <CollectionView ItemsSource="{Binding LinesStates}"
                             x:DataType="vm:TypingViewModel"
@@ -85,41 +86,41 @@
                 StyleClass="button_hover"
                 x:Name="TakeFocusButton"
                 Clicked="TakeFocusButton_Clicked"
-                Margin="20,5"
                 HeightRequest="30"
                 WidthRequest="300"/>
 
-        <Grid Grid.Row="3"
+        <Border Grid.Row="3" StyleClass="BorderTypingRounded10, BorderBgTyping" Padding="30" Margin="70">
+            <Grid Grid.Row="3"
               RowDefinitions="*,*"
-              HeightRequest="80"
               ColumnDefinitions="auto, *"
               ColumnSpacing="5">
 
-            <Switch Grid.Column="0"
+                <Switch Grid.Column="0"
                     VerticalOptions="Center"
                     IsToggled="{Binding BackReturnEnable}"/>
-            
-            <Label Grid.Column="1"
+
+                <Label Grid.Column="1"
                    VerticalOptions="Center"
                    Text="{Binding BackReturnTxt}">
 
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SwitchBackReturnCommand}"/>
-                </Label.GestureRecognizers>
-            </Label>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchBackReturnCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
 
-            <Switch Grid.Row="1" Grid.Column="0"
+                <Switch Grid.Row="1" Grid.Column="0"
                 VerticalOptions="Center"
                 IsToggled="{Binding StopOnErrorEnable}"/>
 
-            <Label Grid.Row="1" Grid.Column="1"
+                <Label Grid.Row="1" Grid.Column="1"
                VerticalOptions="Center"
                Text="{Binding StopOnErrorTxt}">
 
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SwitchStopOnErrorCommand}"/>
-                </Label.GestureRecognizers>
-            </Label>
-        </Grid>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchStopOnErrorCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </Border>
     </Grid>
 </ContentPage>

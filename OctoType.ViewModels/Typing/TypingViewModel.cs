@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using OctoType.Application;
 using OctoType.Application.Interfaces;
+using OctoType.Application.Models.Themes;
 using OctoType.Domain.Typing.Analysis;
 
 using AppInterfaces = OctoType.Application.Interfaces;
@@ -23,10 +24,12 @@ public partial class TypingViewModel : ObservableObject
 
     private readonly AppInterfacesTyping.ITypingThemeProvider _typingThemeProvider;
     private readonly AppInterfaces.IInputCharMapperService _charMapper;
+    private readonly IThemeChangerService _themeChangerService;
 
     public TypingViewModel(
         AppInterfaces.IInputCharMapperService charMapper,
-        AppInterfacesTyping.ITypingThemeProvider typingThemeProvider)
+        AppInterfacesTyping.ITypingThemeProvider typingThemeProvider,
+        IThemeChangerService themeChangerService)
     {
         _charMapper = charMapper;
 
@@ -35,6 +38,7 @@ public partial class TypingViewModel : ObservableObject
             LineChanged?.Invoke(lineNumber);
         };
         _typingThemeProvider = typingThemeProvider;
+        _themeChangerService = themeChangerService;
     }
 
 
@@ -84,10 +88,13 @@ public partial class TypingViewModel : ObservableObject
         Session.Lines.Clear();
         LinesStates.Clear();
 
+        // Get current theme apply
+        ThemeState themeState = _themeChangerService.GetTheme();
+
         // TODO
         // to property, + user access
-        Result<AppInterfacesTyping.ITypingTheme> themeResu =
-            await _typingThemeProvider.GetThemeAsync("OctoType_Typing_Theme");
+        Result <AppInterfacesTyping.ITypingTheme> themeResu =
+            await _typingThemeProvider.GetThemeAsync("OctoType_Typing_Theme", themeState);
 
         if (!themeResu.Success)
         {

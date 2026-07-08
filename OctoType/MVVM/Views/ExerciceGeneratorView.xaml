@@ -20,7 +20,7 @@
 
         <VerticalStackLayout Margin="10,0" Spacing="5">
 
-            <Border StyleClass="BorderRounded10, BorderBgStd" Padding="10">
+            <Border StyleClass="BorderBgStd, BorderTypingRounded10" Padding="10">
 
                 <VerticalStackLayout Margin="10" Spacing="7">
                     <Entry Placeholder="Set the exercice name" 
@@ -42,7 +42,7 @@
 
             </Border>
 
-            <Border StyleClass="BorderRounded10, BorderBgStd" Padding="10">
+            <Border StyleClass="BorderBgStd, BorderTypingRounded10" Padding="10">
 
                 <Grid ColumnDefinitions="auto,auto"
                       HorizontalOptions="Start"
@@ -58,7 +58,7 @@
         </VerticalStackLayout>
 
 
-        <Border StyleClass="BorderRounded10, BorderBgStd" Padding="10" Margin="30,20,30,15">
+        <Border StyleClass="BorderBgStd, BorderTypingRounded10" Padding="10" Margin="30,20,30,15">
             <Grid ColumnDefinitions="*,auto"
               Margin="10,5,10,5"
               ColumnSpacing="10"
@@ -93,7 +93,7 @@
 
         <Grid ColumnDefinitions="auto,auto, *">
 
-            <Border StyleClass="BorderRounded10, BorderBgStd" Padding="20" Margin="30,0">
+            <Border StyleClass="BorderBgStd, BorderTypingRounded10" Padding="20" Margin="30,0">
                 <Grid Grid.Column="0"
                       RowDefinitions="*,*,*,*"
                       ColumnDefinitions="auto,50"
@@ -137,7 +137,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="1" StyleClass="BorderRounded10, BorderBgStd" Padding="20" Margin="30,0">
+            <Border Grid.Column="1" StyleClass="BorderBgStd, BorderTypingRounded10" Padding="20" Margin="30,0">
                 <Grid ColumnDefinitions="*,*,*,*"
                   RowDefinitions="auto,auto"
                   ColumnSpacing="10">
@@ -168,7 +168,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="2"  StyleClass="BorderRounded10, BorderBgStd" Padding="50,30" Margin="30,0" IsVisible="{Binding IsMessageVisible}">
+            <Border Grid.Column="2"  StyleClass="BorderTypingRounded10, BorderBgStd" Padding="50,30" Margin="30,0" IsVisible="{Binding IsMessageVisible}">
                 <VerticalStackLayout>
                     <Label Text="{Binding ErrorMessageTxt}" TextColor="OrangeRed"/>
                     <Label Text="{Binding SuccessMessageTxt}" TextColor="#047AA6"/>

@@ -2,37 +2,57 @@
   "name": "OctoType_Typing_Theme",
 
   "pending": {
-    "textColor": "#FF757575",
-    "backgroundColor": "#00000000",
-    "borderColor": "#00000000",
-    "borderThickness": 2
+    "textColorLight": "#FF757575",
+    "backgroundColorLight": "#00000000",
+    "borderColorLight": "#00000000",
+    "borderThicknessLight": 2,
+    "textColorDark": "#FF757575",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#00000000",
+    "borderThicknessDark": 2
   },
 
   "current": {
-    "textColor": "#FF757575",
-    "backgroundColor": "#00000000",
-    "borderColor": "#FF04FF00",
-    "borderThickness": 0
+    "textColorLight": "#FF757575",
+    "backgroundColorLight": "#00000000",
+    "borderColorLight": "#FF04FF00",
+    "borderThicknessLight": 0,
+    "textColorDark": "#FF757575",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#FF04FF00",
+    "borderThicknessDark": 0
   },
 
   "correct": {
-    "textColor": "#FF1D99F9",
-    "backgroundColor": "#FFD5EEF2",
-    "borderColor": "#00000000",
-    "borderThickness": 0
+    "textColorLight": "#FF1D99F9",
+    "backgroundColorLight": "#FFD5EEF2",
+    "borderColorLight": "#00000000",
+    "borderThicknessLight": 0,
+    "textColorDark": "#FF1D99F9",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#00000000",
+    "borderThicknessDark": 0
   },
 
   "correctWithError": {
-    "textColor": "#FFFF8000",
-    "backgroundColor": "#FFFFEC77",
-    "borderColor": "#00000000",
-    "borderThickness": 0
+    "textColorLight": "#FFFF8000",
+    "backgroundColorLight": "#FFFFEC77",
+    "borderColorLight": "#00000000",
+    "borderThicknessLight": 0,
+    "textColorDark": "#FFFF8000",
+    "backgroundColorDark": "#FF471C05",
+    "borderColorDark": "#00000000",
+    "borderThicknessDark": 0
   },
 
   "CurrentWrong": {
-    "textColor": "#FFFF4500",
-    "backgroundColor": "#00000000",
-    "borderColor": "#FFFF2345",
-    "borderThickness": 2
+    "textColorLight": "#FFFF4500",
+    "backgroundColorLight": "#00000000",
+    "borderColorLight": "#FFFF2345",
+    "borderThicknessLight": 2,
+    "textColorDark": "#FFFF4500",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#FFFF2345",
+    "borderThicknessDark": 2
   }
 }

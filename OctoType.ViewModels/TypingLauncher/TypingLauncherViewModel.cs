@@ -7,7 +7,7 @@ using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
-using OctoType.Application.Models;
+using OctoType.Application.Models.Themes;
 using OctoType.Application.Models.Typing.Engine;
 using OctoType.Application.Models.Typing.Exercices;
 
@@ -23,13 +23,13 @@ public partial class TypingLauncherViewModel : ObservableObject
     private readonly INavigationService _navigation;
     private readonly ICreateStringProviderOrchestrator _createStringProviderOrchestrator;
     private readonly IThemeChangerService _themeChangerService;
-    private readonly IThemeIconeProvider _themeIconeProvider;
+    private readonly IThemeIconeCodeProvider _themeIconeProvider;
     private ITypingExercicesEngine? _typingExerciceEngine;
 
     public ObservableCollection<ExerciceItemViewModel> AllExercice { get; set; } = [];
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
 
-    IconeThemeState _themeSwitch = IconeThemeState.Dark;
+    ThemeStateConfiguration _themeSwitch = ThemeStateConfiguration.Dark;
 
     public TypingLauncherViewModel(
         ITypingExercicesStorage typingExerciceStorage,
@@ -37,7 +37,7 @@ public partial class TypingLauncherViewModel : ObservableObject
         ICreateStringProviderOrchestrator createStringProviderOrchestrator,
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
         IThemeChangerService themeChangerService,
-        IThemeIconeProvider themeIconeProvider)
+        IThemeIconeCodeProvider themeIconeProvider)
     {
         _typingExerciceStorage = typingExerciceStorage;
         _navigation = navigation;
@@ -194,18 +194,18 @@ public partial class TypingLauncherViewModel : ObservableObject
     {
         _themeSwitch = _themeSwitch switch
         {
-            IconeThemeState.Dark => IconeThemeState.Light,
-            IconeThemeState.Light => IconeThemeState.System,
-            IconeThemeState.System => IconeThemeState.Dark,
+            ThemeStateConfiguration.Dark => ThemeStateConfiguration.Light,
+            ThemeStateConfiguration.Light => ThemeStateConfiguration.System,
+            ThemeStateConfiguration.System => ThemeStateConfiguration.Dark,
             _ => throw new NotImplementedException(),
         };
 
 
         switch(_themeSwitch)
         {
-            case IconeThemeState.Dark: _themeChangerService.SetDark();break;
-            case IconeThemeState.Light: _themeChangerService.SetLight();break;
-            case IconeThemeState.System: _themeChangerService.SetToSystem();break;
+            case ThemeStateConfiguration.Dark: _themeChangerService.SetDark();break;
+            case ThemeStateConfiguration.Light: _themeChangerService.SetLight();break;
+            case ThemeStateConfiguration.System: _themeChangerService.SetToSystem();break;
             default: throw new NotImplementedException();
         };
 

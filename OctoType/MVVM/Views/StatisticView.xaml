@@ -10,11 +10,12 @@
     <VerticalStackLayout>
         <Label Text="Statistics"
                FontSize="45"
-               Margin="10"
+               Margin="20,10,0,0"
                />
 
         <Border Margin="30,30"
-            StrokeShape="RoundRectangle 10">
+            StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="10">
 
             <Grid ColumnDefinitions="auto,*">
 
@@ -32,14 +33,14 @@
         </Border>
 
         <Border Margin="30,30"
-                StrokeShape="RoundRectangle 10">
+                StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="20, 10,20,40">
 
             <Grid RowDefinitions="*,*,*">
                 <Label Grid.Row="0"
                     Text="Response time(ms)"
-                       Margin="10"
-                       FontSize="30"
-                       TextColor="Blue"/>
+                       Margin="10,0"
+                       FontSize="30"/>
 
                 <Label Grid.Row="1"
                         Text="The less, the better"
@@ -47,11 +48,11 @@
                         FontSize="15"
                         TextColor="DarkSlateGray"/>
 
-                <micro:ChartView  Grid.Row="2"
-            Chart="{Binding TheChart}" 
-                         HeightRequest="300"
-                         WidthRequest="800"
-                         />
+                    <micro:ChartView  Grid.Row="2" 
+                            Chart="{Binding TheChart}" 
+                             HeightRequest="300"
+                             WidthRequest="800"
+                             />
             </Grid>
         </Border>
 
