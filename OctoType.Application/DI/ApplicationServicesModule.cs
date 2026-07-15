@@ -23,7 +23,8 @@ internal static class ApplicationServicesModule
         services.AddTransient<ITypingExerciseLineNumberService, TypingExerciseLineNumberService>();
         services.AddTransient<IEditorSplitCharProvider, EditorSplitCharProvider>();
         services.AddTransient<IGuidProvider, GuidProvider>();
-        services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorsProvider>();
+        //services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorsBeginnerProvider>();
+        services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorIntermediateProvider>();
         services.AddTransient<IChartErrorProvider, ChartErrorProvider>();
 
         // TODO

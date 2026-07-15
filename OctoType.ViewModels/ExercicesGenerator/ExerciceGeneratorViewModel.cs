@@ -6,9 +6,11 @@ using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.Application.Mappers;
+using OctoType.Application.Models.Typing;
 using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Application.UseCases;
 using OctoType.Application.ValueObjects;
+
 using OctoType.Domain.Typing;
 
 namespace OctoType.ViewModels.ExercicesGenerator;
@@ -60,6 +62,9 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         SetKeyboardLayout(keyboardLayoutDtoId);
     }
 
+
+    public string Title => ExerciceToUpdate == null ? "Générateur d'exercice" : "Éditer l'exercice";
+
     public IReadOnlyList<string> LanguageAvailable => _languageAvailableElem;
     public string? LanguageSelected { get; set; }
 
@@ -86,6 +91,74 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             .ToList();
 
         AllowedChars += string.Join(null, detectedChar);
+    }
+
+    private TypingExercise? ExerciceToUpdate { get; set; }
+    public async Task<Result<bool>> InitFromExercice(Guid exerciceGuid, int keyboardLayoutDtoId)
+    {
+        SetKeyboardLayout(keyboardLayoutDtoId);
+
+        // from keyboardlayout load correct exercice file
+        if (KeyboardLayoutSelected is KeyBoardLayoutDto keyboardLayoutDto)
+        {
+            Result<TypingExercices> exercicesLoadedResult =
+                await _typingExercicePersistence.LoadAsync(keyboardLayoutDto.KeyBoardCode);
+
+            if (exercicesLoadedResult.Success)
+            {
+                _typingExerciceManager.Exercices = exercicesLoadedResult.GetValue;
+            }
+            else
+            {
+                return Result<bool>
+                    .Fail(exercicesLoadedResult.Error);
+            }
+        }
+        else
+        {
+            return Result<bool>
+                .Fail("Not a correct keyboardLayoutDto");
+        }
+
+        // Get exercice
+        TypingExercise? exercice = _typingExerciceManager.Exercices.Exercices.FirstOrDefault(x => x.Id == exerciceGuid);
+        if (exercice == null)
+            return Result<bool>
+                .Fail("Exercice doesn't exist");
+
+        // UI properties synchro
+        ExerciceToUpdate = exercice;
+
+        ExerciceName = ExerciceToUpdate.Name;
+        Description = ExerciceToUpdate.Description;
+        AllowedChars = ExerciceToUpdate.AllowedCharacters;
+
+
+        if (ExerciceToUpdate.TextDataType is TypingTextDataStatic textDataStatic)
+        {
+            IsStaticGenerated = true;
+            GeneratedText = textDataStatic.GeneratedText;
+        }
+
+        if (ExerciceToUpdate.TextDataType is TypingTextDataDynamic textDataDynamic)
+        {
+            IsStaticGenerated = false;
+            MinLengthWord = textDataDynamic.LengthMin;
+            MaxLengthWord = textDataDynamic.LengthMax;
+            LanguageSelected = textDataDynamic.LanguagesSelected.FirstOrDefault();
+
+            Result<GeneratedTypeSourceDto> generatedSourceResult = textDataDynamic.GeneratedTypeSource.ToDto();
+            if (generatedSourceResult.Success)
+            {
+                GenerationTypeSourceSelected = generatedSourceResult.GetValue;
+            }
+            else
+            {
+                GenerationTypeSourceSelected = GeneratedTypeSourceDto.PseudoWords;
+            }
+        }
+        return Result<bool>
+            .Ok(true);
     }
 
     [ObservableProperty] public partial string ExerciceName { get; set; } = string.Empty;
@@ -153,7 +226,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     {
         get
         {
-            if(!string.IsNullOrWhiteSpace(ErrorMessageTxt) || !string.IsNullOrWhiteSpace(SuccessMessageTxt))
+            if (!string.IsNullOrWhiteSpace(ErrorMessageTxt) || !string.IsNullOrWhiteSpace(SuccessMessageTxt))
             {
                 return true;
             }
@@ -164,7 +237,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMessageVisible))]
     public partial string ErrorMessageTxt { get; set; } = string.Empty;
-    
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMessageVisible))]
     public partial string SuccessMessageTxt { get; set; } = string.Empty;
@@ -195,9 +268,13 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
         IsStaticGenerated = !IsStaticGenerated;
     }
 
+    public bool IsSaveNewVisible => ExerciceToUpdate == null;
     [RelayCommand]
     private async Task SaveNewExerciceSetting()
     {
+        if (ExerciceToUpdate != null)
+            return;
+
         ErrorMessageTxt = string.Empty;
         SuccessMessageTxt = string.Empty;
 
@@ -259,12 +336,12 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
 
             if (exercicesLoadedResult.Success)
             {
-                _typingExerciceManager.Exercice = exercicesLoadedResult.GetValue;
+                _typingExerciceManager.Exercices = exercicesLoadedResult.GetValue;
             }
             else
             {
                 // file not found, first time
-                _typingExerciceManager.Exercice =
+                _typingExerciceManager.Exercices =
                     new()
                     {
                         KeyboardLayout = keyboardLayoutDto,
@@ -272,7 +349,7 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             }
 
             var resu =
-                await _saveUseCase.ExecuteAsync(
+                await _saveUseCase.SaveNewExerciceAsync(
                     settingbase,
                     IsStaticGenerated,
                     GeneratedText,
@@ -285,8 +362,92 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             }
             else
             {
-                SuccessMessageTxt = "Exercice succesfully saved !";
+                SuccessMessageTxt = "Exercices succesfully saved !";
             }
         }
+    }
+
+
+    public bool IsUpdateVisible => !IsSaveNewVisible;
+    [RelayCommand]
+    public async Task UpdateExerciceSetting()
+    {
+        if (ExerciceToUpdate == null)
+            return;
+
+        TypingExercise tempoExercice =
+            new()
+            {
+                Id = ExerciceToUpdate.Id,
+                Name = ExerciceName,
+                Description = Description,
+                AllowedCharacters = AllowedChars
+            };
+
+
+        if (IsStaticGenerated)
+        {
+            tempoExercice.TextDataType =
+                new TypingTextDataStatic()
+                {
+                    GeneratedText = GeneratedText,
+                };
+        }
+        else
+        {
+            Result<TypingTextDataDynamic> textDynamicResult = BuildFromUITextDataDynamic();
+            if (!textDynamicResult.Success)
+            {
+                ErrorMessageTxt = textDynamicResult.Error;
+                return;
+            }
+            tempoExercice.TextDataType = textDynamicResult.GetValue;
+        }
+
+        var resu =
+                await _saveUseCase.UpdateExerciceAsync(
+                    _typingExerciceManager,
+                    tempoExercice);
+
+        if (!resu.Success)
+        {
+            ErrorMessageTxt = resu.Error;
+        }
+        else
+        {
+            SuccessMessageTxt = "Exercices succesfully saved !";
+        }
+
+    }
+
+
+    private Result<TypingTextDataDynamic> BuildFromUITextDataDynamic()
+    {
+        if (GenerationTypeSourceSelected is GeneratedTypeSourceDto generationTypeSourceDto)
+        {
+            Result<GeneratedTypeSource> generationTypeSourceMapResult = generationTypeSourceDto.ToModel();
+            if (!generationTypeSourceMapResult.Success)
+            {
+                Result<TypingTextDataDynamic>
+                    .Fail(generationTypeSourceMapResult.Error);
+            }
+
+            TypingTextDataDynamic dynamicTypingTextData =
+                new()
+                {
+                    LengthMax = Math.Max(MaxLengthWord, MinLengthWord),
+                    LengthMin = Math.Min(MaxLengthWord, MinLengthWord),
+                    LanguagesSelected =
+                        LanguageSelected != null
+                        ? [LanguageSelected]
+                        : [],
+                    GeneratedTypeSource = generationTypeSourceMapResult.GetValue
+                };
+
+            return Result<TypingTextDataDynamic>
+                .Ok(dynamicTypingTextData);
+        }
+        return Result<TypingTextDataDynamic>
+                    .Fail("You need to select a Generation Type source");
     }
 }

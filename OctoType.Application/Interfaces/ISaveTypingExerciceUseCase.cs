@@ -6,11 +6,15 @@ namespace OctoType.Application.Interfaces
 {
     public interface ISaveTypingExerciceUseCase
     {
-        Task<Result<bool>> ExecuteAsync(
+        Task<Result<bool>> SaveNewExerciceAsync(
             TypingExerciseCreateParameters parameters,
             bool isStatic,
             string? generatedText,
             ITypingExercicesManager exercicesManager,
             TypingTextDataDynamic? typingTextData);
+
+        Task<Result<bool>> UpdateExerciceAsync(
+           ITypingExercicesManager exerciceManager,
+           TypingExercise exercice);
     }
 }

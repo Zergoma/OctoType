@@ -12,10 +12,8 @@ public static class ViewModelsModule
 {
     public static IServiceCollection AddViewModelsModule(this IServiceCollection services)
     {
-        services.AddTransient<ExerciceGeneratorViewModel>();
         services.AddTransient<ImportBookViewModel>();
         services.AddTransient<ImportWordViewModel>();
-        services.AddTransient<TypingViewModel>();
         services.AddTransient<TypingLauncherViewModel>();
         return services;
     }

@@ -18,31 +18,29 @@
         Padding="5"
         RowSpacing="5">
 
-        <!--settings-->
-        <Grid Grid.Row="0"
-              Grid.Column="1">
+        <!--Settings-->
+        <Grid Grid.Row="0" Grid.Column="1">
 
             <HorizontalStackLayout VerticalOptions="Center" HorizontalOptions="End">
-                
-            <Button Grid.Row="1"
+
+                <Button Grid.Row="1"
                     Padding="0"
                     Command="{Binding ChangeThemeCommand}"
                     StyleClass="ButtonHoverAddExercice"
                     CornerRadius="20"
                     WidthRequest="100"
-                    HeightRequest="20"> 
-                <Button.ImageSource>
-                    <FontImageSource FontFamily="icones_themes"
+                    HeightRequest="20">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="icones_themes"
                          Glyph="{Binding IconeTheme}"
                          Size="20"/>
-                </Button.ImageSource>
-            </Button>
+                    </Button.ImageSource>
+                </Button>
             </HorizontalStackLayout>
         </Grid>
 
-        
-        <Border Grid.Row="1"
-                Grid.Column="1"
+        <!--Selected exercice description-->
+        <Border Grid.Row="1" Grid.Column="1"
                 StyleClass="BorderBgStd, BorderTypingRounded10"
                 Padding="10">
 
@@ -57,7 +55,20 @@
 
 
                 <VerticalStackLayout IsVisible="{Binding IsSelectedExercice}">
-                    <Label Text="{Binding ExerciceName}" FontSize="34" FontAttributes="Bold" Margin="5,5,0,15" />
+                    <Grid RowDefinitions="auto,auto" Margin="5,5,0,15">
+                        <Label Text="{Binding ExerciceName}" FontSize="34" FontAttributes="Bold"  />
+                        <Button Grid.Row="1" 
+                                StyleClass="ButtonHoverAddExercice"
+                                Text="Edit"
+                                MinimumHeightRequest="10"
+                                MinimumWidthRequest="10"
+                                HeightRequest="30"
+                                WidthRequest="30"
+                                Padding="0"
+                                FontSize="10" 
+                                Command="{Binding GoToUpdateExerciceCommand}"
+                                HorizontalOptions="Start"/>
+                    </Grid>
 
                     <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10" Margin="0,0,0,30">
                         <VerticalStackLayout>
@@ -93,16 +104,14 @@
             </Grid>
         </Border>
 
-
-        <Border 
-            Grid.Row="1"
-            Grid.Column="0"
+        <!--All exercices-->
+        <Border Grid.Row="1" Grid.Column="0"
                 StyleClass="BorderBgStd, BorderTypingRounded10"
                 Padding="10">
 
 
             <Grid RowDefinitions="auto,*, 0.15*">
-                
+
                 <Grid RowDefinitions="*,*">
 
                     <Label Grid.Row="0"
@@ -123,7 +132,7 @@
                                 Margin="10,0,0,0"
                                 VerticalTextAlignment="Center"/>
 
-                            
+
                         </Grid>
                     </Border>
                 </Grid>

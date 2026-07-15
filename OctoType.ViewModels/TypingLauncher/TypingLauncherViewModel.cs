@@ -3,6 +3,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.Extensions.Logging;
+
 using OctoType.Application;
 using OctoType.Application.DTOs;
 using OctoType.Application.Interfaces;
@@ -25,6 +27,7 @@ public partial class TypingLauncherViewModel : ObservableObject
     private readonly IThemeChangerService _themeChangerService;
     private readonly IThemeIconeCodeProvider _themeIconeProvider;
     private ITypingExercicesEngine? _typingExerciceEngine;
+    private ILogger<TypingLauncherViewModel> _logger;
 
     public ObservableCollection<ExerciceItemViewModel> AllExercice { get; set; } = [];
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
@@ -37,7 +40,8 @@ public partial class TypingLauncherViewModel : ObservableObject
         ICreateStringProviderOrchestrator createStringProviderOrchestrator,
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
         IThemeChangerService themeChangerService,
-        IThemeIconeCodeProvider themeIconeProvider)
+        IThemeIconeCodeProvider themeIconeProvider,
+        ILogger<TypingLauncherViewModel> logger)
     {
         _typingExerciceStorage = typingExerciceStorage;
         _navigation = navigation;
@@ -52,9 +56,10 @@ public partial class TypingLauncherViewModel : ObservableObject
 
         _themeChangerService = themeChangerService;
         _themeSwitch = _themeChangerService.ApplyUserSelectedTheme();
-        
+
         _themeIconeProvider = themeIconeProvider;
         IconeTheme = _themeIconeProvider.GetIconeCode(_themeSwitch);
+        _logger = logger;
     }
 
     private void SetKeyboardLayout(int id)
@@ -128,9 +133,9 @@ public partial class TypingLauncherViewModel : ObservableObject
 
 
 
-    public string ExerciceName => ExerciceSelected?.Name ?? "Exercice Name";
-    public string ExerciceDescription => ExerciceSelected?.Desciption ?? "Exercice Description";
-    public string ExerciceLetters => ExerciceSelected?.Letters ?? "Exercice Letters";
+    public string ExerciceName => ExerciceSelected?.Name ?? "Exercices Name";
+    public string ExerciceDescription => ExerciceSelected?.Desciption ?? "Exercices Description";
+    public string ExerciceLetters => ExerciceSelected?.Letters ?? "Exercices Letters";
 
 
 
@@ -169,6 +174,11 @@ public partial class TypingLauncherViewModel : ObservableObject
                 return;
             }
 
+            _logger.LogInformation(
+            "Exercise started {ExerciseId} {ExerciceName}",
+            exer.Id,
+            exer.Name);
+
             // TODO
             // Think about ExerciceEngine inside
             // This give the ability to autolaunch next exercice
@@ -183,6 +193,15 @@ public partial class TypingLauncherViewModel : ObservableObject
     public async Task GoToExerciceGenerator()
     {
         await _navigation.NavigateToExerciceGeneratorAsync();
+    }
+
+    [RelayCommand]
+    public async Task GoToUpdateExercice()
+    {
+        if (ExerciceSelected == null)
+            return;
+
+        await _navigation.NavigateToUpdateExerciceAsync(ExerciceSelected.Guid);
     }
 
 

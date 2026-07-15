@@ -20,14 +20,27 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        var logDirectory =
+            Path.Combine(
+                FileSystem.AppDataDirectory,
+                "logs");
+        Directory.CreateDirectory(logDirectory);
+
         Log.Logger =
             new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "OctoType")
                 .WriteTo.Console()
+
                 .WriteTo.File(
-                    Path.Combine(FileSystem.AppDataDirectory, "logs/OctoType-.txt"),
+                    Path.Combine(
+                        logDirectory,
+                        "OctoType-.txt"),
                     rollingInterval: RollingInterval.Day)
+#if DEBUG
+                    .WriteTo.Seq("http://localhost:5341")
+#endif
                 .CreateLogger();
 
 
@@ -51,6 +64,12 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+
+        Log.Information(
+        "Application started {ApplicationName} {Version}",
+        "OctoType",
+        "1.0.0");
+
 
         builder.Services
             .AddMauiInfrastructure()        // declare a IAssetReader
@@ -78,7 +97,7 @@ public static class MauiProgram
 
         var app = builder.Build();
 
-
+        Log.Logger.Information("Fun {chat}", "sympa");
 
         // INFRASTRUCTURE
         // DB

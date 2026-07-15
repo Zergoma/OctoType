@@ -2,6 +2,8 @@
 
 using Microcharts;
 
+using Microsoft.Extensions.Logging;
+
 using OctoType.Application.Interfaces;
 using OctoType.Application.Models.Themes;
 using OctoType.Domain.Typing.Analysis;
@@ -25,17 +27,20 @@ public partial class StatisticViewModelMauiAdapter : ObservableObject
     private readonly IChartResponseTimeColorsProvider _chartResponseTimeColorsProvider;
     private readonly IChartErrorProvider _chartErrorColorsProvider;
     private readonly ThemeState _themeState;
+    private readonly ILogger<StatisticViewModelMauiAdapter> _logger;
 
     public StatisticViewModelMauiAdapter(
         StatisticViewModel statisticViewModel,
         IChartResponseTimeColorsProvider chartResponseTimeColorsProvider,
         IChartErrorProvider chartErrorColorsProvider,
-        ThemeState themeState)
+        ThemeState themeState,
+        ILogger<StatisticViewModelMauiAdapter> logger)
     {
         _statisticViewModel = statisticViewModel;
         _chartResponseTimeColorsProvider = chartResponseTimeColorsProvider;
         _themeState = themeState;
         _chartErrorColorsProvider = chartErrorColorsProvider;
+        _logger = logger;
     }
 
     public int TotalOccurence { get; set; } = 0;
@@ -117,7 +122,7 @@ public partial class StatisticViewModelMauiAdapter : ObservableObject
             {
                 Entries = [.. gatherResponseTime.OrderByDescending(x => x.Value)],
                 MinValue = 0,
-                MaxValue = 5,
+                //MaxValue = 5,
                 LabelOrientation = Orientation.Horizontal,
                 BackgroundColor = colorBg,
                 CornerRadius = 5,
@@ -133,6 +138,19 @@ public partial class StatisticViewModelMauiAdapter : ObservableObject
                 LabelTextSize = 10,
                 BackgroundColor = colorBg,
             };
+
+
+        _logger.LogInformation(
+            "Letters per minute {LPM}, Words per minute {WPM}, Errors {CharsError}",
+            LettersPerMinute,
+            WordsPerMinute,
+            _statisticViewModel.Statistics
+            .Where(x => x.Value.RealErrors.Count  >0 )
+            .Select(x => (
+                Character :x.Key, 
+                Count : x.Value.RealErrors.Count,
+                Errors : string.Join(null, x.Value.RealErrors)
+            )));
     }
 
 }

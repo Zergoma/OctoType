@@ -5,14 +5,14 @@ namespace OctoType.Application.Managers;
 
 public class TypingExercicesManager : ITypingExercicesManager
 {
-    public TypingExercices? Exercice { get; set; }
-    public int ExercicesCount => Exercice?.Exercices.Count ?? 0;
+    public TypingExercices? Exercices { get; set; }
+    public int ExercicesCount => Exercices?.Exercices.Count ?? 0;
 
     public Result<TypingExercise> GetExercice(int idx)
     {
         var checkResu = CheckCoherence(idx);
         return checkResu.Success
-            ? Result<TypingExercise>.Ok(Exercice!.Exercices[idx])
+            ? Result<TypingExercise>.Ok(Exercices!.Exercices[idx])
             : Result<TypingExercise>.Fail(checkResu.Error);
     }
 
@@ -22,16 +22,23 @@ public class TypingExercicesManager : ITypingExercicesManager
         if (!checkResu.Success)
             return Result<bool>.Fail(checkResu.Error);
 
-        Exercice!.Exercices.Insert(idx, exercice);
+        Exercices!.Exercices.Insert(idx, exercice);
         return Result<bool>.Ok(true);
     }
 
     public Result<bool> AddNewExercice(TypingExercise exercice)
     {
-        if (Exercice == null)
+        if (Exercices == null)
             return Result<bool>.Fail("No exercice found");
 
-        Exercice!.Exercices.Add(exercice);
+        TypingExercise? exerciceExistsResult = Exercices!.Exercices.FirstOrDefault(x => x.Id == exercice.Id);
+        
+        if(exerciceExistsResult!=null)
+            return Result<bool>
+                .Fail("Exercice id already exist");
+
+
+        Exercices!.Exercices.Add(exercice);
         return Result<bool>.Ok(true);
     }
 
@@ -41,9 +48,26 @@ public class TypingExercicesManager : ITypingExercicesManager
         if (!checkResu.Success)
             return Result<bool>.Fail(checkResu.Error);
 
-        Exercice!.Exercices[idx] = exercice;
+        Exercices!.Exercices[idx] = exercice;
 
         return Result<bool>.Ok(true);
+    }
+
+    public Result<bool> UpdateExercice(TypingExercise exercice)
+    {
+        TypingExercise? exerciceExistsResult = Exercices!.Exercices.FirstOrDefault(x => x.Id == exercice.Id);
+
+        if(exerciceExistsResult == null)
+            return Result<bool>
+                .Fail("Exercice doesn't exist");
+
+        exerciceExistsResult.Name = exercice.Name;
+        exerciceExistsResult.Description = exercice.Description;
+        exerciceExistsResult.AllowedCharacters = exercice.AllowedCharacters;
+        exerciceExistsResult.TextDataType = exercice.TextDataType;
+        
+        return Result<bool>
+            .Ok(true);
     }
 
     public Result<bool> RemoveExercice(int idx)
@@ -52,16 +76,28 @@ public class TypingExercicesManager : ITypingExercicesManager
         if (!checkResu.Success)
             return Result<bool>.Fail(checkResu.Error);
 
-        Exercice!.Exercices.RemoveAt(idx);
+        Exercices!.Exercices.RemoveAt(idx);
+        return Result<bool>.Ok(true);
+    }
+
+    public Result<bool> RemoveExercice(Guid id)
+    {
+        TypingExercise? exerciceExists = Exercices!.Exercices.FirstOrDefault(x => x.Id == id);
+
+        if (exerciceExists == null)
+            return Result<bool>
+                .Fail("Exercice doesn't exist");
+
+        Exercices!.Exercices.Remove(exerciceExists);
         return Result<bool>.Ok(true);
     }
 
     private Result<bool> CheckCoherence(int idx)
     {
-        if (Exercice == null)
+        if (Exercices == null)
             return Result<bool>.Fail("No exercice found");
 
-        if (idx < 0 || idx >= Exercice!.Exercices.Count)
+        if (idx < 0 || idx >= Exercices!.Exercices.Count)
             return Result<bool>.Fail("Idx out of range");
 
         return Result<bool>.Ok(true);

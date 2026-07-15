@@ -1,4 +1,6 @@
-﻿using OctoType.Application;
+﻿using Microsoft.Extensions.Logging;
+
+using OctoType.Application;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
 using OctoType.MVVM.Views;
@@ -16,7 +18,8 @@ public class TypingViewFactory : ITypingViewFactory
     public TypingViewFactory(
         ITypingThemeProvider typingThemeProvider,
         IInputCharMapperService charMapper,
-        IThemeChangerService themeChangerService)
+        IThemeChangerService themeChangerService,
+        ILogger<TypingView> logger)
     {
         _typingThemeProvider = typingThemeProvider;
         _charMapper = charMapper;
@@ -35,7 +38,10 @@ public class TypingViewFactory : ITypingViewFactory
 
         await typingviewmodel.LoadTextAsync(stringProvider);
 
-        TypingView typingView = new(typingviewmodel, navigationService);
+        TypingView typingView =
+            new(
+                typingviewmodel,
+                navigationService);
 
         return Result<ContentPage>
             .Ok(typingView);

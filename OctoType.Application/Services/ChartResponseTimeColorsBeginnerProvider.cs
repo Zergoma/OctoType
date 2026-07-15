@@ -3,9 +3,9 @@ using OctoType.Application.Models.Themes;
 
 namespace OctoType.Application.Services;
 
-public class ChartResponseTimeColorsProvider : IChartResponseTimeColorsProvider
+public class ChartResponseTimeColorsBeginnerProvider : IChartResponseTimeColorsProvider
 {
-    public string GetHexColorTimeResponse(double timeInSecondes, ThemeState themeState)
+    virtual public string GetHexColorTimeResponse(double timeInSecondes, ThemeState themeState)
     {
         return themeState switch
         {
@@ -44,6 +44,33 @@ public class ChartResponseTimeColorsProvider : IChartResponseTimeColorsProvider
         {
             ThemeState.Dark => "#FFFFFF",
             _ => "#000000",
+        };
+    }
+}
+
+
+public class ChartResponseTimeColorIntermediateProvider : ChartResponseTimeColorsBeginnerProvider
+{
+    public override string GetHexColorTimeResponse(double timeInSecondes, ThemeState themeState)
+    {
+        return themeState switch
+        {
+            ThemeState.Dark => timeInSecondes switch
+            {
+                < 0.1 => "#36B205",
+                < 0.2 => "#91B200",
+                < 0.3 => "#B25C00",
+                < 0.4 => "#B21700",
+                _ => "#444444"
+            },
+            _ => timeInSecondes switch
+            {
+                < 0.1 => "#42E506",
+                < 0.2 => "#B5E200",
+                < 0.3 => "#E07700",
+                < 0.4 => "#DD2400",
+                _ => "#000000"
+            }
         };
     }
 }

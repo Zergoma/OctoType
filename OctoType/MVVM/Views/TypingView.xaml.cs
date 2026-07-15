@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Input;
 
 using OctoType.Application.Interfaces;

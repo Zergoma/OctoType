@@ -24,6 +24,9 @@ public partial class ExerciceItemViewModel : ObservableObject
     [ObservableProperty] public partial bool IsSelected { get; set; }
 
     public string Name => _exercice.Name;
+
+    public Guid Guid => _exercice.Id;
+
     public string Desciption => _exercice.Description;
 
 

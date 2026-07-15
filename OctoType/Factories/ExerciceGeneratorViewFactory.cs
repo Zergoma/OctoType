@@ -1,6 +1,8 @@
 ﻿using OctoType.Application;
 using OctoType.Application.Interfaces;
 using OctoType.Application.Interfaces.Typing;
+using OctoType.Application.Managers;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.MVVM.Views;
 using OctoType.ViewModels.ExercicesGenerator;
 
@@ -43,7 +45,7 @@ public class ExerciceGeneratorViewFactory : IExerciceGeneratorViewFactory
 
     public async Task<Result<ContentPage>> CreateExerciceGeneratorView()
     {
-        ExerciceGeneratorViewModel typingviewmodel
+        ExerciceGeneratorViewModel exerciceGeneratorViewmodel
             = new(
                 _pseudoWordBatchGenerator,
                 _typingExerciceManager,
@@ -61,9 +63,37 @@ public class ExerciceGeneratorViewFactory : IExerciceGeneratorViewFactory
                 .Fail(userPreferenceKeyboardCodeResult.Error);
         }
 
-        await typingviewmodel.InitializeAsync(userPreferenceKeyboardCodeResult.GetValue);
+        await exerciceGeneratorViewmodel.InitializeAsync(userPreferenceKeyboardCodeResult.GetValue);
 
-        ExerciceGeneratorView typingView = new(typingviewmodel);
+        ExerciceGeneratorView typingView = new(exerciceGeneratorViewmodel);
+
+        return Result<ContentPage>
+            .Ok(typingView);
+    }
+
+    public async Task<Result<ContentPage>> CreateExerciceUpdaterView(Guid exerciceToUpdate)
+    {
+        ExerciceGeneratorViewModel exerciceGeneratorViewmodel
+            = new(
+                _pseudoWordBatchGenerator,
+                _typingExerciceManager,
+                _typingExercicePersistence,
+                _saveUseCase,
+                _generationTypeSource,
+                _keyboardLayoutAvailableService,
+                _languageAvailableService);
+
+
+        Result<int> userPreferenceKeyboardCodeResult = _userKeyboardPreferenceService.GetKeyboardType();
+        if (!userPreferenceKeyboardCodeResult.Success)
+        {
+            return Result<ContentPage>
+                .Fail(userPreferenceKeyboardCodeResult.Error);
+        }
+
+        await exerciceGeneratorViewmodel.InitFromExercice(exerciceToUpdate, userPreferenceKeyboardCodeResult.GetValue);
+
+        ExerciceGeneratorView typingView = new(exerciceGeneratorViewmodel);
 
         return Result<ContentPage>
             .Ok(typingView);

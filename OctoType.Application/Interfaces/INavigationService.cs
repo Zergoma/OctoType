@@ -1,4 +1,5 @@
-﻿using OctoType.Domain.Typing.Analysis;
+﻿using OctoType.Application.Models.Typing.Exercices;
+using OctoType.Domain.Typing.Analysis;
 
 namespace OctoType.Application.Interfaces;
 
@@ -9,6 +10,8 @@ public interface INavigationService
     Task<Result<bool>> NavigateToStatisticAsync(Dictionary<char, CharStats> stat);
 
     Task<Result<bool>> NavigateToExerciceGeneratorAsync();
+
+    Task<Result<bool>> NavigateToUpdateExerciceAsync(Guid exercice);
 
     Task PopBackAsync();
 }

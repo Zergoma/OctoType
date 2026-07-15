@@ -12,19 +12,22 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
     private readonly ITypingExerciceSettingFactory _factory;
     private readonly ITypingExercicesStorage _storage;
     private readonly IValidator<TypingExerciseCreateParameters> _typingExerciceSettingValidator;
+    private readonly IValidator<TypingExercise> _typingExerciceValidator;
 
     public SaveTypingExerciceUseCase(
         ITypingExerciceSettingFactory factory,
 
         ITypingExercicesStorage storage,
-        IValidator<TypingExerciseCreateParameters> typingExerciceSettingValidator)
+        IValidator<TypingExerciseCreateParameters> typingExerciceSettingValidator,
+        IValidator<TypingExercise> typingExerciceValidator)
     {
         _factory = factory;
         _storage = storage;
         _typingExerciceSettingValidator = typingExerciceSettingValidator;
+        _typingExerciceValidator = typingExerciceValidator;
     }
 
-    public async Task<Result<bool>> ExecuteAsync(
+    public async Task<Result<bool>> SaveNewExerciceAsync(
         TypingExerciseCreateParameters parameters,
         bool isStatic,
         string? generatedText,
@@ -40,7 +43,7 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
                 .Fail(validationResu.ToString());
         }
 
-        if(!isStatic && dynamicTypingTextData==null)
+        if (!isStatic && dynamicTypingTextData == null)
         {
             return Result<bool>
                 .Fail("Data for dynamic are null");
@@ -56,6 +59,27 @@ public class SaveTypingExerciceUseCase : ISaveTypingExerciceUseCase
         exerciceManager.AddNewExercice(typingExerciceSettings);
 
         // Record all exercices
-        return await _storage.SaveAsync(exerciceManager.Exercice);
+        return await _storage.SaveAsync(exerciceManager.Exercices);
+    }
+
+    public async Task<Result<bool>> UpdateExerciceAsync(
+       ITypingExercicesManager exerciceManager,
+       TypingExercise exercice)
+    {
+        // validation
+        ValidationResult validationResu =
+            _typingExerciceValidator.Validate(exercice);
+
+        if (!validationResu.IsValid)
+        {
+            return Result<bool>
+                .Fail(validationResu.ToString());
+        }
+
+        // updating
+        exerciceManager.UpdateExercice(exercice);
+
+        // Record all exercices
+        return await _storage.SaveAsync(exerciceManager.Exercices);
     }
 }

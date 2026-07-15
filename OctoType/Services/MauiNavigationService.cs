@@ -1,5 +1,6 @@
 ﻿using OctoType.Application;
 using OctoType.Application.Interfaces;
+using OctoType.Application.Models.Typing.Exercices;
 using OctoType.Domain.Typing.Analysis;
 using OctoType.Factories;
 
@@ -35,6 +36,25 @@ public class MauiNavigationService : INavigationService
 
         return Result<bool>.Ok(true);
     }
+
+
+    public async Task<Result<bool>> NavigateToUpdateExerciceAsync(Guid exerciceGuid)
+    {
+        var exerciceGeneratorViewResult =
+            await _exerciceViewFactory.CreateExerciceUpdaterView(exerciceGuid);
+
+        if (!exerciceGeneratorViewResult.Success)
+        {
+            return Result<bool>.Fail(exerciceGeneratorViewResult.Error);
+        }
+
+        await Shell.Current.Navigation.PushAsync(exerciceGeneratorViewResult.GetValue);
+
+        return Result<bool>.Ok(true);
+    }
+
+
+
 
     public async Task<Result<bool>> NavigateToTypingExerciseAsync(IStringsProvider stringProvider)
     {
