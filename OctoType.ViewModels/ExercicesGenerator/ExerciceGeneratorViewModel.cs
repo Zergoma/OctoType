@@ -284,7 +284,12 @@ public partial class ExerciceGeneratorViewModel : ObservableObject
             return;
         }
 
-        string allowedCharsStrict = AllowedLettersExtractor.ExtractAllowedLetters(AllowedChars, GeneratedText);
+        string allowedCharsStrict =
+            IsStaticGenerated == true
+            ? AllowedLettersExtractor.ExtractAllowedLetters(AllowedChars, GeneratedText)    // check letters in generated text,
+                                                                                            // keep order from allowed if presents
+                                                                                            // else only letters in generatde text
+            : AllowedChars; // dynamic context: no generated text, only based on allowed
 
         TypingExerciseCreateParameters settingbase = new()
         {

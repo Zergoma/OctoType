@@ -182,23 +182,26 @@
         <!--generated area-->
         <Border
             IsVisible="{Binding IsStaticGenerated}"
-            StyleClass="BorderBgStd, BorderTypingRounded10" Padding="10" Margin="30,5,30,15">
+            StyleClass="BorderBgStd, BorderTypingRounded10" 
+            Padding="10"
+            Margin="30,5,30,15">
+            
             <Grid ColumnDefinitions="*,auto"
                   Margin="10,5,10,5"
                   ColumnSpacing="10"
                   HorizontalOptions="Fill">
 
                 <Editor Grid.Column="0"
-            x:Name="EditorGenerateText"
-            Text="{Binding GeneratedText}"
-            AutoSize="TextChanges"
-            StyleClass="editor_no_spell_no_prediction"
-            MinimumHeightRequest="150"
-            MaximumHeightRequest="150"
-            Placeholder="pseudo-words or words will be generated here, you can modify them if you want"
-            VerticalOptions="Fill"
-            HorizontalOptions="Fill"
-            FontSize="24">
+                        x:Name="EditorGenerateText"
+                        Text="{Binding GeneratedText}"
+                        AutoSize="TextChanges"
+                        StyleClass="editor_no_spell_no_prediction"
+                        MinimumHeightRequest="150"
+                        MaximumHeightRequest="400"
+                        Placeholder="pseudo-words or words will be generated here, you can modify them if you want"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill"
+                        FontSize="24">
                     <FlyoutBase.ContextFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Text="Add Enter ↵ mark" Clicked="MenuFlyoutItem_AddEnterMarkClicked"/>
