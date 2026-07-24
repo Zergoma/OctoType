@@ -1,5 +1,5 @@
-![.NET](https://img.shields.io/badge/.NET-11.0.preview5-blue?logo=dotnet)
-![MAUI](https://img.shields.io/badge/MAUI-11.0.preview5-brightgreen?logo=dotnet)
+![.NET](https://img.shields.io/badge/.NET-11.0.preview6-blue?logo=dotnet)
+![MAUI](https://img.shields.io/badge/MAUI-11.0.preview6-brightgreen?logo=dotnet)
 ![xUnit](https://img.shields.io/badge/xUnit-tests-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
