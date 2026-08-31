@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:OctoType.ViewModels.TypingLauncher;assembly=OctoType.ViewModels"
              Title="TypingLauncherView"
              x:DataType="vm:TypingLauncherViewModel"
+             xmlns:behaviors="clr-namespace:OctoType.Behaviors"
              Shell.NavBarIsVisible="False"
              StyleClass="xylotype_page_bg"
              x:Name="RootPage">
@@ -18,7 +19,7 @@
         Padding="5"
         RowSpacing="5">
 
-        <!--Settings-->
+        <!--UI Settings-->
         <Grid Grid.Row="0" Grid.Column="1">
 
             <HorizontalStackLayout VerticalOptions="Center" HorizontalOptions="End">
@@ -46,6 +47,7 @@
 
             <Grid>
 
+                <!--In case there is no selected exercise-->
                 <Label IsVisible="{Binding IsNoSelection}" 
                     Text="Select an exercice on the left"
                        WidthRequest="200"
@@ -53,7 +55,7 @@
                        HorizontalOptions="Center"
                        VerticalOptions="Center"/>
 
-
+                <!--Details infos-->
                 <VerticalStackLayout IsVisible="{Binding IsSelectedExercice}">
                     <Grid RowDefinitions="auto,auto" Margin="5,5,0,15">
                         <Label Text="{Binding ExerciceName}" FontSize="34" FontAttributes="Bold"  />
@@ -84,13 +86,33 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border StyleClass="BorderRounded10, BorderBgDescription" Padding="10">
-                        <Grid ColumnDefinitions="auto,*">
-                            <Label Text="Nombre de mot" TextColor="White" Margin="0,0,0,0" VerticalOptions="Center"/>
-                            <Picker Grid.Column="1" BackgroundColor="#444" TextColor="White" Margin="10,0,0,0" />
+                    <Border IsVisible="{Binding IsDynamic}" HorizontalOptions="Center" StyleClass="BorderRounded10, BorderBgDescription" Padding="10">
+                        <Grid RowDefinitions="*,auto"
+                              ColumnDefinitions="auto,*"
+                              RowSpacing="5"
+                              ColumnSpacing="5">
+                            <Label Grid.Row="0" Text="Nombre de ligne" TextColor="White" Margin="0,0,0,0" VerticalOptions="Center"/>
+                            <Entry Grid.Row="0" Grid.Column="1"
+                                    Keyboard="Numeric"
+                                    StyleClass="entry_no_spell_no_prediction, entry_small"
+                                    Text="{Binding NbLine}">
+                                <Entry.Behaviors>
+                                    <behaviors:DigitsOnlyBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
+
+                            <Label Grid.Row="1" Text="Nombre de mot" TextColor="White" Margin="0,0,0,0" VerticalOptions="Center"/>
+                            <Entry Grid.Row="1" Grid.Column="1"
+                                    Keyboard="Numeric"
+                                    StyleClass="entry_no_spell_no_prediction, entry_small"
+                                    Text="{Binding NbWordPerLine}">
+                                <Entry.Behaviors>
+                                    <behaviors:DigitsOnlyBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
                         </Grid>
                     </Border>
-
+                    
 
                     <Button HorizontalOptions="End" MinimumWidthRequest="70" MaximumWidthRequest="200" Text="Lancer !"
                             Command="{Binding LaunchCommand}"

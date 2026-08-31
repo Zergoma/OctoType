@@ -12,6 +12,7 @@ using OctoType.Application.Interfaces.Typing;
 using OctoType.Application.Models.Themes;
 using OctoType.Application.Models.Typing.Engine;
 using OctoType.Application.Models.Typing.Exercices;
+using OctoType.Application.Services;
 
 namespace OctoType.ViewModels.TypingLauncher;
 
@@ -29,6 +30,9 @@ public partial class TypingLauncherViewModel : ObservableObject
     private ITypingExercicesEngine? _typingExerciceEngine;
     private ILogger<TypingLauncherViewModel> _logger;
 
+    private readonly ITypingExerciseWordNumberService _typingExerciceWordNumberService;
+    private readonly ITypingExerciseLineNumberService _typingExerciceLineNumberService;
+
     public ObservableCollection<ExerciceItemViewModel> AllExercice { get; set; } = [];
     private readonly List<KeyBoardLayoutDto> _keyboardLayoutAvailableElem;
 
@@ -41,25 +45,36 @@ public partial class TypingLauncherViewModel : ObservableObject
         IKeyBoardLayoutAvailableService keyboardLayoutAvailableService,
         IThemeChangerService themeChangerService,
         IThemeIconeCodeProvider themeIconeProvider,
-        ILogger<TypingLauncherViewModel> logger)
+        ILogger<TypingLauncherViewModel> logger,
+        ITypingExerciseWordNumberService typingExerciceWordNumberService,
+        ITypingExerciseLineNumberService typingExerciceLineNumberService)
     {
         _typingExerciceStorage = typingExerciceStorage;
         _navigation = navigation;
         _createStringProviderOrchestrator = createStringProviderOrchestrator;
         _keyboardLayoutAvailableElem = keyboardLayoutAvailableService.GetKeyBoardAvailable();
 
+        _themeChangerService = themeChangerService;
+        _themeIconeProvider = themeIconeProvider;
+        _logger = logger;
+        _typingExerciceWordNumberService = typingExerciceWordNumberService;
+        _typingExerciceLineNumberService = typingExerciceLineNumberService;
+
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         AllExercice.CollectionChanged += (_, _) =>
         {
             OnPropertyChanged(nameof(HasExercice));
             OnPropertyChanged(nameof(HasNoExercice));
         };
 
-        _themeChangerService = themeChangerService;
         _themeSwitch = _themeChangerService.ApplyUserSelectedTheme();
-
-        _themeIconeProvider = themeIconeProvider;
         IconeTheme = _themeIconeProvider.GetIconeCode(_themeSwitch);
-        _logger = logger;
+        NbLine = _typingExerciceLineNumberService.LineNumber;
+        NbWordPerLine = _typingExerciceWordNumberService.ItemNumber;
     }
 
     private void SetKeyboardLayout(int id)
@@ -78,6 +93,21 @@ public partial class TypingLauncherViewModel : ObservableObject
             return;
 
         KeyboardLayoutChanged?.Invoke((int)value.KeyBoardCode);
+    }
+
+    [ObservableProperty]
+    public partial int NbLine { get; set; }
+    partial void OnNbLineChanged(int value)
+    {
+        _typingExerciceLineNumberService.LineNumber=value;
+    }
+
+
+    [ObservableProperty]
+    public partial int NbWordPerLine { get; set; }
+    partial void OnNbWordPerLineChanged(int value)
+    {
+        _typingExerciceWordNumberService.ItemNumber=value;
     }
 
     public bool HasExercice => AllExercice.Count > 0;
@@ -129,6 +159,7 @@ public partial class TypingLauncherViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(ExerciceName))]
     [NotifyPropertyChangedFor(nameof(ExerciceDescription))]
     [NotifyPropertyChangedFor(nameof(ExerciceLetters))]
+    [NotifyPropertyChangedFor(nameof(IsDynamic))]
     public partial ExerciceItemViewModel? ExerciceSelected { get; set; }
 
 
@@ -136,6 +167,8 @@ public partial class TypingLauncherViewModel : ObservableObject
     public string ExerciceName => ExerciceSelected?.Name ?? "Exercices Name";
     public string ExerciceDescription => ExerciceSelected?.Desciption ?? "Exercices Description";
     public string ExerciceLetters => ExerciceSelected?.Letters ?? "Exercices Letters";
+
+    public bool IsDynamic => ExerciceSelected?.IsDynamic ?? false;
 
 
 

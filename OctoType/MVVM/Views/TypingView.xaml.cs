@@ -111,7 +111,8 @@ public partial class TypingView : ContentPage
         if (HiddenInput.Handler?.PlatformView is not Microsoft.UI.Xaml.Controls.TextBox nativeTextBox)
             return;
 
-        nativeTextBox.KeyDown += OnNativeKeyDown; ;
+        nativeTextBox.KeyDown -= OnNativeKeyDown;
+        nativeTextBox.KeyDown += OnNativeKeyDown;
 
         Dispatcher.Dispatch(() =>
         {

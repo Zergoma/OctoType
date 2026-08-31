@@ -33,7 +33,8 @@
             <CollectionView ItemsSource="{Binding LinesStates}"
                             x:DataType="vm:TypingViewModel"
                             x:Name="TypingCollectionView"
-                            HeightRequest="350">
+                            HeightRequest="350"
+                            VerticalOptions="Fill">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

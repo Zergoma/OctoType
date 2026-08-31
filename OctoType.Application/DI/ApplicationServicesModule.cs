@@ -19,13 +19,15 @@ internal static class ApplicationServicesModule
         services.AddTransient<IPseudoWordGeneratorService, PseudoWordGeneratorService>();
         services.AddTransient<IStringsProvider, DevStringsProvider>();
         services.AddTransient<IGenerationTypeSourceAvailableService, GenerationTypeSourceAvailableService>();
-        services.AddTransient<ITypingExerciseWordNumberService, TypingExerciseWordNumberService>();
-        services.AddTransient<ITypingExerciseLineNumberService, TypingExerciseLineNumberService>();
         services.AddTransient<IEditorSplitCharProvider, EditorSplitCharProvider>();
         services.AddTransient<IGuidProvider, GuidProvider>();
         //services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorsBeginnerProvider>();
         services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorIntermediateProvider>();
         services.AddTransient<IChartErrorProvider, ChartErrorProvider>();
+
+
+        services.AddSingleton<ITypingExerciseWordNumberService, TypingExerciseWordNumberService>();
+        services.AddSingleton<ITypingExerciseLineNumberService, TypingExerciseLineNumberService>();
 
         // TODO
         // need to add qwerty etc keyboard keys locators

@@ -15,11 +15,11 @@ public partial class App : MauiAppNS.Application
     {
         Window win = new Window(new AppShell());
 #if WINDOWS
-        win.Width = 800;
-        win.Height = 700;
+        win.Height = 800;
+        win.Width = 1000;
 
-        win.MinimumHeight = 700;
-        win.MinimumWidth = 800;
+        win.MinimumHeight = 800;
+        win.MinimumWidth = 900;
 #endif
         return win;
     }

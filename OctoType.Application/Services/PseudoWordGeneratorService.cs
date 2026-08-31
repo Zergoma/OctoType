@@ -8,38 +8,36 @@ namespace OctoType.Application.Services;
 
 public class PseudoWordGeneratorService : IPseudoWordGeneratorService
 {
-    private static readonly Random s_random = Random.Shared;
+    private readonly IGetNextInRange _getNext;
+
+    public PseudoWordGeneratorService(IGetNextInRange getNext)
+    {
+        _getNext = getNext;
+    }
     
     Result<LetterPool>? _letterPoolResu = null;
     PseudoWordOptions? _LetterOption = null;
 
-    static private int GetLength(int val1, int val2)
+    private int GetLength(int val1, int val2)
     {
         return val1 == val2
             ? val1
-            : s_random.Next(
+            : _getNext.GetNext(
                 Math.Min(val1, val2), 
                 Math.Max(val1, val2) + 1);
     }
 
     public Result<string> Generate(PseudoWordOptions options)
     {
-        // first time
+        // first time or option delta
         // get the option and build the letterPool
-        if(_LetterOption is null)
+        if(_LetterOption is null || _LetterOption != options)
         {
             _LetterOption = options;
             _letterPoolResu =
                 LetterPool.Create(options.AllowedChars);
         }
-        // next time
-        // compare option if delta, re-create the letterPool
-        else if(_LetterOption != options)
-        {
-            _letterPoolResu =
-                LetterPool.Create(options.AllowedChars);
-        }
-
+        
         // does the letterPool operational ?
         if (!_letterPoolResu!.Success)
             return Result<string>
@@ -47,7 +45,6 @@ public class PseudoWordGeneratorService : IPseudoWordGeneratorService
 
         LetterPool letterSource = _letterPoolResu.GetValue;
 
-        //int length = GetLength();
         int length = 
             GetLength(options.MinLength, options.MaxLength);
 

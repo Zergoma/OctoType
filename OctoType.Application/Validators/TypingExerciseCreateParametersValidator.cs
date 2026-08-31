@@ -25,7 +25,6 @@ public class TypingExerciseCreateParametersValidator : AbstractValidator<TypingE
 
 
 
-
 public class TypingTextDataStaticValidator : AbstractValidator<TypingTextDataStatic>
 {
     public TypingTextDataStaticValidator()

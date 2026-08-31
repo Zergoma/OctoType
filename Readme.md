@@ -8,7 +8,25 @@
 
 Do you want to learn dactylo ? Or improve your typing speed ?  
 OctoType have been design in this very way  
+Select you exercice, type then look at your stats.  
 
+
+---
+## Exercices
+
+You can design your own exercices  
+You will have to select the letters you want, text you want or dynamically generate pseudo words based on these letters.  
+
+
+---
+## Roadmap
+- [ ] Add user database for exercice's stats  
+  - [ ] Local 
+  - [ ] Online (not the priority)
+- [ ] From stat page, Add buttons: redo, or next exercice
+- [ ] Exercices settings: reorder exercice
+
+---
 
 # Architectue
 MVVM  
@@ -31,7 +49,7 @@ Application --> Domain
 
 ```
 
-----
+---
 ## Technos
 .NET11 preview5  
 MAUI11.0.0-preview.5  
