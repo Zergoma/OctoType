@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XyloType.MVVM.Views.ImportBookView"
+             xmlns:vm="clr-namespace:XyloType.ViewModels.Import;assembly=XyloType.ViewModels"
+             Title="Import Book"
+             x:DataType="vm:ImportBookViewModel"
+             Shell.NavBarIsVisible="False"
+             StyleClass="xylotype_page_bg">
+    
+    <Grid RowDefinitions="0.2*,0.8*"
+      HorizontalOptions="Fill"
+      VerticalOptions="Fill">
+
+        <Label Grid.Row="0"
+        Text="Import livre"
+        FontSize="Large"
+        VerticalOptions="Center" 
+        HorizontalOptions="Center" />
+
+        <Grid Grid.Row="1"
+        RowDefinitions="*,*,*"
+          ColumnDefinitions="*,*"
+          VerticalOptions="Center"
+          HorizontalOptions="Center"
+          RowSpacing="10"
+          Margin="10">
+
+            <Button Grid.Row="0"
+                    Text="Sélection d'un livre"
+                    StyleClass="button_hover"
+                    Command="{Binding SelectFileCommand}"/>
+
+            <Button Grid.Row="2" Grid.Column="1"
+                    Text="Importer"
+                    StyleClass="button_hover"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    IsEnabled="{Binding IsFileSelected}"
+                    Command="{Binding ImportFileCommand}"/>
+        </Grid>
+    </Grid>
+</ContentPage>

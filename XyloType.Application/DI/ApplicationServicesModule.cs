@@ -1,0 +1,42 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+using XyloType.Application.Interfaces;
+using XyloType.Application.Services;
+
+namespace XyloType.Application.DI;
+
+internal static class ApplicationServicesModule
+{
+    public static IServiceCollection AddOctoTypeApplicationServices(this IServiceCollection services)
+    {
+        // ********************************************************************************************
+        // Zero dependancies services
+        // ********************************************************************************************
+        services.AddTransient<IInputCharMapperService, InputCharMapperService>();
+        services.AddTransient<IKeyboardAnalyzerService, KeyboardAnalyzerService>();
+        services.AddTransient<IKeyBoardLayoutAvailableService, KeyBoardLayoutAvailableService>();
+        services.AddTransient<ILanguageAvailableService, LanguageAvailableService>();
+        services.AddTransient<IPseudoWordGeneratorService, PseudoWordGeneratorService>();
+        services.AddTransient<IStringsProvider, DevStringsProvider>();
+        services.AddTransient<IGenerationTypeSourceAvailableService, GenerationTypeSourceAvailableService>();
+        services.AddTransient<IEditorSplitCharProvider, EditorSplitCharProvider>();
+        services.AddTransient<IGuidProvider, GuidProvider>();
+        //services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorsBeginnerProvider>();
+        services.AddTransient<IChartResponseTimeColorsProvider, ChartResponseTimeColorIntermediateProvider>();
+        services.AddTransient<IChartErrorProvider, ChartErrorProvider>();
+
+
+        services.AddSingleton<ITypingExerciseWordNumberService, TypingExerciseWordNumberService>();
+        services.AddSingleton<ITypingExerciseLineNumberService, TypingExerciseLineNumberService>();
+
+        // TODO
+        // need to add qwerty etc keyboard keys locators
+        services.AddTransient<IKeyboardKeysLocator, AzertyKeysLocator>();
+        // ********************************************************************************************
+
+        services.AddTransient<IPseudoWordBatchGenerator, PseudoWordBatchGenerator>();   // depends -> IPseudoWordGeneratorService
+
+
+        return services;
+    }
+}

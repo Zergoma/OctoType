@@ -1,0 +1,111 @@
+<ContentPage x:Class="XyloType.MVVM.Views.StatisticView"
+             xmlns:vm ="clr-namespace:XyloType.MVVM.ViewModels"
+             xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:DataType="vm:StatisticViewModelMauiAdapter"
+             Title="StatisticView"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             StyleClass="xylotype_page_bg">
+
+
+    <ScrollView>
+        <Grid RowDefinitions="auto,auto,auto,auto">
+            <Label Grid.Row="0"
+            Text="Statistics"
+               FontSize="45"
+               Margin="20,10,0,0"
+               />
+
+            <Border Grid.Row="1"
+            Margin="30,20,30,10"
+            StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="10">
+
+                <Grid ColumnDefinitions="*,*">
+
+                    <Grid Grid.Column="0"
+                      HorizontalOptions="Center"
+                    ColumnDefinitions="auto,*">
+
+                        <Label Grid.Column="1" 
+                        Text="WPM"
+                        FontSize="20"
+                        VerticalOptions="Center"/>
+
+                        <Label Grid.Column="0" 
+                        Text="{Binding WordsPerMinuteText}"
+                        Margin="10,0"
+                        FontSize="30"
+                           VerticalOptions="Center"
+                        TextColor="DarkSlateGray"/>
+                    </Grid>
+
+                    <Grid Grid.Column="1"
+                      HorizontalOptions="Center"
+                    ColumnDefinitions="auto,*">
+
+                        <Label Grid.Column="1" 
+                        Text="LPM"
+                        FontSize="20"
+                           VerticalOptions="Center"/>
+
+                        <Label Grid.Column="0" 
+                        Text="{Binding LetterPerMinuteText}"
+                        Margin="10"
+                        FontSize="30"
+                        TextColor="DarkSlateGray"
+                           VerticalOptions="Center"/>
+                    </Grid>
+                </Grid>
+            </Border>
+
+
+            <Border Grid.Row="2"
+            Margin="30,30,30,10"
+                StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="20, 10,20,20">
+
+                <Grid RowDefinitions="*,*,*">
+                    <Label Grid.Row="0"
+                    Text="Response time(s)"
+                       Margin="10,0"
+                       FontSize="25"/>
+
+                    <Label Grid.Row="1"
+                        Text="The less, the better"
+                        Margin="10,0"
+                        FontSize="15"
+                        TextColor="DarkSlateGray"/>
+
+                    <micro:ChartView  Grid.Row="2" 
+                            Chart="{Binding TimeResponseChart}" 
+                             HeightRequest="200"
+                             WidthRequest="800"
+                             />
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="3"
+            Margin="30,0,30,30"
+                StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="20,10,20,20"
+                IsVisible="{Binding HasError}">
+
+                <Grid RowDefinitions="*,*">
+                    <Label Grid.Row="0"
+                    Text="Errors"
+                    Margin="10,0"
+                    FontSize="25"/>
+
+                    <micro:ChartView  Grid.Row="1" 
+                    Chart="{Binding ErrorsChart}" 
+                     HeightRequest="350"
+                     WidthRequest="800"
+                     />
+                </Grid>
+            </Border>
+
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

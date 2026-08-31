@@ -4,10 +4,10 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 
-# OctoType
+# XyloType
 
-Do you want to learn dactylo ? Or improve your typing speed ?  
-OctoType have been design in this very way  
+Do you want to learn dactylo or improve your typing precision/speed ?  
+XyloType have been design in this very way  
 Select you exercice, type then look at your stats.  
 
 

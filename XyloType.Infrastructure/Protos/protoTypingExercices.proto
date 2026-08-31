@@ -1,0 +1,57 @@
+﻿syntax="proto3";
+
+package XyloType.Infrastructure.Protos;
+
+
+message ProtoKeyboardLayout {
+    enum ProtoKeyboardLayoutType {
+        AZERTYFr = 0;
+        QWERTYUS = 1;
+        QWERTZDE = 2;
+        BEPO = 3;
+    }
+    ProtoKeyboardLayoutType layout = 1;
+    string name = 2;
+}
+
+message ProtoTypingTextDataStatic {
+    string generatedText = 1;
+}
+
+message ProtoTypingTextDataDynamic {
+    enum ProtoGeneratedTypeSource {
+        PSEUDOWORDS = 0;    // pseudo words generator source
+        WORDS = 1;          // bdd source 
+    }
+    ProtoGeneratedTypeSource generated_type_source =1;
+    uint32 length_min = 2;
+    uint32 length_max = 3;
+    repeated string languages_selected = 4;
+}
+
+message ProtoTypingTextData {
+    string allowed_characters = 1;
+    oneof text_data_Type {
+        ProtoTypingTextDataStatic static_text_data = 2;
+        ProtoTypingTextDataDynamic dynamic_text_data = 3;
+    }
+}
+
+
+message ProtoTypingExercice {
+    string name = 1;
+    string description = 2;
+
+    string allowed_characters = 3;
+    
+    oneof text_data_Type {
+        ProtoTypingTextDataStatic static_text_data = 4;
+        ProtoTypingTextDataDynamic dynamic_text_data = 5;
+    }
+    bytes id = 6;
+}
+
+message ProtoTypingExerciceList {
+    ProtoKeyboardLayout keyboard_layout = 1;
+    repeated ProtoTypingExercice exercices = 2;
+}
