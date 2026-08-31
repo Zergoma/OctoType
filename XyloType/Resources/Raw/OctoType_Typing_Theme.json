@@ -1,0 +1,58 @@
+{
+  "name": "OctoType_Typing_Theme",
+
+  "pending": {
+    "textColorLight": "#FF757575",
+    "backgroundColorLight": "#00000000",
+    "borderColorLight": "#00000000",
+    "borderThicknessLight": 2,
+    "textColorDark": "#FF757575",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#00000000",
+    "borderThicknessDark": 2
+  },
+
+  "current": {
+    "textColorLight": "#FF757575",
+    "backgroundColorLight": "#00000000",
+    "borderColorLight": "#FF04FF00",
+    "borderThicknessLight": 0,
+    "textColorDark": "#FF757575",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#FF04FF00",
+    "borderThicknessDark": 0
+  },
+
+  "correct": {
+    "textColorLight": "#FF1D99F9",
+    "backgroundColorLight": "#FFD5EEF2",
+    "borderColorLight": "#00000000",
+    "borderThicknessLight": 0,
+    "textColorDark": "#FF1D99F9",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#00000000",
+    "borderThicknessDark": 0
+  },
+
+  "correctWithError": {
+    "textColorLight": "#FFFF8000",
+    "backgroundColorLight": "#FFFFEC77",
+    "borderColorLight": "#00000000",
+    "borderThicknessLight": 0,
+    "textColorDark": "#FFFF8000",
+    "backgroundColorDark": "#FF471C05",
+    "borderColorDark": "#00000000",
+    "borderThicknessDark": 0
+  },
+
+  "CurrentWrong": {
+    "textColorLight": "#FFFF4500",
+    "backgroundColorLight": "#00000000",
+    "borderColorLight": "#FFFF2345",
+    "borderThicknessLight": 2,
+    "textColorDark": "#FFFF4500",
+    "backgroundColorDark": "#00000000",
+    "borderColorDark": "#FFFF2345",
+    "borderThicknessDark": 2
+  }
+}

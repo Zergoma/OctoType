@@ -1,0 +1,17 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace XyloType.Infrastructure.DI;
+
+public static class InfrastructureModule
+{
+    public static IServiceCollection AddOctoTypeInfrastructure(this IServiceCollection services)
+    {
+        services.AddProviders();
+        services.AddRepositories();
+        services.AddIo();
+        services.AddTheme();
+        services.AddStrores();
+
+        return services;
+    }
+}

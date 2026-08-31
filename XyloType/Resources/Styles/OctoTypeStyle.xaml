@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+
+
+    <Style TargetType="Page" ApplyToDerivedTypes="True" Class="xylotype_page_bg">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PageBgLight}, Dark={StaticResource PageBgDark}}" />
+    </Style>
+
+
+    <Style TargetType="Label" Class="label_hv_center">
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style TargetType="Label" Class="label_text_h_start">
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
+    </Style>
+
+    <Style TargetType="Label" Class="label_text_h_end">
+        <Setter Property="HorizontalTextAlignment" Value="End" />
+    </Style>
+
+    <Style TargetType="Label" Class="label_text_h_center">
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+
+    <Style TargetType="Label" Class="label_text_v_center">
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+
+    <Style TargetType="Entry" Class="entry_no_spell_no_prediction">
+        <Setter Property="IsTextPredictionEnabled" Value="False" />
+        <Setter Property="IsSpellCheckEnabled" Value="False" />
+    </Style>
+
+    <Style TargetType="Entry" Class="entry_small">
+        <Setter Property="MinimumHeightRequest" Value="30" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style TargetType="Editor" Class="editor_no_spell_no_prediction">
+        <Setter Property="IsTextPredictionEnabled" Value="False" />
+        <Setter Property="IsSpellCheckEnabled" Value="False" />
+    </Style>
+
+    
+
+</ResourceDictionary>

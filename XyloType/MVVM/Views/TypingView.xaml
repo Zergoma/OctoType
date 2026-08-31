@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:XyloType.ViewModels.Typing;assembly=XyloType.ViewModels"
+             xmlns:converters="clr-namespace:XyloType.Converters"
+             x:Class="XyloType.MVVM.Views.TypingView"
+             x:DataType="vm:TypingViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             StyleClass="xylotype_page_bg">
+    <ContentPage.Resources>
+        <converters:StringToColorConverter x:Key="stringToColor"/>
+
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="0.1,auto,0.2*,auto">
+
+        <Entry Grid.Row="0"
+               x:Name="HiddenInput"
+               Opacity="0.00100"
+               WidthRequest="60"
+               HeightRequest="20"
+               BackgroundColor="Blue"
+               CursorPosition="0"
+               TextChanged="OnTextChanged"/>
+
+
+        <Border Grid.Row="1"
+                Margin="20"
+                StyleClass="BorderTypingRounded10, BorderBgTyping"
+                Padding="10">
+
+            <CollectionView ItemsSource="{Binding LinesStates}"
+                            x:DataType="vm:TypingViewModel"
+                            x:Name="TypingCollectionView"
+                            HeightRequest="350"
+                            VerticalOptions="Fill">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <FlexLayout x:DataType="vm:TypingLineStateViewModel"
+                                    Wrap="Wrap"
+                                    Direction="Row"
+                                    BindableLayout.ItemsSource="{Binding Characters}"
+                                    Padding="10,10">
+
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:TypingCharStateViewModel">
+
+                                    <Border StrokeShape="RoundRectangle 5"
+                                            Stroke="Transparent"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{Binding BgColor, Converter={StaticResource stringToColor}}"
+                                            Margin="0,0,1,6"
+                                            VerticalOptions="Center">
+
+                                        <Grid RowDefinitions="auto, *"
+                                              HorizontalOptions="Center"
+                                              VerticalOptions="Center">
+
+                                            <Label Text="{Binding Character}"
+                                                   TextColor="{Binding TextColor, Converter={StaticResource stringToColor}}"
+                                                   BackgroundColor="Transparent"
+                                                   FontSize="45"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+
+                                            <BoxView Grid.Row="1"
+                                                     HeightRequest="4"
+                                                     WidthRequest="20"
+                                                     BackgroundColor="{Binding BorderColor, Converter={StaticResource stringToColor}}" />
+
+                                        </Grid>
+                                    </Border>
+
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </Border>
+
+        <Button Grid.Row="2"
+                Text="Reprendre la saisie"
+                StyleClass="button_hover"
+                x:Name="TakeFocusButton"
+                Clicked="TakeFocusButton_Clicked"
+                HeightRequest="30"
+                WidthRequest="300"/>
+
+        <!-- typing flow settings -->
+        <Border Grid.Row="3" StyleClass="BorderTypingRounded10, BorderBgTyping" Padding="30" Margin="70">
+            <Grid Grid.Row="3"
+              RowDefinitions="*,*"
+              ColumnDefinitions="auto, *"
+              ColumnSpacing="5">
+
+                <Switch Grid.Column="0"
+                    VerticalOptions="Center"
+                    IsToggled="{Binding BackReturnEnable}"/>
+
+                <Label Grid.Column="1"
+                   VerticalOptions="Center"
+                   Text="{Binding BackReturnTxt}">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchBackReturnCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Switch Grid.Row="1" Grid.Column="0"
+                VerticalOptions="Center"
+                IsToggled="{Binding StopOnErrorEnable}"/>
+
+                <Label Grid.Row="1" Grid.Column="1"
+               VerticalOptions="Center"
+               Text="{Binding StopOnErrorTxt}">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchStopOnErrorCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

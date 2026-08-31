@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="CdC_OctoType.drawio" />
+    <File Path="icones_themes_codes.png" />
+    <File Path="Readme.md" />
+  </Folder>
+  <Folder Name="/UI/">
+    <Project Path="XyloType/XyloType.csproj" />
+  </Folder>
+  <Project Path="XyloType.Application/XyloType.Application.csproj" Id="e15f431e-30c8-448a-998d-5afca8dbd6c0" />
+  <Project Path="XyloType.Domain/XyloType.Domain.csproj" Id="1bac9925-433b-4325-b749-deab7b769dd3" />
+  <Project Path="XyloType.Infrastructure/XyloType.Infrastructure.csproj" Id="ae5d5397-2cb6-410b-890c-e994c04a3adc" />
+  <Project Path="XyloType.Tests/XyloType.Tests.csproj" Id="4e1ddf35-1a09-4363-9847-bf62f99ed014" />
+  <Project Path="XyloType.ViewModels/XyloType.ViewModels.csproj" Id="bb522144-655e-4e2c-b8f8-b440886fcb23" />
+</Solution>

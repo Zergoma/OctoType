@@ -1,6 +1,8 @@
 {
     "conventionalCommits.scopes": [
         "Typing navigation",
-        "Typing UI settings"
+        "Typing UI settings",
+        "TypeingExercise persistence",
+        ".NET preview upgrade"
     ]
 }

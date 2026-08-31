@@ -1,0 +1,18 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+using XyloType.ViewModels.Import;
+using XyloType.ViewModels.TypingLauncher;
+
+
+namespace XyloType.ViewModels.DI;
+
+public static class ViewModelsModule
+{
+    public static IServiceCollection AddViewModelsModule(this IServiceCollection services)
+    {
+        services.AddTransient<ImportBookViewModel>();
+        services.AddTransient<ImportWordViewModel>();
+        services.AddTransient<TypingLauncherViewModel>();
+        return services;
+    }
+}

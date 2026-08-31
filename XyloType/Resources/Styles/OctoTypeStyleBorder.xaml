@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style TargetType="Border" Class="BorderRounded10">
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Stroke" Value="Transparent" />
+    </Style>
+
+    <Style TargetType="Border" Class="BorderTypingRounded10">
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource BorderTypingRounded10BorderLight}, Dark={StaticResource BorderTypingRounded10BorderDark}}" />
+    </Style>
+    
+    
+    
+
+    <Style TargetType="Border" Class="BorderBgStd">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgStdLight}, Dark={StaticResource BorderBgStdDark}}" />
+    </Style>
+    
+    <Style TargetType="Border" Class="BorderBgDescription">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgDescriptionLight}, Dark={StaticResource BorderBgDescriptionDark}}" />
+    </Style>
+
+    <Style TargetType="Border" Class="BorderBgBlue">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgBlueLight}, Dark={StaticResource BorderBgBlueDark}}" />
+    </Style>
+
+
+    <Style TargetType="Border" Class="BorderBgTyping">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BorderBgTypingLight}, Dark={StaticResource BorderBgTypingDark}}" />
+    </Style>
+
+
+</ResourceDictionary>
